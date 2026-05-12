@@ -50,6 +50,12 @@ Los mensajes NO se envían automáticamente (LinkedIn lo bloquea). El usuario co
 - ✅ Links directos a perfiles de LinkedIn
 - ✅ Responsive (desktop tabla + mobile cards)
 
+### V3: Authentication System
+- ✅ Login page with dark minimal design, Entrar/Registro tabs, email/password inputs, admin approval workflow
+- ✅ User Registration (status: pending_approval)
+- ✅ Secure Signin (status: approved check)
+- ✅ Middleware route protection (`/app/*`, `/admin/*`)
+
 ---
 
 ## 🛠 Stack Tecnológico

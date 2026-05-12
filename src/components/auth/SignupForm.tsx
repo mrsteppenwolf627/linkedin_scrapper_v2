@@ -81,7 +81,7 @@ export function SignupForm({ email, isLoading, onLoadingChange }: SignupFormProp
       </div>
       <button 
         type="submit" 
-        className="w-full bg-[#FCFCFC] text-[#1A1A1A] font-bold uppercase tracking-[0.2em] py-3 px-6 rounded-none hover:bg-white/90 transition-all flex items-center justify-center disabled:opacity-50"
+        className="w-full bg-[#FCFCFC] text-[#1A1A1A] font-bold uppercase tracking-[0.2em] py-3 px-6 rounded-none hover:bg-white/90 transition-all flex items-center justify-center disabled:opacity-50 mt-4"
         disabled={isLoading}
       >
         {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "REGISTRARSE"}

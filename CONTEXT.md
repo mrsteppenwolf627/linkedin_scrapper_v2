@@ -159,8 +159,9 @@ created_at (timestamp)
 | 4 | GET `/api/admin/pending-users` (list pending) | Claude | 🔴 P0 | ✅ |
 | 5 | POST `/api/admin/approve-user/:id` (approve) | Claude | 🔴 P0 | ✅ |
 | 6 | POST `/api/auth/logout` (logout) | Claude | 🟠 P1 | ✅ |
-| 7 | Login page UI (`/login`) | Gemini | 🔴 P0 | ✅ |
-| 8 | Admin dashboard (`/admin/approvals`) UI + logic | Gemini | 🔴 P0 | ⏳ |
+| 7 | Login page UI (`/login`) | Gemini | 🔴 P0 | ✅ Completada |
+|   | *Login page rediseñada: dark minimalista, hamburguesa layout, botones y inputs sin border-radius* | | | |
+| 8 | Admin dashboard (`/admin/approvals`) UI + logic | Gemini | 🔴 P0 | ⏳ Pendiente |
 | 9 | Middleware: protect `/app/*` + `/admin/*` routes | Claude | 🔴 P0 | ✅ |
 | 10 | E2E tests: signup → pending → approve → signin | Codex | 🟠 P1 | ⏳ |
 

@@ -33,7 +33,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen w-full bg-[#1A1A1A] text-[#FCFCFC] flex items-center justify-center p-4 selection:bg-[#FCFCFC] selection:text-[#1A1A1A] font-sans">
-      <div className="w-full max-w-sm flex flex-col items-center space-y-8">
+      <div className="w-full max-w-sm flex flex-col items-center space-y-10">
         
         {/* CABECERA */}
         <div className="space-y-2 text-center">

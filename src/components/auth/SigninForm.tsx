@@ -58,7 +58,7 @@ export function SigninForm({ email, isLoading, onLoadingChange }: SigninFormProp
         <input
           type="password"
           required
-          placeholder="••••••••"
+          placeholder="CONTRASEÑA"
           className="w-full bg-transparent border border-input rounded-none py-3 px-4 text-white placeholder:text-[rgb(120,120,120)] placeholder:opacity-100 focus:outline-none focus:border-white transition-colors"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -68,7 +68,7 @@ export function SigninForm({ email, isLoading, onLoadingChange }: SigninFormProp
       
       <button 
         type="submit" 
-        className="w-full bg-[#FCFCFC] text-[#1A1A1A] font-bold uppercase tracking-[0.2em] py-3 px-6 rounded-none hover:bg-white/90 transition-all flex items-center justify-center disabled:opacity-50"
+        className="w-full bg-[#FCFCFC] text-[#1A1A1A] font-bold uppercase tracking-[0.2em] py-3 px-6 rounded-none hover:bg-white/90 transition-all flex items-center justify-center disabled:opacity-50 mt-4"
         disabled={isLoading}
       >
         {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "INICIAR SESIÓN"}
