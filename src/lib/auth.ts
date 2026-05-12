@@ -1,13 +1,9 @@
-// ============================================
-// Auth helpers — session cookies + admin guard
-// ============================================
-
+﻿import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 
-export const SESSION_COOKIE = 'sb-auth-token'
-
-// ── Cookie helpers ────────────────────────────────────────────────────────────
+export const SESSION_COOKIE = 'auth-token'
 
 export function setSessionCookie(
   response: NextResponse,
@@ -37,8 +33,6 @@ export function getTokenFromRequest(req: NextRequest): string | null {
   return req.cookies.get(SESSION_COOKIE)?.value ?? null
 }
 
-// ── Session verification ──────────────────────────────────────────────────────
-
 export async function getAuthUserId(token: string): Promise<string | null> {
   try {
     const supabase = createServerClient()
@@ -50,29 +44,69 @@ export async function getAuthUserId(token: string): Promise<string | null> {
   }
 }
 
-// ── Admin guard ───────────────────────────────────────────────────────────────
+interface ApprovedUserContext {
+  id: string
+  email: string
+  role: string
+  status: string
+}
+
+export async function requireApproved(): Promise<ApprovedUserContext> {
+  const cookieStore = await cookies()
+  const token = cookieStore.get(SESSION_COOKIE)?.value
+
+  if (!token) {
+    redirect('/login?reason=unauthorized')
+  }
+
+  const userId = await getAuthUserId(token)
+  if (!userId) {
+    redirect('/login?reason=unauthorized')
+  }
+
+  const supabase = createServerClient()
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('id, email, role, status')
+    .eq('id', userId)
+    .single()
+
+  if (error || !user) {
+    redirect('/login?reason=unauthorized')
+  }
+
+  if (user.status === 'pending_approval') {
+    redirect('/login?reason=pending')
+  }
+
+  if (user.status === 'rejected') {
+    redirect('/login?reason=rejected')
+  }
+
+  if (user.status !== 'approved') {
+    redirect('/login?reason=unauthorized')
+  }
+
+  return {
+    id: user.id as string,
+    email: user.email as string,
+    role: user.role as string,
+    status: user.status as string,
+  }
+}
 
 interface AdminContext {
   adminId: string
   adminEmail: string
 }
 
-/**
- * Verifies the request carries a valid session belonging to an approved admin.
- * Returns AdminContext on success, or a NextResponse error to return immediately.
- *
- * Usage:
- *   const admin = await requireAdmin(req)
- *   if (admin instanceof NextResponse) return admin
- *   // admin.adminId is now available
- */
 export async function requireAdmin(
   req: NextRequest
 ): Promise<AdminContext | NextResponse> {
   const token = getTokenFromRequest(req)
   if (!token) {
     return NextResponse.json(
-      { error: 'Unauthorized', message: 'Sesión no encontrada. Inicia sesión primero.' },
+      { error: 'Unauthorized', message: 'Sesion no encontrada. Inicia sesion primero.' },
       { status: 401 }
     )
   }
@@ -80,7 +114,7 @@ export async function requireAdmin(
   const userId = await getAuthUserId(token)
   if (!userId) {
     return NextResponse.json(
-      { error: 'Unauthorized', message: 'Sesión inválida o expirada.' },
+      { error: 'Unauthorized', message: 'Sesion invalida o expirada.' },
       { status: 401 }
     )
   }

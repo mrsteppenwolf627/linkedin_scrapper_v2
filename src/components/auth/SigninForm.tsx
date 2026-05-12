@@ -36,6 +36,11 @@ export function SigninForm({ email, isLoading, onLoadingChange }: SigninFormProp
         credentials: "include",
       })
 
+      if (res.redirected) {
+        window.location.href = res.url
+        return
+      }
+
       const data = await res.json()
 
       if (!res.ok) {
@@ -44,7 +49,7 @@ export function SigninForm({ email, isLoading, onLoadingChange }: SigninFormProp
       }
 
       toast.success("¡Bienvenido!")
-      router.push("/app/messages")
+      router.push("/dashboard/messages")
     } catch (err) {
       toast.error("Error de conexión")
     } finally {

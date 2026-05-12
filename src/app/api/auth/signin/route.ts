@@ -1,12 +1,5 @@
-// ============================================
-// POST /api/auth/signin
-// Authenticates a user and sets an HttpOnly session cookie.
-// Rejects if status != 'approved'.
-// ============================================
-
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
-import { setSessionCookie } from '@/lib/auth'
 import type { ApiError } from '@/types'
 
 export async function POST(req: NextRequest) {
@@ -15,32 +8,27 @@ export async function POST(req: NextRequest) {
     body = await req.json()
   } catch {
     return NextResponse.json<ApiError>(
-      { error: 'Bad Request', message: 'Body JSON inválido' },
+      { error: 'Bad Request', message: 'Body JSON invalido' },
       { status: 400 }
     )
   }
 
-  const email    = typeof body.email    === 'string' ? body.email.trim().toLowerCase() : ''
+  const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : ''
   const password = typeof body.password === 'string' ? body.password : ''
 
   if (!email || !password) {
     return NextResponse.json<ApiError>(
-      { error: 'Bad Request', message: 'Email y contraseña son requeridos.' },
+      { error: 'Bad Request', message: 'Email y contrasena son requeridos.' },
       { status: 400 }
     )
   }
 
-  // ── Call Supabase Auth REST with the anon key ──────────────────────────────
-  // The anon key is the correct key for user-facing auth operations.
-  // Add SUPABASE_ANON_KEY (no NEXT_PUBLIC_ prefix) to .env.local —
-  // it's the same value as NEXT_PUBLIC_SUPABASE_ANON_KEY if you have that set.
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const anonKey     = process.env.SUPABASE_ANON_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const anonKey = process.env.SUPABASE_ANON_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  if (!anonKey) {
-    console.error('[signin] Missing SUPABASE_ANON_KEY env var')
+  if (!supabaseUrl || !anonKey) {
     return NextResponse.json<ApiError>(
-      { error: 'Internal Server Error', message: 'Configuración de servidor incorrecta.' },
+      { error: 'Internal Server Error', message: 'Configuracion de servidor incorrecta.' },
       { status: 500 }
     )
   }
@@ -51,33 +39,29 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'apikey': anonKey,
+        apikey: anonKey,
       },
       body: JSON.stringify({ email, password }),
     })
-  } catch (err) {
-    console.error('[signin] Auth fetch error:', err)
+  } catch {
     return NextResponse.json<ApiError>(
-      { error: 'Internal Server Error', message: 'Error de conexión al servidor de autenticación.' },
+      { error: 'Internal Server Error', message: 'Error de conexion al servidor de autenticacion.' },
       { status: 500 }
     )
   }
 
   if (!authResponse.ok) {
-    // Supabase returns 400 for invalid credentials — generic message prevents enumeration
     return NextResponse.json<ApiError>(
-      { error: 'Unauthorized', message: 'Email o contraseña incorrectos.' },
+      { error: 'Unauthorized', message: 'Email o contrasena incorrectos.' },
       { status: 401 }
     )
   }
 
-  const session = await authResponse.json() as {
+  const session = (await authResponse.json()) as {
     access_token: string
-    expires_in: number
     user: { id: string }
   }
 
-  // ── Check approval status in custom users table ────────────────────────────
   const supabase = createServerClient()
   const { data: user, error: userErr } = await supabase
     .from('users')
@@ -94,7 +78,7 @@ export async function POST(req: NextRequest) {
 
   if (user.status === 'pending_approval') {
     return NextResponse.json<ApiError>(
-      { error: 'Forbidden', message: 'Tu cuenta aún no ha sido aprobada.' },
+      { error: 'Forbidden', message: 'Tu cuenta aun no ha sido aprobada.' },
       { status: 403 }
     )
   }
@@ -106,13 +90,14 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  console.log(`[signin] ${email} | role=${user.role}`)
-
-  const response = NextResponse.json({
-    success: true,
-    user: { id: user.id, email: user.email, role: user.role },
+  const response = NextResponse.redirect(new URL('/dashboard', req.url))
+  response.cookies.set('auth-token', session.access_token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 7 * 24 * 60 * 60,
   })
 
-  setSessionCookie(response, session.access_token, session.expires_in ?? 3600)
   return response
 }

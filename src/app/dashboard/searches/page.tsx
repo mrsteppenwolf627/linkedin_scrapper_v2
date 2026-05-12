@@ -83,7 +83,7 @@ export default function SearchesPage() {
     toast.success("✅ Mensajes generados correctamente");
     
     setTimeout(() => {
-      window.location.href = "/messages";
+      window.location.href = "/dashboard/messages";
     }, 2000);
   };
 
@@ -100,7 +100,7 @@ export default function SearchesPage() {
               Selecciona una búsqueda anterior y genera 3 mensajes personalizados para cada lead automáticamente
             </p>
           </div>
-          <Link href="/" className="text-xs font-bold border-2 border-[#1A1A1A] px-6 py-3 hover:bg-[#1A1A1A] hover:text-white transition-colors uppercase shadow-[4px_4px_0px_#1A1A1A] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none whitespace-nowrap">
+          <Link href="/dashboard" className="text-xs font-bold border-2 border-[#1A1A1A] px-6 py-3 hover:bg-[#1A1A1A] hover:text-white transition-colors uppercase shadow-[4px_4px_0px_#1A1A1A] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none whitespace-nowrap">
             &lt; VOLVER AL DASHBOARD
           </Link>
         </header>

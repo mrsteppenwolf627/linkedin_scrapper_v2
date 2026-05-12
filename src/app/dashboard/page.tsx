@@ -570,13 +570,13 @@ export default function Dashboard() {
               VER_RESULTADOS
             </button>
             <Link
-              href="/searches"
+              href="/dashboard/searches"
               className={`whitespace-nowrap md:whitespace-normal md:w-full text-left px-4 py-3 border-2 transition-all font-bold text-sm border-[#1A1A1A] hover:bg-[#D94F00] hover:text-white flex items-center gap-2`}
             >
               🚀 GENERAR MENSAJES
             </Link>
             <Link
-              href="/messages"
+              href="/dashboard/messages"
               className={`whitespace-nowrap md:whitespace-normal md:w-full text-left px-4 py-3 border-2 transition-all font-bold text-sm border-[#1A1A1A] hover:bg-[#D94F00] hover:text-white flex items-center gap-2`}
             >
               📧 MIS MENSAJES
