@@ -1,173 +1,174 @@
-# 🕵️‍♂️ LinkedIn Lead Scraper V2 — Message Generator Edition
+﻿# ðŸ•µï¸â€â™‚ï¸ LinkedIn Lead Scraper V2 â€” Message Generator Edition
 
-Sistema completo de prospección B2B: busca perfiles en LinkedIn, genera 3 mensajes personalizados por lead y centraliza todo en una tabla lista para copiar y enviar.
+Sistema completo de prospecciÃ³n B2B: busca perfiles en LinkedIn, genera 3 mensajes personalizados por lead y centraliza todo en una tabla lista para copiar y enviar.
 
 ---
 
-## 📋 Tabla de Contenidos
+## ðŸ“‹ Tabla de Contenidos
 
-1. [Visión General](#-visión-general)
+1. [VisiÃ³n General](#-visiÃ³n-general)
 2. [Features](#-features)
-3. [Stack Tecnológico](#-stack-tecnológico)
+3. [Stack TecnolÃ³gico](#-stack-tecnolÃ³gico)
 4. [Arquitectura](#-arquitectura)
-5. [Guía de Uso](#-guía-de-uso)
+5. [GuÃ­a de Uso](#-guÃ­a-de-uso)
 6. [API Reference](#-api-reference)
 7. [Costos](#-costos)
 8. [Roadmap](#-roadmap)
 
 ---
 
-## 📌 Visión General
+## ðŸ“Œ VisiÃ³n General
 
-Sistema completo de prospección B2B en tres pasos:
+Sistema completo de prospecciÃ³n B2B en tres pasos:
 
-1. **Busca** perfiles de LinkedIn por criterios (puesto, sector, ubicación) vía SearchApi.io
+1. **Busca** perfiles de LinkedIn por criterios (puesto, sector, ubicaciÃ³n) vÃ­a SearchApi.io
 2. **Genera** 3 mensajes personalizados por lead (secuencia de contacto) con OpenAI
-3. **Copia** cada mensaje desde la tabla centralizada y pégalo en LinkedIn DMs
+3. **Copia** cada mensaje desde la tabla centralizada y pÃ©galo en LinkedIn DMs
 
-Los mensajes NO se envían automáticamente (LinkedIn lo bloquea). El usuario copia y pega manualmente.
+Los mensajes NO se envÃ­an automÃ¡ticamente (LinkedIn lo bloquea). El usuario copia y pega manualmente.
 
 ---
 
-## ✨ Features
+## âœ¨ Features
 
-### Sprint 1–2: Message Generator
-- ✅ Generación de 3 mensajes por lead (Secuencia 1, 2, 3)
-- ✅ Personalización con propuesta de valor (hasta 1000 caracteres)
-- ✅ Prompt B2B profesional optimizado para cerrar conversaciones
-- ✅ Métricas, casos de éxito y features distribuidos en los 3 mensajes
+### Sprint 1â€“2: Message Generator
+- âœ… GeneraciÃ³n de 3 mensajes por lead (Secuencia 1, 2, 3)
+- âœ… PersonalizaciÃ³n con propuesta de valor (hasta 1000 caracteres)
+- âœ… Prompt B2B profesional optimizado para cerrar conversaciones
+- âœ… MÃ©tricas, casos de Ã©xito y features distribuidos en los 3 mensajes
 
-### Sprint 3–4: Batch Processing
-- ✅ Generar mensajes para 10–40 leads en paralelo (5 concurrent)
-- ✅ Barra de progreso real-time (SSE)
-- ✅ Notificación al completar
-- ✅ Redirect automático a /messages
+### Sprint 3â€“4: Batch Processing
+- âœ… Generar mensajes para 10â€“40 leads en paralelo (5 concurrent)
+- âœ… Barra de progreso real-time (SSE)
+- âœ… NotificaciÃ³n al completar
+- âœ… Redirect automÃ¡tico a /messages
 
 ### Sprint 5: Messages Hub
-- ✅ Tabla centralizada de todos los mensajes
-- ✅ Agrupados por búsqueda → lead
-- ✅ Copy buttons con feedback visual (✓ Copiado)
-- ✅ Links directos a perfiles de LinkedIn
-- ✅ Responsive (desktop tabla + mobile cards)
+- âœ… Tabla centralizada de todos los mensajes
+- âœ… Agrupados por bÃºsqueda â†’ lead
+- âœ… Copy buttons con feedback visual (âœ“ Copiado)
+- âœ… Links directos a perfiles de LinkedIn
+- âœ… Responsive (desktop tabla + mobile cards)
 
 ### V3: Authentication System
-- ✅ Login page with dark minimal design, Entrar/Registro tabs, email/password inputs, admin approval workflow
-- ✅ User Registration (status: pending_approval)
-- ✅ Secure Signin (status: approved check)
-- ✅ Middleware route protection (`/app/*`, `/admin/*`)
+- âœ… Login page with dark minimal design, Entrar/Registro tabs, email/password inputs, admin approval workflow
+- âœ… User Registration (status: pending_approval)
+- âœ… Secure Signin (status: approved check)
+- âœ… Middleware route protection (`/app/*`, `/admin/*`)
+- ✅ Admin approvals dashboard (`/admin/approvals`) con approve/reject y refetch automático
 
 ---
 
-## 🛠 Stack Tecnológico
+## ðŸ›  Stack TecnolÃ³gico
 
-| Capa | Tecnología |
+| Capa | TecnologÃ­a |
 |------|-----------|
-| Frontend | Next.js 14 (App Router), React, Tailwind CSS, Shadcn/UI |
+| Frontend | Next.js 15 (App Router), React, Tailwind CSS, Shadcn/UI |
 | Backend | Next.js API Routes |
 | Database | Supabase (PostgreSQL) |
 | Search | SearchApi.io (Google Search proxy) |
 | LLM | OpenAI `gpt-4o-mini` |
 | Deploy | Vercel |
-| Auth | API Keys (env vars) |
+| Auth | Supabase Auth + custom users table + HttpOnly JWT cookie |
 
 ---
 
-## 🏗 Arquitectura
+## ðŸ— Arquitectura
 
 ### Flujo Principal
 
 ```
-Usuario crea búsqueda en /
-        ↓
+Usuario crea bÃºsqueda en /
+        â†“
 Resultados guardados en Supabase (searches + contacts)
-        ↓
+        â†“
 Usuario va a /searches
-        ↓
-Selecciona búsqueda + escribe propuesta de valor (≤1000 chars)
-        ↓
+        â†“
+Selecciona bÃºsqueda + escribe propuesta de valor (â‰¤1000 chars)
+        â†“
 Click [GENERAR MENSAJES EN LOTE]
-        ↓
+        â†“
 Backend:
-  ├── Extrae todos los contacts de esa búsqueda
-  ├── Para cada contact → OpenAI genera 3 mensajes de secuencia
-  ├── Guarda en leads + message_drafts (sequence 1, 2, 3)
-  └── Devuelve progreso vía polling de /batch/status
-        ↓
+  â”œâ”€â”€ Extrae todos los contacts de esa bÃºsqueda
+  â”œâ”€â”€ Para cada contact â†’ OpenAI genera 3 mensajes de secuencia
+  â”œâ”€â”€ Guarda en leads + message_drafts (sequence 1, 2, 3)
+  â””â”€â”€ Devuelve progreso vÃ­a polling de /batch/status
+        â†“
 Frontend:
-  ├── Muestra barra de progreso (processed / total)
-  └── Cuando status=complete → redirect a /messages
-        ↓
+  â”œâ”€â”€ Muestra barra de progreso (processed / total)
+  â””â”€â”€ Cuando status=complete â†’ redirect a /messages
+        â†“
 En /messages:
-  ├── GET /api/drafts → array plano ordenado por search → lead → sequence
-  ├── Tabla: NOMBRE | LINKEDIN | MSG 1 | MSG 2 | MSG 3
-  └── Usuario copia mensaje → pega en LinkedIn DM
+  â”œâ”€â”€ GET /api/drafts â†’ array plano ordenado por search â†’ lead â†’ sequence
+  â”œâ”€â”€ Tabla: NOMBRE | LINKEDIN | MSG 1 | MSG 2 | MSG 3
+  â””â”€â”€ Usuario copia mensaje â†’ pega en LinkedIn DM
 ```
 
 ### Estructura de Base de Datos
 
 ```sql
-searches        -- Campañas de búsqueda (filtros, query Google, status)
-contacts        -- Perfiles encontrados por búsqueda (linkedin_url, job_title, etc.)
-leads           -- Perfiles procesados para generación de mensajes
+searches        -- CampaÃ±as de bÃºsqueda (filtros, query Google, status)
+contacts        -- Perfiles encontrados por bÃºsqueda (linkedin_url, job_title, etc.)
+leads           -- Perfiles procesados para generaciÃ³n de mensajes
 message_drafts  -- Mensajes generados (sequence INT 1/2/3, draft_text, confidence)
 ```
 
 **Relaciones:**
 ```
-searches ──< contacts
-searches ──< leads ──< message_drafts
+searches â”€â”€< contacts
+searches â”€â”€< leads â”€â”€< message_drafts
 ```
 
 ### Estructura de Ficheros
 
 ```
 src/
-├── app/
-│   ├── page.tsx                          # Dashboard principal (búsqueda + vista de contactos)
-│   ├── searches/page.tsx                 # Selector de búsqueda + generación en lote
-│   ├── messages/page.tsx                 # Tabla de mensajes generados
-│   └── api/
-│       ├── search/route.ts               # POST — ejecuta búsqueda en LinkedIn
-│       ├── searches/route.ts             # GET — lista búsquedas
-│       ├── contacts/route.ts             # GET — contactos por búsqueda
-│       ├── drafts/route.ts               # GET — todos los mensajes generados
-│       ├── generate-messages/
-│       │   ├── route.ts                  # POST — genera mensajes para un lead
-│       │   └── batch/
-│       │       ├── route.ts              # POST — genera mensajes para toda una búsqueda
-│       │       └── status/route.ts       # GET — progreso del batch
-│       └── status/route.ts               # GET — estado de una búsqueda
-├── lib/
-│   ├── claude_prompts.ts                 # Prompts OpenAI (parsing, validación, generación)
-│   ├── message_store.ts                  # Helpers DB: saveLeadWithDrafts
-│   ├── supabase.ts                       # Cliente Supabase (server-side)
-│   └── utils.ts                          # Utilidades genéricas
-└── types/
-    └── index.ts                          # Tipos compartidos (SearchFilters, MessageDraft, etc.)
+â”œâ”€â”€ app/
+â”‚   â”œâ”€â”€ page.tsx                          # Dashboard principal (bÃºsqueda + vista de contactos)
+â”‚   â”œâ”€â”€ searches/page.tsx                 # Selector de bÃºsqueda + generaciÃ³n en lote
+â”‚   â”œâ”€â”€ messages/page.tsx                 # Tabla de mensajes generados
+â”‚   â””â”€â”€ api/
+â”‚       â”œâ”€â”€ search/route.ts               # POST â€” ejecuta bÃºsqueda en LinkedIn
+â”‚       â”œâ”€â”€ searches/route.ts             # GET â€” lista bÃºsquedas
+â”‚       â”œâ”€â”€ contacts/route.ts             # GET â€” contactos por bÃºsqueda
+â”‚       â”œâ”€â”€ drafts/route.ts               # GET â€” todos los mensajes generados
+â”‚       â”œâ”€â”€ generate-messages/
+â”‚       â”‚   â”œâ”€â”€ route.ts                  # POST â€” genera mensajes para un lead
+â”‚       â”‚   â””â”€â”€ batch/
+â”‚       â”‚       â”œâ”€â”€ route.ts              # POST â€” genera mensajes para toda una bÃºsqueda
+â”‚       â”‚       â””â”€â”€ status/route.ts       # GET â€” progreso del batch
+â”‚       â””â”€â”€ status/route.ts               # GET â€” estado de una bÃºsqueda
+â”œâ”€â”€ lib/
+â”‚   â”œâ”€â”€ claude_prompts.ts                 # Prompts OpenAI (parsing, validaciÃ³n, generaciÃ³n)
+â”‚   â”œâ”€â”€ message_store.ts                  # Helpers DB: saveLeadWithDrafts
+â”‚   â”œâ”€â”€ supabase.ts                       # Cliente Supabase (server-side)
+â”‚   â””â”€â”€ utils.ts                          # Utilidades genÃ©ricas
+â””â”€â”€ types/
+    â””â”€â”€ index.ts                          # Tipos compartidos (SearchFilters, MessageDraft, etc.)
 ```
 
 ---
 
-## 📖 Guía de Uso
+## ðŸ“– GuÃ­a de Uso
 
-### 1. Hacer una búsqueda
+### 1. Hacer una bÃºsqueda
 
 1. Ir a `/` (dashboard)
 2. Click **[NUEVO ESCANEO]**
-3. Rellenar los 4 campos: Puesto, Años de experiencia, Sector, Localización
-4. Esperar resultados (30–60 s)
-5. Los contactos se guardan automáticamente en Supabase
+3. Rellenar los 4 campos: Puesto, AÃ±os de experiencia, Sector, LocalizaciÃ³n
+4. Esperar resultados (30â€“60 s)
+5. Los contactos se guardan automÃ¡ticamente en Supabase
 
 ### 2. Generar mensajes en lote
 
 1. Ir a `/searches`
-2. Seleccionar una búsqueda anterior
-3. Escribir la propuesta de valor (**máx 1000 caracteres**)
-   - Incluye: qué haces, beneficios, métricas, casos de éxito, precio
-   - Cuanto más específica, más personalizados serán los mensajes
+2. Seleccionar una bÃºsqueda anterior
+3. Escribir la propuesta de valor (**mÃ¡x 1000 caracteres**)
+   - Incluye: quÃ© haces, beneficios, mÃ©tricas, casos de Ã©xito, precio
+   - Cuanto mÃ¡s especÃ­fica, mÃ¡s personalizados serÃ¡n los mensajes
 4. Click **[GENERAR MENSAJES EN LOTE (X leads)]**
 5. Esperar la barra de progreso
-6. Al completar → redirect automático a `/messages`
+6. Al completar â†’ redirect automÃ¡tico a `/messages`
 
 ### 3. Ver y copiar mensajes
 
@@ -175,28 +176,28 @@ La tabla en `/messages` muestra:
 
 | NOMBRE | LINKEDIN | MENSAJE 1 | MENSAJE 2 | MENSAJE 3 |
 |--------|----------|-----------|-----------|-----------|
-| Juan García | 🔗 | Primer contacto `[COPIAR]` | Follow-up día 3 `[COPIAR]` | Follow-up día 7 `[COPIAR]` |
+| Juan GarcÃ­a | ðŸ”— | Primer contacto `[COPIAR]` | Follow-up dÃ­a 3 `[COPIAR]` | Follow-up dÃ­a 7 `[COPIAR]` |
 
-- **MSG 1** — Primer contacto: hook + relevancia + CTA suave
-- **MSG 2** — Follow-up día 3: ángulo diferente + social proof + CTA directa
-- **MSG 3** — Follow-up día 7: urgencia implícita + cierre educado
+- **MSG 1** â€” Primer contacto: hook + relevancia + CTA suave
+- **MSG 2** â€” Follow-up dÃ­a 3: Ã¡ngulo diferente + social proof + CTA directa
+- **MSG 3** â€” Follow-up dÃ­a 7: urgencia implÃ­cita + cierre educado
 
-Click **[COPIAR]** → feedback visual ✓ → pegar en LinkedIn DM
+Click **[COPIAR]** â†’ feedback visual âœ“ â†’ pegar en LinkedIn DM
 
 ---
 
-## 🔌 API Reference
+## ðŸ”Œ API Reference
 
-Todas las rutas requieren el header `x-api-key: <SEARCH_API_KEY>`.
+Las rutas de scraping/message generation requieren `x-api-key: <SEARCH_API_KEY>`. Las rutas de auth/admin usan sesión JWT en cookie HttpOnly.
 
 ### `POST /api/search`
-Ejecuta una búsqueda de perfiles en LinkedIn.
+Ejecuta una bÃºsqueda de perfiles en LinkedIn.
 
 **Body:**
 ```json
 {
   "jobTitle": "Director de Ventas",
-  "experience": "5+ años",
+  "experience": "5+ aÃ±os",
   "industry": "SaaS",
   "location": "Barcelona"
 }
@@ -207,27 +208,27 @@ Ejecuta una búsqueda de perfiles en LinkedIn.
 ---
 
 ### `GET /api/searches`
-Lista todas las búsquedas.
+Lista todas las bÃºsquedas.
 
 **Response:** `{ searches: SearchRecord[], total }`
 
 ---
 
 ### `GET /api/contacts?search_id=<uuid>`
-Obtiene los contactos de una búsqueda.
+Obtiene los contactos de una bÃºsqueda.
 
 **Response:** `{ contacts: ContactRecord[], total, page, page_size }`
 
 ---
 
 ### `POST /api/generate-messages/batch`
-Genera 3 mensajes para todos los leads de una búsqueda (max 5 en paralelo).
+Genera 3 mensajes para todos los leads de una bÃºsqueda (max 5 en paralelo).
 
 **Body:**
 ```json
 {
   "search_id": "uuid",
-  "your_product": "Descripción de tu producto/servicio (≤1000 chars)"
+  "your_product": "DescripciÃ³n de tu producto/servicio (â‰¤1000 chars)"
 }
 ```
 
@@ -262,15 +263,15 @@ Progreso del batch en tiempo real (polling).
 ---
 
 ### `GET /api/drafts?search_id=<uuid>`
-Obtiene todos los mensajes generados. `search_id` es opcional; sin él devuelve todos.
+Obtiene todos los mensajes generados. `search_id` es opcional; sin Ã©l devuelve todos.
 
-**Response:** Array plano, ordenado por `search_id → lead_id → sequence`:
+**Response:** Array plano, ordenado por `search_id â†’ lead_id â†’ sequence`:
 ```json
 [
   {
     "id": "uuid",
     "lead_id": "uuid",
-    "lead_name": "Juan García",
+    "lead_name": "Juan GarcÃ­a",
     "lead_linkedin_url": "https://linkedin.com/in/juan-garcia",
     "lead_company": "TechCorp",
     "search_name": "SEARCH-FOUNDER-BARCELONA",
@@ -283,55 +284,55 @@ Obtiene todos los mensajes generados. `search_id` es opcional; sin él devuelve 
 
 ---
 
-## 💰 Costos
+## ðŸ’° Costos
 
-### Por operación
+### Por operaciÃ³n
 
 | Servicio | Coste | Notas |
 |----------|-------|-------|
-| SearchApi.io | ~$0.005–0.01 / búsqueda | Free tier: 100 búsquedas/mes |
+| SearchApi.io | ~$0.005â€“0.01 / bÃºsqueda | Free tier: 100 bÃºsquedas/mes |
 | OpenAI gpt-4o-mini | ~$0.0007 / lead (3 msgs) | Input $0.15/M + Output $0.60/M tokens |
-| Supabase | $0 | Free tier: 500 MB, 2 usuarios simultáneos |
+| Supabase | $0 | Free tier: 500 MB, 2 usuarios simultÃ¡neos |
 
 ### Ejemplo: batch de 100 leads
 
 | Concepto | Coste |
 |----------|-------|
-| SearchApi (1 búsqueda) | $0.01 |
-| OpenAI (100 leads × 3 msgs) | ~$0.07 |
+| SearchApi (1 bÃºsqueda) | $0.01 |
+| OpenAI (100 leads Ã— 3 msgs) | ~$0.07 |
 | **Total** | **~$0.08** |
 
 ### Pricing recomendado para clientes
 
 | Plan | Precio | Incluye |
 |------|--------|---------|
-| Free | $0 | 10 búsquedas/mes, máx 5 leads |
-| Pro | $29/mes | 100 búsquedas/mes, leads ilimitados |
+| Free | $0 | 10 bÃºsquedas/mes, mÃ¡x 5 leads |
+| Pro | $29/mes | 100 bÃºsquedas/mes, leads ilimitados |
 | Enterprise | $99/mes | Ilimitado + acceso API |
 
 ---
 
-## 🗺 Roadmap
+## ðŸ—º Roadmap
 
-### Sprint 6 — Follow-ups automáticos
-- [ ] Programar envíos automáticos (día 3, 7, 14)
+### Sprint 6 â€” Follow-ups automÃ¡ticos
+- [ ] Programar envÃ­os automÃ¡ticos (dÃ­a 3, 7, 14)
 - [ ] Tracking de respuestas
 
-### Sprint 7 — CRM Integration
+### Sprint 7 â€” CRM Integration
 - [ ] Exportar a HubSpot / Pipedrive
 - [ ] Webhook para auto-sync
 
-### Sprint 8 — Analytics
-- [ ] Dashboard de métricas (tasa de respuesta, conversión)
+### Sprint 8 â€” Analytics
+- [ ] Dashboard de mÃ©tricas (tasa de respuesta, conversiÃ³n)
 - [ ] A/B testing de mensajes
 
-### Sprint 9 — Email Hunter
-- [ ] Integración Hunter.io / RocketReach
-- [ ] Emails + teléfonos verificados
+### Sprint 9 â€” Email Hunter
+- [ ] IntegraciÃ³n Hunter.io / RocketReach
+- [ ] Emails + telÃ©fonos verificados
 
 ---
 
-## 🚀 Deploy
+## ðŸš€ Deploy
 
 ### Local
 
@@ -350,7 +351,7 @@ vercel deploy
 ### Variables de entorno requeridas
 
 ```bash
-# Búsqueda
+# BÃºsqueda
 SEARCHAPI_IO_KEY=
 
 # IA
@@ -370,12 +371,13 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 ---
 
-## 📝 Notas
+## ðŸ“ Notas
 
-- Los mensajes **no se envían automáticamente** (LinkedIn bloquea la automatización). El usuario copia y pega en los DMs manualmente.
-- Solo se almacenan perfiles **públicos** de LinkedIn, compatible con GDPR.
+- Los mensajes **no se envÃ­an automÃ¡ticamente** (LinkedIn bloquea la automatizaciÃ³n). El usuario copia y pega en los DMs manualmente.
+- Solo se almacenan perfiles **pÃºblicos** de LinkedIn, compatible con GDPR.
 - El sistema no guarda conversaciones ni respuestas.
 
 ---
 
-*Desarrollado con filosofía Wabi-Sabi: imperfección, artesanía, eficiencia.*
+*Desarrollado con filosofÃ­a Wabi-Sabi: imperfecciÃ³n, artesanÃ­a, eficiencia.*
+

@@ -1,41 +1,37 @@
-# CONTEXT.md - LinkedIn Lead Scraper: Message Generator + User System
+﻿CONTEXT.md - LinkedIn Scraper: Message Generator + User System
+Project Overview
+Goal: Transform LinkedIn profile searches into AI-generated personalized outreach messages. Protected by user authentication with admin approval.
+Stack: Next.js 15 + OpenAI API (gpt-4o-mini) + Supabase PostgreSQL + TypeScript + Tailwind CSS
+Philosophy: Zero friction for sales reps. Find â†’ Generate â†’ Send. Secured by admin approval gate.
 
-## Project Overview
-**Goal**: Transform LinkedIn profile searches into AI-generated personalized outreach messages. Protected by user authentication with admin approval.
-**Stack**: Next.js 14 + OpenAI API (gpt-4o-mini) + Supabase PostgreSQL + Zapier  
-**Philosophy**: Zero friction for sales reps. Find → Generate → Send. Secured by admin approval gate.
+Roles
 
----
+Claude Code: Backend (API routes, OpenAI prompts, DB schemas, auth, business logic, middleware)
+Gemini CLI: Frontend (React components, UI/UX, form handling, landing page, login/admin dashboard)
+Codex: Testing (e2e auth flow, integration tests, security audit)
 
-## Roles
-- **Claude Code**: Backend (API routes, OpenAI prompts, DB schemas, auth, business logic)
-- **Gemini CLI**: Frontend (React components, UI/UX, form handling, draft display, login/admin dashboard)
-- **Codex**: Testing (e2e auth flow, integration tests)
 
----
-
-## Architecture
-```
-[NEW] User Registration → Pending → Admin Approval → Access
-
+Architecture
+Landing Page (/) â†’ Login (/login) â†’ Auth System â†’ Dashboard (/app/*)
+                                         â†“
+                                   Admin Approval (status='pending' â†’ 'approved')
+                                         â†“
+                                   Access to Message Generator
+                                   
+Message Generation Flow:
 LinkedIn Profile (from existing search)
-    ↓
+    â†“
 API POST /api/generate-messages (protected by auth)
-    ↓
+    â†“
 OpenAI gpt-4o-mini (3 drafts: Direct, Consultative, Value-First)
-    ↓
+    â†“
 Supabase (store lead + generated drafts)
-    ↓
-Frontend displays drafts → User copies to LinkedIn
-```
+    â†“
+Frontend displays drafts â†’ User copies to LinkedIn
 
----
-
-## Data Model
-
-### Table: `users` (NEW - V3)
-```sql
-id (uuid, pk)
+Data Model
+Table: users (V3 - Auth)
+sqlid (uuid, pk)
 email (text, unique)
 password_hash (text)
 role (text: 'user' | 'admin', default='user')
@@ -43,21 +39,15 @@ status (text: 'pending_approval' | 'approved' | 'rejected', default='pending_app
 created_at (timestamp)
 approved_at (timestamp, nullable)
 approved_by (uuid, fk to users(id), nullable)
-```
-
-### Table: `user_approvals` (NEW - V3, log table)
-```sql
-id (uuid, pk)
+Table: user_approvals (V3 - Log)
+sqlid (uuid, pk)
 user_id (uuid, fk)
 approved_by (uuid, fk)
 status (text: 'approved' | 'rejected')
 reason (text, nullable)
 created_at (timestamp)
-```
-
-### Table: `leads` (V1-V2)
-```sql
-id (uuid, pk)
+Table: leads (V1-V2 - Message Generator)
+sqlid (uuid, pk)
 search_id (uuid, fk)
 name (text)
 title (text)
@@ -68,11 +58,8 @@ linkedin_url (text)
 profile_snippet (text)
 score (numeric, optional)
 created_at (timestamp)
-```
-
-### Table: `message_drafts` (V1-V2)
-```sql
-id (uuid, pk)
+Table: message_drafts (V1-V2 - Message Generator)
+sqlid (uuid, pk)
 lead_id (uuid, fk)
 search_id (uuid, fk)
 batch_id (uuid, fk to message_batches, nullable)
@@ -81,222 +68,259 @@ text (text)
 sounds_human (numeric 0-1, optional)
 confidence (numeric 0-1)
 created_at (timestamp)
-```
-
-### Table: `message_batches` (V2 onwards)
-```sql
-id (uuid, pk)
+Table: message_batches (V2 onwards - Message Generator)
+sqlid (uuid, pk)
 search_id (uuid, fk)
 batch_name (text)
 message_count (int)
 status (text: 'generated' | 'deleted', default='generated')
 created_at (timestamp)
-```
 
----
+Current Status
+V1-V2: Message Generator âœ… COMPLETE
 
-## Current Status
+ Architecture defined
+ Data model designed
+ OpenAI prompt finalized (humanization v2)
+ API endpoint /api/generate-messages + batch route
+ Supabase schema (leads, message_drafts, message_batches)
+ Frontend form component (SearchSelector)
+ Draft display component (results table)
+ Batch Generator UI (/searches)
+ Messages Management UI (/messages) with batch selection
+ Legacy messages recovery (heredados)
+ Batch operations (create, delete, select, regenerate)
 
-### V1-V2: Message Generator ✅ COMPLETE
-- [x] Architecture defined
-- [x] Data model designed
-- [x] OpenAI prompt finalized (humanization v2)
-- [x] API endpoint `/api/generate-messages` + batch route
-- [x] Supabase schema (leads, message_drafts, message_batches)
-- [x] Frontend form component (SearchSelector)
-- [x] Draft display component (results table)
-- [x] Batch Generator UI (/searches)
-- [x] Messages Management UI (/messages) with batch selection
-- [x] Legacy messages recovery (heredados)
-- [x] Batch operations (create, delete, select, regenerate)
+V3: Auth System âœ… COMPLETE
 
-### V3: Landing Page ✅ COMPLETE
-- [x] `/` → Landing page (Navbar, Hero, Features, Testimonial, CTA, Footer)
-- [x] Dashboard moved to `/app/page.tsx` (protected by middleware)
-- [x] Components: `src/components/landing/` (6 files)
-- Design: wabi-sabi terminal aesthetic, same palette as dashboard
-- Routing: `/` public, `/app/*` protected, `/login` auth gate
+ Database: users + user_approvals tables (Supabase SQL)
+ Endpoints:
 
-### V3: Sistema de Usuarios + Auth 🔄 **CURRENT PHASE**
-- [ ] Create `users` + `user_approvals` tables in Supabase  ← run migrations/20260512_users_auth.sql
-- [x] POST `/api/auth/signup` — register new user (pending approval)
-- [x] POST `/api/auth/signin` — login (check status = 'approved')
-- [x] POST `/api/auth/logout` — logout
-- [x] GET `/api/admin/pending-users` — list pending approvals
-- [x] POST `/api/admin/approve-user/:id` — approve user
-- [x] POST `/api/admin/reject-user/:id` — reject user
-- [x] Login page UI (`/login`)
-- [ ] Admin dashboard UI (`/admin/approvals`)
-- [x] Middleware to protect routes (`/app/*`, `/admin/*`)
-- [ ] E2E tests (signup → pending → approve → signin → access)
+POST /api/auth/signup (register â†’ status='pending_approval')
+POST /api/auth/signin (login, check status='approved')
+POST /api/auth/logout (logout, clear session)
+GET /api/admin/pending-users (list pending + rejected users)
+POST /api/admin/approve-user/:id (approve user via RPC)
+POST /api/admin/reject-user/:id (reject user via RPC)
 
----
 
-## Decisiones Arquitectónicas
+ Middleware (middleware.ts - Edge Runtime):
 
-### 1. Auth Strategy: Supabase Auth
-- **Decision**: Use Supabase Auth (built-in) + custom `users` table for roles/status
-- **Why**: Already using Supabase, JWT tokens, password hashing automatic, HttpOnly cookies
-- **Alternative rejected**: NextAuth (overkill), custom (insecure)
+Protege /app/* â†’ requiere auth + status='approved'
+Protege /admin/* â†’ requiere auth + role='admin' + status='approved'
+PÃºblica: /, /login, /api/auth/*
 
-### 2. Admin Approval Flow
-- **Decision**: `status` field ('pending_approval' | 'approved' | 'rejected')
-- **Why**: Simple, explicit, audit trail via `user_approvals` log table
-- **Alternative**: Email confirmation (less control, automatic)
 
-### 3. Initial Admin User
-- **Decision**: Hardcoded admin email in env var (ADMIN_EMAIL)
-- **Why**: Simple for MVP, can scale to UI later
-- **Alternative**: Manual SQL insert (less safe)
+ Security:
 
-### 4. Role System
-- **Decision**: Simple `role` field ('user' | 'admin')
-- **Why**: Flexible for future RBAC, easy to implement
-- **Alternative**: Permissions table (overkill for MVP)
+Fixed privilege escalation (no auto-approve by email)
+Enforced: todos los signups â†’ status='pending_approval'
+HttpOnly cookies para JWT tokens
+Password hashing via Supabase
+RPC transaccional para approve/reject
 
----
 
-## Tareas Fase V3 (Priorizado)
 
-| # | Tarea | Modelo | Prioridad | Estado |
-|---|---|---|---|---|
-| 1 | Crear tablas `users` + `user_approvals` en Supabase SQL | Claude | 🔴 P0 | ⏳ run SQL |
-| 2 | POST `/api/auth/signup` (register → pending) | Claude | 🔴 P0 | ✅ |
-| 3 | POST `/api/auth/signin` (login, check approved) | Claude | 🔴 P0 | ✅ |
-| 4 | GET `/api/admin/pending-users` (list pending) | Claude | 🔴 P0 | ✅ |
-| 5 | POST `/api/admin/approve-user/:id` (approve) | Claude | 🔴 P0 | ✅ |
-| 6 | POST `/api/auth/logout` (logout) | Claude | 🟠 P1 | ✅ |
-| 7 | Login page UI (`/login`) | Gemini | 🔴 P0 | ✅ Completada |
-|   | *Login page rediseñada: dark minimalista, hamburguesa layout, botones y inputs sin border-radius* | | | |
-| 8 | Admin dashboard (`/admin/approvals`) UI + logic | Gemini | 🔴 P0 | ⏳ Pendiente |
-| 9 | Middleware: protect `/app/*` + `/admin/*` routes | Claude | 🔴 P0 | ✅ |
-| 10 | E2E tests: signup → pending → approve → signin | Codex | 🟠 P1 | ⏳ |
+V3: Login Page UI âœ… COMPLETE
 
----
+ Design: Dark minimal, hamburguesa layout (vertical stack)
+ Components:
 
-## Flujo de Usuario (V3)
+src/app/login/page.tsx (main page)
+src/components/auth/SigninForm.tsx (signin logic)
+src/components/auth/SignupForm.tsx (signup logic)
 
-### Nuevo Usuario
-```
-1. Va a /login → ve "No tengo cuenta" link
-2. Click → va a /signup
-3. Llena: email + password (8+ chars)
-4. Submit → POST /api/auth/signup
-   ↓ BD: INSERT users (status='pending_approval')
-   ↓ Response: "Espera la aprobación del admin"
-5. Vuelve a login, intenta signin
-   ↓ POST /api/auth/signin
-   ↓ Query: users.status != 'approved'
-   ↓ Response: "Tu cuenta aún no ha sido aprobada"
-```
 
-### Admin (Tú)
-```
-1. Va a /admin/approvals
-   ↓ GET /api/admin/pending-users
-   ↓ Ve lista de pending registrations
-2. Ve: email, fecha signup, [Aprobar] [Rechazar]
-3. Click Aprobar
-   ↓ POST /api/admin/approve-user/:id
-   ↓ BD: UPDATE users SET status='approved', approved_at=NOW()
-   ↓ BD: INSERT user_approvals (status='approved')
-   ↓ Response: "Usuario aprobado"
-4. Usuario ahora puede signin → acceso a `/app/*`
-```
+ Features:
 
----
+Tabs: "Entrar" | "Registro" (botones verticales, border sharp)
+Inputs: Email + Password (sharp, legible placeholders)
+Button: "Iniciar SesiÃ³n" (blanco/negro, sharp)
+SearchParams: ?reason=pending, ?reason=rejected (status messages)
+ValidaciÃ³n: Email format + password length (8+ chars)
+UI responsivo, dark mode compatible
 
-## Workflow Operativo (Tu Metodología)
 
-### Orden recomendado:
-1. **Claude** → Tablas SQL + endpoints auth
-2. **Gemini** → Login page + Admin dashboard UI
-3. **Claude** → Middleware + protección rutas
-4. **Codex** → Tests e2e
+ Commit: "Fix: redesign login page (design system compliant)"
 
-### Si algo falla:
-- **Timeout** → escala modelo (Flash→Pro)
-- **Simple error** → fix prompt, reintenta
-- **Complejo** → cambia modelo, pasa contexto
+V3: Landing Page âœ… COMPLETE
 
-### Commits:
-```bash
-git commit -m "Feat: [desc] (via Claude/Gemini/Codex)"
-```
+ 6 Server Components (sin "use client"):
 
----
+Navbar.tsx (fixed top, logo âš¡ + nav links + CTA "Empezar")
+HeroSection.tsx (terminal preview animado, stats, 2 CTAs)
+FeaturesSection.tsx (grid 3 cols: BÃºsqueda / Mensajes / CampaÃ±as)
+TestimonialSection.tsx (fondo negro, blockquote, social proof chips)
+CTASection.tsx (fondo naranja #D94F00, "Registrarse gratis")
+Footer.tsx (logo + nav links + copyright)
 
-## Stack Técnico (V3 additions)
 
-- **Auth**: Supabase Auth + custom `users` table
-- **Password**: bcrypt hashing (Supabase automatic)
-- **Sessions**: JWT tokens, HttpOnly cookies
-- **Frontend**: Next.js 14, TypeScript, React
-- **API**: `/api/auth/*`, `/api/admin/*`
-- **Middleware**: `middleware.ts` (route protection)
-- **Testing**: Jest + Playwright (e2e)
+ Features:
 
----
+EstÃ©tica idÃ©ntica al dashboard (same palette + bordes sharp)
+Colores: #F0EDE4 (bg), #1A1A1A (texto), #D94F00 (accent), #4A7C59 (secondary)
+Bordes: Sharp (border-radius: 0)
+Server-side rendering (sin estado, sin hydration overhead)
+Responsivo: Mobile first, desktop optimizado
 
-## Restricciones Críticas (V3)
 
-- Admin approval **MUST** be mandatory (no auto-signup)
-- Password: mínimo 8 caracteres
-- Sessions: HttpOnly cookies (no localStorage)
-- Admin user: Tu email hardcoded en .env.local
-- All auth routes: POST (no GET)
-- All protected routes: check JWT + user.status = 'approved'
+ Routing:
 
----
+/ â†’ Landing page
+/login â†’ Auth page
+/app/* â†’ Dashboard (protegido)
+/admin/* â†’ Admin panel (protegido)
 
-## Checklist Antes de Empezar V3
 
-- [ ] Este CONTEXT.md en carpeta del proyecto
-- [ ] Claude Code listo
-- [ ] Gemini CLI listo
-- [ ] Codex listo
-- [ ] Supabase SQL Editor abierto
-- [ ] Terminal lista (git commits)
-- [ ] .env.local con ADMIN_EMAIL configurado
+ Commit: abe4ac2 â€” "Feat: create landing page (design-consistent)"
 
----
+V3: Admin Dashboard ✅ COMPLETE (TAREA 11)
 
-## Assumptions
+ Admin Approvals page (/admin/approvals)
 
-- User brings their own OpenAI API key (BYOA model)
-- LinkedIn profile data already extracted
-- No real-time LinkedIn integration yet (copy/paste only)
-- Spanish language priority
-- Single admin initially (you)
-- Email domain verification not required (MVP)
+Tabla con: Email | Status | Requested Date | Actions
+Botones: Aprobar | Rechazar (con refetch automático)
+API calls: GET /api/admin/pending-users, POST approve/reject
+Estética: Idéntica al dashboard (sharps, OKLCH variables)
+Protección: Solo role='admin' + status='approved'
 
----
+ Commit: b09b808 — "Feat: admin approvals dashboard (via Codex)"
+V3: E2E Tests â³ PENDIENTE (TAREA 12)
 
-## Notes
+ Signup â†’ Pending approval â†’ Admin approve â†’ Signin â†’ Access
+Asignada a: Codex
 
-- Keep prompts < 2000 tokens (cost efficiency)
-- Confidence scoring helps users prioritize drafts
-- Admin dashboard should show: email, signup date, action buttons
-- After V3 complete → ready for Vercel deployment
-- Consider CORS for future webhook integrations
 
----
+ðŸ” Endpoints Implementados
+Auth
+POST /api/auth/signup
+  Body: { email, password }
+  Response: { success, error?, reason? }
+  
+POST /api/auth/signin
+  Body: { email, password }
+  Response: { success, token?, error? }
+  
+POST /api/auth/logout
+  Response: { success }
+Admin
+GET /api/admin/pending-users
+  Response: User[]
 
-## Próximos Pasos
+POST /api/admin/approve-user/[id]
+  Body: {}
+  Response: { success, message }
 
-**INMEDIATO (Hoy):**
-1. Copia este CONTEXT.md a tu carpeta del proyecto
-2. Lee con calma las tareas V3
-3. Abre Supabase SQL Editor
-4. Ejecuta script de creación de tablas
-5. Comienza con TAREA 1 en Claude Code
+POST /api/admin/reject-user/[id]
+  Body: { reason?: string }
+  Response: { success, message }
+Message Generator (V1-V2)
+GET /api/searches
+GET /api/contacts/[id]
+POST /api/generate-messages
+GET /api/batches
+GET /api/drafts?legacy=true
 
-**DESPUÉS (Cuando V3 esté 100% listo):**
-1. Deploy a Vercel
-2. Webhooks de Slack/LinkedIn
-3. Refinements basados en user feedback
+ðŸ“ File Structure
+src/app/
+â”œâ”€â”€ page.tsx                           # Landing page (âœ… COMPLETE)
+â”œâ”€â”€ login/
+â”‚   â””â”€â”€ page.tsx                       # Auth page - dark minimal (âœ… COMPLETE)
+â”œâ”€â”€ app/
+â”‚   â”œâ”€â”€ page.tsx                       # Dashboard (protegido)
+â”‚   â”œâ”€â”€ searches/page.tsx
+â”‚   â”œâ”€â”€ messages/page.tsx
+â”‚   â””â”€â”€ batches/page.tsx
+â”œâ”€â”€ admin/
+â”‚   â”œâ”€â”€ layout.tsx                     # ProtecciÃ³n admin
+â”‚   â””â”€â”€ approvals/
+â”‚       â””â”€â”€ page.tsx                   # (✅ COMPLETE)
+â”œâ”€â”€ api/
+â”‚   â”œâ”€â”€ auth/
+â”‚   â”‚   â”œâ”€â”€ signup/route.ts            # (âœ… COMPLETE)
+â”‚   â”‚   â”œâ”€â”€ signin/route.ts            # (âœ… COMPLETE)
+â”‚   â”‚   â””â”€â”€ logout/route.ts            # (âœ… COMPLETE)
+â”‚   â”œâ”€â”€ admin/
+â”‚   â”‚   â”œâ”€â”€ pending-users/route.ts     # (âœ… COMPLETE)
+â”‚   â”‚   â”œâ”€â”€ approve-user/[id]/route.ts # (âœ… COMPLETE)
+â”‚   â”‚   â””â”€â”€ reject-user/[id]/route.ts  # (âœ… COMPLETE)
+â”‚   â””â”€â”€ [V1-V2 routes...]
+â””â”€â”€ middleware.ts                      # Route protection (âœ… COMPLETE)
 
----
+src/components/
+â”œâ”€â”€ landing/                           # 6 componentes (âœ… COMPLETE)
+â”‚   â”œâ”€â”€ Navbar.tsx
+â”‚   â”œâ”€â”€ HeroSection.tsx
+â”‚   â”œâ”€â”€ FeaturesSection.tsx
+â”‚   â”œâ”€â”€ TestimonialSection.tsx
+â”‚   â”œâ”€â”€ CTASection.tsx
+â”‚   â””â”€â”€ Footer.tsx
+â”œâ”€â”€ auth/                              # Auth forms (âœ… COMPLETE)
+â”‚   â”œâ”€â”€ SigninForm.tsx
+â”‚   â””â”€â”€ SignupForm.tsx
+â””â”€â”€ [V1-V2 components...]
 
-**Última actualización**: 12 de mayo de 2026  
-**Estado**: Listo para iniciar V3
+src/lib/
+â”œâ”€â”€ auth.ts                            # Auth utilities
+â”œâ”€â”€ supabase.ts                        # Supabase client
+â””â”€â”€ utils.ts
+
+src/types/
+â””â”€â”€ index.ts
+
+Decisiones ArquitectÃ³nicas (Congeladas)
+1. Auth Strategy: Supabase Auth + Custom Users Table
+
+DecisiÃ³n: Use Supabase Auth (built-in) + custom users table para roles/status
+Por quÃ©: Ya usando Supabase, JWT tokens automÃ¡ticos, password hashing seguro, HttpOnly cookies
+
+2. Admin Approval Flow (Mandatory)
+
+DecisiÃ³n: Status field ('pending_approval' | 'approved' | 'rejected')
+Por quÃ©: Simple, explÃ­cito, audit trail vÃ­a user_approvals log
+
+3. Landing Page = Dashboard (Same Aesthetic)
+
+DecisiÃ³n: Landing page usa EXACTAMENTE la misma palette + bordes sharp
+Por quÃ©: Coherencia visual, branded experience
+
+4. Middleware Edge Runtime Protection
+
+DecisiÃ³n: Protege /app/* y /admin/* en middleware.ts (Edge Runtime)
+Por quÃ©: Performance, early redirect
+
+
+Flujo de Usuario (V3)
+Nuevo Usuario
+1. Va a / (landing) â†’ click "Empezar" â†’ /login
+2. Click "Registrarse" â†’ formulario signup
+3. Email + Password â†’ Submit
+4. POST /api/auth/signup â†’ status='pending_approval'
+5. Response: "Espera aprobaciÃ³n del admin"
+Admin (AprobaciÃ³n)
+1. /admin/approvals
+2. Ve tabla: email, status, fecha
+3. Click "Aprobar" â†’ POST /api/admin/approve-user/:id
+4. Usuario ahora puede signin
+Usuario Aprobado
+1. /login â†’ Signin
+2. POST /api/auth/signin (status='approved')
+3. Redirect â†’ /app/searches (dashboard)
+4. Acceso completo a message generator
+
+Stack TÃ©cnico
+Frontend: Next.js 15 + React 18 + TypeScript + Tailwind CSS
+Backend: Next.js API Routes + Edge Runtime Middleware
+Database: Supabase PostgreSQL
+Auth: Supabase Auth + JWT HttpOnly cookies
+Password: bcrypt hashing (Supabase automatic)
+Styling: Tailwind CSS con variables OKLCH
+
+Proximas Tareas
+TAREA 12: E2E Tests (Codex)
+
+Signup -> Pending -> Approve -> Signin -> Access
+
+Ultima actualizacion: 12 de mayo de 2026, 14:25
+Estado: V3 Auth + UI + Admin Dashboard COMPLETO | E2E Tests PENDIENTE
+Build note: ✅ npm run build pasando (incluye fix de SearchFilters en scripts/test_search.ts, commit fd75c09).
