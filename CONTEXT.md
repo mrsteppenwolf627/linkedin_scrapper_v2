@@ -110,6 +110,13 @@ created_at (timestamp)
 - [x] Legacy messages recovery (heredados)
 - [x] Batch operations (create, delete, select, regenerate)
 
+### V3: Landing Page ✅ COMPLETE
+- [x] `/` → Landing page (Navbar, Hero, Features, Testimonial, CTA, Footer)
+- [x] Dashboard moved to `/app/page.tsx` (protected by middleware)
+- [x] Components: `src/components/landing/` (6 files)
+- Design: wabi-sabi terminal aesthetic, same palette as dashboard
+- Routing: `/` public, `/app/*` protected, `/login` auth gate
+
 ### V3: Sistema de Usuarios + Auth 🔄 **CURRENT PHASE**
 - [ ] Create `users` + `user_approvals` tables in Supabase  ← run migrations/20260512_users_auth.sql
 - [x] POST `/api/auth/signup` — register new user (pending approval)
