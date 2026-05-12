@@ -1,6 +1,6 @@
 // ============================================
 // GET /api/admin/pending-users
-// Lists users awaiting approval. Admin only.
+// Lists users awaiting approval or already rejected. Admin only.
 // ============================================
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -16,8 +16,8 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await supabase
     .from('users')
-    .select('id, email, created_at')
-    .eq('status', 'pending_approval')
+    .select('id, email, status, created_at')
+    .in('status', ['pending_approval', 'rejected'])
     .order('created_at', { ascending: true })
 
   if (error) {
@@ -28,5 +28,5 @@ export async function GET(req: NextRequest) {
     )
   }
 
-  return NextResponse.json({ users: data ?? [] })
+  return NextResponse.json(data ?? [])
 }
