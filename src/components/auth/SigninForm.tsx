@@ -3,9 +3,6 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Loader2 } from "lucide-react"
 
 export function SigninForm() {
@@ -28,17 +25,7 @@ export function SigninForm() {
       const data = await res.json()
 
       if (!res.ok) {
-        if (res.status === 403) {
-          if (data.message?.toLowerCase().includes("aprobada")) {
-            router.push("/login?reason=pending")
-            return
-          }
-          if (data.message?.toLowerCase().includes("rechazada")) {
-            router.push("/login?reason=rejected")
-            return
-          }
-        }
-        toast.error(data.message || "Email o contraseña incorrectos")
+        toast.error(data.message || "Credenciales inválidas")
         return
       }
 
@@ -51,45 +38,41 @@ export function SigninForm() {
     }
   }
 
+  const inputClasses = "w-full bg-transparent border border-white/20 rounded-sm px-3 py-2 text-white placeholder:text-white/30 focus:outline-none focus:border-white transition-colors"
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-2">
-        <Label htmlFor="email" className="text-sm font-medium text-foreground">
-          Email
-        </Label>
-        <Input
-          id="email"
+      <div className="space-y-1">
+        <label className="text-xs uppercase tracking-widest text-white/50 font-medium">Email</label>
+        <input
           type="email"
-          placeholder="nombre@empresa.com"
           required
-          className="rounded-sm border-input bg-background"
+          placeholder="nombre@empresa.com"
+          className={inputClasses}
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           disabled={isLoading}
         />
       </div>
-      <div className="space-y-2">
-        <Label htmlFor="password" id="password-label" className="text-sm font-medium text-foreground">
-          Contraseña
-        </Label>
-        <Input
-          id="password"
+      <div className="space-y-1">
+        <label className="text-xs uppercase tracking-widest text-white/50 font-medium">Contraseña</label>
+        <input
           type="password"
-          placeholder="••••••••"
           required
-          className="rounded-sm border-input bg-background"
+          placeholder="••••••••"
+          className={inputClasses}
           value={formData.password}
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           disabled={isLoading}
         />
       </div>
-      <Button 
+      <button 
         type="submit" 
-        className="w-full bg-primary text-primary-foreground font-medium rounded-sm py-2 hover:opacity-90 transition-opacity" 
+        className="w-full bg-white text-black font-bold uppercase tracking-widest py-3 rounded-sm hover:bg-white/90 transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
         disabled={isLoading}
       >
-        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Iniciar Sesión"}
-      </Button>
+        {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "Iniciar Sesión"}
+      </button>
     </form>
   )
 }

@@ -3,9 +3,6 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Loader2 } from "lucide-react"
 
 export function SignupForm() {
@@ -48,7 +45,7 @@ export function SignupForm() {
         return
       }
 
-      toast.success("¡Cuenta creada correctamente!")
+      toast.success("Cuenta creada. Espera la aprobación.")
       router.push("/login?reason=pending")
     } catch (err) {
       toast.error("Error de conexión")
@@ -57,61 +54,53 @@ export function SignupForm() {
     }
   }
 
+  const inputClasses = "w-full bg-transparent border border-white/20 rounded-sm px-3 py-2 text-white placeholder:text-white/30 focus:outline-none focus:border-white transition-colors"
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-2">
-        <Label htmlFor="signup-email" className="text-sm font-medium text-foreground">
-          Email
-        </Label>
-        <Input
-          id="signup-email"
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-1">
+        <label className="text-xs uppercase tracking-widest text-white/50 font-medium">Email</label>
+        <input
           type="email"
-          placeholder="nombre@empresa.com"
           required
-          className="rounded-sm border-input bg-background"
+          placeholder="nombre@empresa.com"
+          className={inputClasses}
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           disabled={isLoading}
         />
       </div>
-      <div className="space-y-2">
-        <Label htmlFor="signup-password" rounded-sm className="text-sm font-medium text-foreground">
-          Contraseña
-        </Label>
-        <Input
-          id="signup-password"
+      <div className="space-y-1">
+        <label className="text-xs uppercase tracking-widest text-white/50 font-medium">Contraseña</label>
+        <input
           type="password"
-          placeholder="••••••••"
           required
-          className="rounded-sm border-input bg-background"
+          placeholder="••••••••"
+          className={inputClasses}
           value={formData.password}
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           disabled={isLoading}
         />
-        <p className="text-[10px] text-muted-foreground mt-1">Mínimo 8 caracteres</p>
       </div>
-      <div className="space-y-2">
-        <Label htmlFor="confirm-password" rounded-sm className="text-sm font-medium text-foreground">
-          Confirmar Contraseña
-        </Label>
-        <Input
-          id="confirm-password"
+      <div className="space-y-1">
+        <label className="text-xs uppercase tracking-widest text-white/50 font-medium">Confirmar Contraseña</label>
+        <input
           type="password"
-          placeholder="••••••••"
           required
-          className="rounded-sm border-input bg-background"
+          placeholder="••••••••"
+          className={inputClasses}
           value={formData.confirmPassword}
           onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
           disabled={isLoading}
         />
       </div>
-      <Button 
+      <button 
         type="submit" 
-        className="w-full bg-primary text-primary-foreground font-medium rounded-sm py-2 hover:opacity-90 transition-opacity" 
+        className="w-full bg-white text-black font-bold uppercase tracking-widest py-3 rounded-sm hover:bg-white/90 transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed mt-2"
         disabled={isLoading}
       >
-        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Registrarse"}
-      </Button>
+        {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "Registrarse"}
+      </button>
     </form>
   )
 }
