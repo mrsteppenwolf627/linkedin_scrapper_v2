@@ -58,26 +58,22 @@ export function SignupForm({ email, isLoading, onLoadingChange }: SignupFormProp
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-2">
-        <label className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-bold block">CONTRASEÑA</label>
+    <form onSubmit={handleSubmit} className="flex flex-col w-full space-y-6">
+      <div className="flex flex-col w-full space-y-4">
         <input
           type="password"
           required
-          placeholder="••••••••"
-          className="w-full bg-transparent border border-input rounded-none py-3 px-4 text-white placeholder:text-white/20 focus:outline-none focus:border-white transition-colors"
+          placeholder="CONTRASENA"
+          className="w-full bg-transparent border border-input rounded-none py-3 px-4 text-white placeholder:text-[rgb(120,120,120)] placeholder:opacity-100 focus:outline-none focus:border-white transition-colors"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={isLoading}
         />
-      </div>
-      <div className="space-y-2">
-        <label className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-bold block">CONFIRMAR CONTRASEÑA</label>
         <input
           type="password"
           required
-          placeholder="••••••••"
-          className="w-full bg-transparent border border-input rounded-none py-3 px-4 text-white placeholder:text-white/20 focus:outline-none focus:border-white transition-colors"
+          placeholder="CONFIRMAR CONTRASENA"
+          className="w-full bg-transparent border border-input rounded-none py-3 px-4 text-white placeholder:text-[rgb(120,120,120)] placeholder:opacity-100 focus:outline-none focus:border-white transition-colors"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           disabled={isLoading}
@@ -85,7 +81,7 @@ export function SignupForm({ email, isLoading, onLoadingChange }: SignupFormProp
       </div>
       <button 
         type="submit" 
-        className="w-full bg-[#FCFCFC] text-[#1A1A1A] font-bold uppercase tracking-[0.2em] py-3 px-6 rounded-none hover:bg-white/90 transition-all flex items-center justify-center disabled:opacity-50 mt-4"
+        className="w-full bg-[#FCFCFC] text-[#1A1A1A] font-bold uppercase tracking-[0.2em] py-3 px-6 rounded-none hover:bg-white/90 transition-all flex items-center justify-center disabled:opacity-50"
         disabled={isLoading}
       >
         {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "REGISTRARSE"}

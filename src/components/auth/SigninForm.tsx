@@ -53,14 +53,13 @@ export function SigninForm({ email, isLoading, onLoadingChange }: SigninFormProp
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      <div className="space-y-2">
-        <label className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-bold block">CONTRASEÑA</label>
+    <form onSubmit={handleSubmit} className="flex flex-col w-full space-y-6">
+      <div className="flex flex-col w-full">
         <input
           type="password"
           required
           placeholder="••••••••"
-          className="w-full bg-transparent border border-input rounded-none py-3 px-4 text-white placeholder:text-white/20 focus:outline-none focus:border-white transition-colors"
+          className="w-full bg-transparent border border-input rounded-none py-3 px-4 text-white placeholder:text-[rgb(120,120,120)] placeholder:opacity-100 focus:outline-none focus:border-white transition-colors"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={isLoading}
