@@ -3,7 +3,7 @@
 Sistema de prospeccion B2B con flujo completo:
 1. Buscar perfiles en LinkedIn
 2. Generar mensajes personalizados con IA
-3. Gestionar acceso con autenticacion y aprobacion de admin
+3. Gestionar acceso con autenticacion y aprobacion admin
 
 ## Stack
 
@@ -16,8 +16,20 @@ Sistema de prospeccion B2B con flujo completo:
 
 - V1-V2 Message Generator: COMPLETO
 - V3 Auth System: COMPLETO
-- V3 Admin Approvals Dashboard (/admin/approvals): COMPLETO
+- V3 Admin Approvals Dashboard (`/admin/approvals`): COMPLETO
+- V3 User Management Panel (`/dashboard/users`, solo admins): COMPLETO (TAREA 13)
 - E2E auth flow (TAREA 12): PENDIENTE
+
+## Rutas principales
+
+- Publicas:
+  - `/`
+  - `/login`
+  - `/api/auth/*`
+
+- Protegidas:
+  - `/dashboard/*` (usuario autenticado y aprobado)
+  - `/admin/*` (admin y aprobado)
 
 ## Flujo de usuario
 
@@ -31,26 +43,18 @@ Sistema de prospeccion B2B con flujo completo:
 ### Admin
 
 1. Ir a `/admin/approvals`
-2. Ver tabla con `pending_approval` y `rejected`
-3. Aprobar: `POST /api/admin/approve-user/[id]`
-4. Rechazar: `POST /api/admin/reject-user/[id]`
+2. Aprobar/rechazar pendientes
+3. Ir a `/dashboard`
+4. Ver boton `Gestionar Usuarios`
+5. Entrar a `/dashboard/users`
+6. Gestionar roles, estado y eliminacion de usuarios
 
 ### Usuario aprobado
 
 1. Iniciar sesion (`POST /api/auth/signin`)
-2. Recibe cookie HttpOnly con sesion
-3. Accede a `/app/*`
-
-## Rutas principales
-
-- Publicas:
-  - `/`
-  - `/login`
-  - `/api/auth/*`
-
-- Protegidas:
-  - `/app/*` (usuario autenticado + `status=approved`)
-  - `/admin/*` (admin + `status=approved`)
+2. Recibe cookie HttpOnly `auth-token`
+3. Accede a `/dashboard/*`
+4. No ve acceso a `/dashboard/users` si no es admin
 
 ## Endpoints V3 (Auth/Admin)
 
@@ -59,12 +63,16 @@ Sistema de prospeccion B2B con flujo completo:
 - `POST /api/auth/signup`
 - `POST /api/auth/signin`
 - `POST /api/auth/logout`
+- `GET /api/auth/me`
 
 ### Admin
 
 - `GET /api/admin/pending-users`
 - `POST /api/admin/approve-user/[id]`
 - `POST /api/admin/reject-user/[id]`
+- `GET /api/admin/users`
+- `PATCH /api/admin/users/[id]`
+- `DELETE /api/admin/users/[id]`
 
 ## Endpoints Message Generator
 
@@ -80,10 +88,10 @@ Sistema de prospeccion B2B con flujo completo:
 ## Seguridad
 
 - Password hashing por Supabase Auth
-- Session token en cookie HttpOnly
-- Middleware para proteger `/app/*` y `/admin/*`
-- Guard server-side `requireAdmin` para endpoints admin
-- RPC transaccional para approve/reject
+- Cookie de sesion HttpOnly (`auth-token`)
+- Middleware protege `/dashboard/*` y `/admin/*`
+- Guard server-side `requireApproved()` y `requireAdmin()`
+- Endpoints admin protegidos server-side
 
 ## Variables de entorno
 
@@ -92,6 +100,7 @@ Sistema de prospeccion B2B con flujo completo:
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_ANON_KEY=
 
 # OpenAI
 OPENAI_API_KEY=
@@ -118,4 +127,4 @@ npm run test:auth
 ## Notas
 
 - LinkedIn DM no se envia automatico: el usuario copia y pega mensajes.
-- `README.md` normalizado a UTF-8 limpio para evitar caracteres rotos en GitHub.
+- README mantenido en UTF-8 limpio para evitar caracteres rotos en GitHub.

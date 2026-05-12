@@ -12,7 +12,7 @@ Codex: Testing (e2e auth flow, integration tests, security audit)
 
 
 Architecture
-Landing Page (/) â†’ Login (/login) â†’ Auth System â†’ Dashboard (/app/*)
+Landing Page (/) â†’ Login (/login) â†’ Auth System â†’ Dashboard (/dashboard/*)
                                          â†“
                                    Admin Approval (status='pending' â†’ 'approved')
                                          â†“
@@ -106,7 +106,7 @@ POST /api/admin/reject-user/:id (reject user via RPC)
 
  Middleware (middleware.ts - Edge Runtime):
 
-Protege /app/* â†’ requiere auth + status='approved'
+Protege /dashboard/* â†’ requiere auth + status='approved'
 Protege /admin/* â†’ requiere auth + role='admin' + status='approved'
 PÃºblica: /, /login, /api/auth/*
 
@@ -126,7 +126,7 @@ V3: Login Page UI âœ… COMPLETE
  Design: Dark minimal, hamburguesa layout (vertical stack)
  Components:
 
-src/app/login/page.tsx (main page)
+src/dashboard/login/page.tsx (main page)
 src/components/auth/SigninForm.tsx (signin logic)
 src/components/auth/SignupForm.tsx (signup logic)
 
@@ -168,7 +168,7 @@ Responsivo: Mobile first, desktop optimizado
 
 / â†’ Landing page
 /login â†’ Auth page
-/app/* â†’ Dashboard (protegido)
+/dashboard/* â†’ Dashboard (protegido)
 /admin/* â†’ Admin panel (protegido)
 
 
@@ -222,7 +222,7 @@ GET /api/batches
 GET /api/drafts?legacy=true
 
 ðŸ“ File Structure
-src/app/
+src/dashboard/
 â”œâ”€â”€ page.tsx                           # Landing page (âœ… COMPLETE)
 â”œâ”€â”€ login/
 â”‚   â””â”€â”€ page.tsx                       # Auth page - dark minimal (âœ… COMPLETE)
@@ -286,7 +286,7 @@ Por quÃ©: Coherencia visual, branded experience
 
 4. Middleware Edge Runtime Protection
 
-DecisiÃ³n: Protege /app/* y /admin/* en middleware.ts (Edge Runtime)
+DecisiÃ³n: Protege /dashboard/* y /admin/* en middleware.ts (Edge Runtime)
 Por quÃ©: Performance, early redirect
 
 
@@ -305,7 +305,7 @@ Admin (AprobaciÃ³n)
 Usuario Aprobado
 1. /login â†’ Signin
 2. POST /api/auth/signin (status='approved')
-3. Redirect â†’ /app/searches (dashboard)
+3. Redirect â†’ /dashboard/searches (dashboard)
 4. Acceso completo a message generator
 
 Stack TÃ©cnico
@@ -321,6 +321,25 @@ TAREA 12: E2E Tests (Codex)
 
 Signup -> Pending -> Approve -> Signin -> Access
 
-Ultima actualizacion: 12 de mayo de 2026, 14:25
-Estado: V3 Auth + UI + Admin Dashboard COMPLETO | E2E Tests PENDIENTE
+Ultima actualizacion: 12 de mayo de 2026, 15:20
+Estado: V3 Auth + Dashboard + Admin + User Management COMPLETO | E2E Tests PENDIENTE
 Build note: ✅ npm run build pasando (incluye fix de SearchFilters en scripts/test_search.ts, commit fd75c09).
+
+V3: User Management Panel ✅ COMPLETE (TAREA 13)
+
+Ruta: /dashboard/users
+Condicional de rol en /dashboard:
+- role=admin: muestra boton "Gestionar Usuarios"
+- role=user: no muestra boton
+
+Proteccion:
+- Middleware: requiere cookie auth-token en /dashboard/*
+- Pagina /dashboard/users valida rol admin y redirige a /dashboard si no cumple
+
+Nuevos endpoints:
+- GET /api/auth/me
+- GET /api/admin/users
+- PATCH /api/admin/users/[id]
+- DELETE /api/admin/users/[id]
+
+Commit esperado de esta tarea: pendiente de crear en esta sesion.
