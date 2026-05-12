@@ -30,9 +30,20 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  // ── Call Supabase Auth REST directly (works with service role key) ──────────
+  // ── Call Supabase Auth REST with the anon key ──────────────────────────────
+  // The anon key is the correct key for user-facing auth operations.
+  // Add SUPABASE_ANON_KEY (no NEXT_PUBLIC_ prefix) to .env.local —
+  // it's the same value as NEXT_PUBLIC_SUPABASE_ANON_KEY if you have that set.
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const serviceKey  = process.env.SUPABASE_SERVICE_ROLE_KEY!
+  const anonKey     = process.env.SUPABASE_ANON_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!anonKey) {
+    console.error('[signin] Missing SUPABASE_ANON_KEY env var')
+    return NextResponse.json<ApiError>(
+      { error: 'Internal Server Error', message: 'Configuración de servidor incorrecta.' },
+      { status: 500 }
+    )
+  }
 
   let authResponse: Response
   try {
@@ -40,7 +51,7 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'apikey': serviceKey,
+        'apikey': anonKey,
       },
       body: JSON.stringify({ email, password }),
     })
@@ -83,7 +94,7 @@ export async function POST(req: NextRequest) {
 
   if (user.status === 'pending_approval') {
     return NextResponse.json<ApiError>(
-      { error: 'Forbidden', message: 'Tu cuenta está pendiente de aprobación. Contacta con el administrador.' },
+      { error: 'Forbidden', message: 'Tu cuenta aún no ha sido aprobada.' },
       { status: 403 }
     )
   }

@@ -1,7 +1,7 @@
 // ============================================
 // POST /api/admin/approve-user/:id
 // Approves a pending user. Admin only.
-// Writes audit log to user_approvals.
+// UPDATE + audit log INSERT are atomic via the approve_user() SQL function.
 // ============================================
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -26,61 +26,30 @@ export async function POST(
 
   const supabase = createServerClient()
 
-  // ── Verify user exists and is pending ──────────────────────────────────────
-  const { data: user, error: fetchErr } = await supabase
-    .from('users')
-    .select('id, email, status')
-    .eq('id', userId)
-    .single()
+  // ── Single atomic call: UPDATE users + INSERT user_approvals ───────────────
+  // The approve_user() function uses FOR UPDATE + runs both statements in the
+  // same implicit transaction, so either both succeed or both roll back.
+  const { data, error } = await supabase.rpc('approve_user', {
+    p_user_id:  userId,
+    p_admin_id: admin.adminId,
+  })
 
-  if (fetchErr || !user) {
+  if (error) {
+    if (error.message.includes('not found') || error.message.includes('not in pending')) {
+      return NextResponse.json<ApiError>(
+        { error: 'Not Found', message: 'Usuario no encontrado o ya no está pendiente.' },
+        { status: 404 }
+      )
+    }
+    console.error('[approve-user] RPC error:', error.message)
     return NextResponse.json<ApiError>(
-      { error: 'Not Found', message: 'Usuario no encontrado.' },
-      { status: 404 }
-    )
-  }
-
-  if (user.status !== 'pending_approval') {
-    return NextResponse.json<ApiError>(
-      { error: 'Conflict', message: `El usuario ya tiene estado "${user.status}".` },
-      { status: 409 }
-    )
-  }
-
-  // ── UPDATE users ───────────────────────────────────────────────────────────
-  const { error: updateErr } = await supabase
-    .from('users')
-    .update({
-      status:      'approved',
-      approved_at: new Date().toISOString(),
-      approved_by: admin.adminId,
-    })
-    .eq('id', userId)
-
-  if (updateErr) {
-    console.error('[approve-user] Update error:', updateErr.message)
-    return NextResponse.json<ApiError>(
-      { error: 'Database Error', message: updateErr.message },
+      { error: 'Database Error', message: error.message },
       { status: 500 }
     )
   }
 
-  // ── INSERT audit log ───────────────────────────────────────────────────────
-  const { error: auditErr } = await supabase.from('user_approvals').insert({
-    user_id:     userId,
-    approved_by: admin.adminId,
-    status:      'approved',
-  })
+  const result = data as { email: string; status: string }
+  console.log(`[admin] APPROVED ${result.email} by ${admin.adminEmail}`)
 
-  if (auditErr) {
-    // Non-fatal: approval already committed; log and continue
-    console.error('[approve-user] Audit log error:', auditErr.message)
-  }
-
-  console.log(`[admin] APPROVED ${user.email} by ${admin.adminEmail}`)
-
-  return NextResponse.json({
-    success: true,
-    user: { email: user.email, status: 'approved' },
-  })
+  return NextResponse.json({ success: true, user: result })
 }

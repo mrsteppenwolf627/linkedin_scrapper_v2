@@ -1,7 +1,8 @@
 // ============================================
 // POST /api/auth/signup
 // Registers a new user with pending_approval status.
-// Admin email (NEXT_PUBLIC_ADMIN_EMAIL) is auto-approved.
+// ALL users (including the admin email) are pending until approved via SQL seed.
+// Admin accounts must NEVER be created through this endpoint.
 // ============================================
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -56,13 +57,10 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  // ── Determine role/status ───────────────────────────────────────────────────
-  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL
-  const isAdmin    = !!adminEmail && email === adminEmail.toLowerCase()
-  const role       = isAdmin ? 'admin' : 'user'
-  const status     = isAdmin ? 'approved' : 'pending_approval'
-
-  // ── Create in Supabase Auth (email_confirm: true skips email verification) ──
+  // ── Create in Supabase Auth ─────────────────────────────────────────────────
+  // email_confirm: true — marks the email as verified in Supabase Auth so users
+  // can sign in after admin approval without a separate email-verification step.
+  // Access is still gated by users.status = 'approved' in the signin endpoint.
   const { data: authData, error: authError } = await supabase.auth.admin.createUser({
     email,
     password,
@@ -84,13 +82,12 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  // ── Insert into custom users table ─────────────────────────────────────────
+  // ── Insert into custom users table — always pending, always role='user' ─────
   const { error: insertError } = await supabase.from('users').insert({
-    id:          authData.user.id,
+    id:     authData.user.id,
     email,
-    role,
-    status,
-    approved_at: isAdmin ? new Date().toISOString() : null,
+    role:   'user',
+    status: 'pending_approval',
   })
 
   if (insertError) {
@@ -103,11 +100,10 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  console.log(`[signup] ${email} | role=${role} | status=${status}`)
+  console.log(`[signup] ${email} | role=user | status=pending_approval`)
 
-  const message = isAdmin
-    ? 'Cuenta de administrador creada. Ya puedes iniciar sesión.'
-    : 'Registro completado. Tu cuenta está pendiente de aprobación por el administrador.'
-
-  return NextResponse.json({ success: true, message }, { status: 201 })
+  return NextResponse.json(
+    { success: true, message: 'Registro completado. Tu cuenta está pendiente de aprobación por el administrador.' },
+    { status: 201 }
+  )
 }
