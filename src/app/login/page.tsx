@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useSearchParams } from "next/navigation"
-import { Linkedin, Zap, Quote } from "lucide-react"
+import { Zap } from "lucide-react"
 import {
   Tabs,
   TabsContent,
@@ -17,120 +17,118 @@ export default function LoginPage() {
   const searchParams = useSearchParams()
   const reason = searchParams.get("reason")
 
-  const getStatusMessage = () => {
+  const statusMessage = React.useMemo(() => {
     switch (reason) {
       case "pending":
         return {
           title: "Cuenta pendiente",
-          message: "Tu cuenta aún no ha sido aprobada por un administrador. Te notificaremos pronto.",
-          type: "info"
+          message: "Tu cuenta aún no ha sido aprobada por un administrador.",
+          className: "bg-muted/50 border-border text-foreground"
         }
       case "rejected":
         return {
           title: "Acceso denegado",
-          message: "Tu solicitud de acceso ha sido rechazada por el administrador.",
-          type: "error"
+          message: "Tu solicitud de acceso ha sido rechazada.",
+          className: "bg-destructive/10 border-destructive/20 text-destructive"
         }
       case "unauthorized":
         return {
-          title: "Acceso restringido",
-          message: "Debes iniciar sesión para acceder a esta página.",
-          type: "warning"
+          title: "Sesión requerida",
+          message: "Debes iniciar sesión para acceder a la plataforma.",
+          className: "bg-amber-500/10 border-amber-500/20 text-amber-700 dark:text-amber-500"
         }
       default:
         return null
     }
-  }
-
-  const status = getStatusMessage()
+  }, [reason])
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
-      {/* PANEL OSCURO (Izquierda) */}
-      <div className="hidden lg:flex flex-col justify-between p-10 bg-primary text-primary-foreground relative overflow-hidden">
-        {/* Background Pattern/Gradient for flavor */}
-        <div className="absolute top-[-10%] right-[-10%] w-64 h-64 bg-background/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-64 h-64 bg-background/5 rounded-full blur-3xl" />
-
-        <div className="relative z-10 flex items-center gap-2">
-          <div className="p-2 bg-background/10 rounded-lg backdrop-blur-sm">
-            <Zap className="h-6 w-6 fill-current" />
-          </div>
-          <h3 className="text-xl font-bold tracking-tight">LinkedIn Scraper</h3>
-        </div>
-
-        <div className="relative z-10 mt-auto space-y-4 max-w-md">
-          <Quote className="h-10 w-10 opacity-20" />
-          <blockquote className="text-lg italic leading-relaxed font-light">
-            &ldquo;Esta herramienta ha transformado nuestra forma de prospectar en LinkedIn, permitiéndonos crear mensajes personalizados en segundos.&rdquo;
-          </blockquote>
-          <p className="text-xs font-medium uppercase tracking-widest opacity-75">
-            — Sales Team
-          </p>
-        </div>
+    <div className="relative min-h-screen w-full flex flex-col lg:flex-row bg-background selection:bg-primary/10">
+      {/* LOGO (Arriba izquierda) */}
+      <div className="fixed top-6 left-6 z-50 flex items-center gap-2">
+        <Zap className="w-5 h-5 text-foreground fill-primary/20" />
+        <span className="font-bold text-lg tracking-tight text-foreground">LinkedIn Scraper</span>
       </div>
 
-      {/* PANEL FORMULARIO (Derecha) */}
-      <div className="flex items-center justify-center p-8 bg-background">
-        <div className="w-full max-w-[400px] space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="space-y-2">
-            <h2 className="text-2xl font-semibold tracking-tight text-foreground uppercase">
-              Iniciar Sesión
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Introduce tus datos a continuación para acceder a la plataforma.
-            </p>
-          </div>
+      {/* CITA (Abajo izquierda) - Hidden on very small screens */}
+      <div className="hidden lg:flex fixed bottom-8 left-8 z-50 max-w-sm flex-col">
+        <div className="text-5xl font-serif text-muted-foreground/30 leading-none mb-2">"</div>
+        <blockquote className="text-sm text-muted-foreground italic font-light leading-relaxed">
+          Esta herramienta ha transformado nuestra forma de prospectar en LinkedIn, permitiéndonos crear mensajes personalizados en segundos.
+        </blockquote>
+        <p className="text-[10px] uppercase tracking-widest text-muted-foreground mt-3 font-semibold">
+          — Sales Team
+        </p>
+      </div>
 
-          {status && (
-            <div className={cn(
-              "p-4 rounded-lg border text-sm space-y-1",
-              status.type === "info" && "bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400",
-              status.type === "error" && "bg-destructive/10 border-destructive/20 text-destructive",
-              status.type === "warning" && "bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400"
-            )}>
-              <p className="font-bold">{status.title}</p>
-              <p className="opacity-90">{status.message}</p>
+      {/* MAIN CONTENT GRID */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 w-full">
+        {/* Left column: Empty/Decorative on large, hidden or space-taker */}
+        <div className="hidden lg:block bg-muted/5 border-r border-border/50" />
+
+        {/* Right column: Form */}
+        <div className="flex items-center justify-center p-6 sm:p-12 lg:p-24 relative overflow-hidden">
+          {/* Subtle background decoration */}
+          <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+          
+          <div className="w-full max-w-[420px] z-10 space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+            <div className="space-y-2">
+              <h1 className="text-4xl font-bold tracking-tighter text-foreground uppercase">
+                INICIAR SESIÓN
+              </h1>
+              <p className="text-sm text-muted-foreground font-medium">
+                Introduce tus datos a continuación para acceder a la plataforma.
+              </p>
             </div>
-          )}
 
-          <Tabs defaultValue="signin" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-transparent h-auto p-0 mb-6 border-b rounded-none">
-              <TabsTrigger 
-                value="signin" 
-                className="rounded-none border-b-2 border-transparent data-active:border-primary data-active:bg-transparent data-active:shadow-none py-3"
-              >
-                Entrar
-              </TabsTrigger>
-              <TabsTrigger 
-                value="signup"
-                className="rounded-none border-b-2 border-transparent data-active:border-primary data-active:bg-transparent data-active:shadow-none py-3"
-              >
-                Registro
-              </TabsTrigger>
-            </TabsList>
+            {statusMessage && (
+              <div className={cn(
+                "p-4 rounded-sm border text-sm space-y-1 animate-in zoom-in-95 duration-300",
+                statusMessage.className
+              )}>
+                <p className="font-bold uppercase tracking-tight text-xs">{statusMessage.title}</p>
+                <p className="opacity-90 leading-snug">{statusMessage.message}</p>
+              </div>
+            )}
 
-            <TabsContent value="signin" className="mt-0">
-              <SigninForm />
-            </TabsContent>
-            
-            <TabsContent value="signup" className="mt-0">
-              <SignupForm />
-            </TabsContent>
-          </Tabs>
+            <Tabs defaultValue="signin" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 bg-transparent h-auto p-0 mb-8 border-b border-border/60 rounded-none">
+                <TabsTrigger 
+                  value="signin" 
+                  className="rounded-none border-b-2 border-transparent data-active:border-foreground data-active:text-foreground data-active:font-bold text-muted-foreground bg-transparent shadow-none py-3 text-base transition-all"
+                >
+                  Entrar
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="signup"
+                  className="rounded-none border-b-2 border-transparent data-active:border-foreground data-active:text-foreground data-active:font-bold text-muted-foreground bg-transparent shadow-none py-3 text-base transition-all"
+                >
+                  Registro
+                </TabsTrigger>
+              </TabsList>
 
-          <footer className="text-center">
-            <p className="text-[10px] leading-relaxed text-muted-foreground max-w-[280px] mx-auto">
-              Al continuar, aceptas nuestras{" "}
-              <a href="#" className="underline underline-offset-4 hover:text-primary">
-                Condiciones de servicio
-              </a>{" "}
-              y{" "}
-              <a href="#" className="underline underline-offset-4 hover:text-primary">
-                Política de privacidad
-              </a>.
-            </p>
-          </footer>
+              <TabsContent value="signin" className="mt-0 focus-visible:outline-none">
+                <SigninForm />
+              </TabsContent>
+              
+              <TabsContent value="signup" className="mt-0 focus-visible:outline-none">
+                <SignupForm />
+              </TabsContent>
+            </Tabs>
+
+            <footer className="pt-8 border-t border-border/40 text-center">
+              <p className="text-[11px] leading-relaxed text-muted-foreground/80 max-w-[300px] mx-auto">
+                Al continuar, aceptas nuestras{" "}
+                <a href="#" className="font-semibold text-foreground hover:underline underline-offset-4">
+                  Condiciones de servicio
+                </a>{" "}
+                y{" "}
+                <a href="#" className="font-semibold text-foreground hover:underline underline-offset-4">
+                  Política de privacidad
+                </a>.
+              </p>
+            </footer>
+          </div>
         </div>
       </div>
     </div>

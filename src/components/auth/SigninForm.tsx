@@ -12,34 +12,11 @@ export function SigninForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
   const [formData, setFormData] = React.useState({ email: "", password: "" })
-  const [errors, setErrors] = React.useState({ email: "", password: "" })
-
-  const validate = () => {
-    let isValid = true
-    const newErrors = { email: "", password: "" }
-
-    if (!formData.email) {
-      newErrors.email = "El email es requerido"
-      isValid = false
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Formato de email inválido"
-      isValid = false
-    }
-
-    if (!formData.password) {
-      newErrors.password = "La contraseña es requerida"
-      isValid = false
-    }
-
-    setErrors(newErrors)
-    return isValid
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!validate()) return
-
     setIsLoading(true)
+
     try {
       const res = await fetch("/api/auth/signin", {
         method: "POST",
@@ -61,60 +38,57 @@ export function SigninForm() {
             return
           }
         }
-        toast.error(data.message || "Error al iniciar sesión")
+        toast.error(data.message || "Email o contraseña incorrectos")
         return
       }
 
-      toast.success("¡Bienvenido de nuevo!")
+      toast.success("¡Bienvenido!")
       router.push("/app/messages")
     } catch (err) {
-      toast.error("Error de conexión con el servidor")
+      toast.error("Error de conexión")
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email" className="text-sm font-medium text-foreground">
+          Email
+        </Label>
         <Input
           id="email"
           type="email"
           placeholder="nombre@empresa.com"
+          required
+          className="rounded-sm border-input bg-background"
           value={formData.email}
-          onChange={(e) => {
-            setFormData({ ...formData, email: e.target.value })
-            if (errors.email) setErrors({ ...errors, email: "" })
-          }}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           disabled={isLoading}
-          className={errors.email ? "border-destructive" : ""}
         />
-        {errors.email && (
-          <p className="text-xs text-destructive mt-1">{errors.email}</p>
-        )}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password">Contraseña</Label>
+        <Label htmlFor="password" id="password-label" className="text-sm font-medium text-foreground">
+          Contraseña
+        </Label>
         <Input
           id="password"
           type="password"
           placeholder="••••••••"
+          required
+          className="rounded-sm border-input bg-background"
           value={formData.password}
-          onChange={(e) => {
-            setFormData({ ...formData, password: e.target.value })
-            if (errors.password) setErrors({ ...errors, password: "" })
-          }}
+          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           disabled={isLoading}
-          className={errors.password ? "border-destructive" : ""}
         />
-        {errors.password && (
-          <p className="text-xs text-destructive mt-1">{errors.password}</p>
-        )}
       </div>
-      <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-        Iniciar Sesión
+      <Button 
+        type="submit" 
+        className="w-full bg-primary text-primary-foreground font-medium rounded-sm py-2 hover:opacity-90 transition-opacity" 
+        disabled={isLoading}
+      >
+        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Iniciar Sesión"}
       </Button>
     </form>
   )

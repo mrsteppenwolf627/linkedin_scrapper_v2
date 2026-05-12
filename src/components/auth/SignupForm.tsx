@@ -16,44 +16,19 @@ export function SignupForm() {
     password: "",
     confirmPassword: "",
   })
-  const [errors, setErrors] = React.useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-  })
-
-  const validate = () => {
-    let isValid = true
-    const newErrors = { email: "", password: "", confirmPassword: "" }
-
-    if (!formData.email) {
-      newErrors.email = "El email es requerido"
-      isValid = false
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Formato de email inválido"
-      isValid = false
-    }
-
-    if (!formData.password) {
-      newErrors.password = "La contraseña es requerida"
-      isValid = false
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Mínimo 8 caracteres"
-      isValid = false
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Las contraseñas no coinciden"
-      isValid = false
-    }
-
-    setErrors(newErrors)
-    return isValid
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!validate()) return
+    
+    if (formData.password.length < 8) {
+      toast.error("La contraseña debe tener al menos 8 caracteres")
+      return
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Las contraseñas no coinciden")
+      return
+    }
 
     setIsLoading(true)
     try {
@@ -69,78 +44,73 @@ export function SignupForm() {
       const data = await res.json()
 
       if (!res.ok) {
-        toast.error(data.message || "Error al crear la cuenta")
+        toast.error(data.message || "Error al registrarse")
         return
       }
 
       toast.success("¡Cuenta creada correctamente!")
       router.push("/login?reason=pending")
     } catch (err) {
-      toast.error("Error de conexión con el servidor")
+      toast.error("Error de conexión")
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="signup-email">Email</Label>
+        <Label htmlFor="signup-email" className="text-sm font-medium text-foreground">
+          Email
+        </Label>
         <Input
           id="signup-email"
           type="email"
           placeholder="nombre@empresa.com"
+          required
+          className="rounded-sm border-input bg-background"
           value={formData.email}
-          onChange={(e) => {
-            setFormData({ ...formData, email: e.target.value })
-            if (errors.email) setErrors({ ...errors, email: "" })
-          }}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           disabled={isLoading}
-          className={errors.email ? "border-destructive" : ""}
         />
-        {errors.email && (
-          <p className="text-xs text-destructive mt-1">{errors.email}</p>
-        )}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="signup-password">Contraseña</Label>
+        <Label htmlFor="signup-password" rounded-sm className="text-sm font-medium text-foreground">
+          Contraseña
+        </Label>
         <Input
           id="signup-password"
           type="password"
           placeholder="••••••••"
+          required
+          className="rounded-sm border-input bg-background"
           value={formData.password}
-          onChange={(e) => {
-            setFormData({ ...formData, password: e.target.value })
-            if (errors.password) setErrors({ ...errors, password: "" })
-          }}
+          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           disabled={isLoading}
-          className={errors.password ? "border-destructive" : ""}
         />
-        {errors.password && (
-          <p className="text-xs text-destructive mt-1">{errors.password}</p>
-        )}
+        <p className="text-[10px] text-muted-foreground mt-1">Mínimo 8 caracteres</p>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="confirm-password">Confirmar Contraseña</Label>
+        <Label htmlFor="confirm-password" rounded-sm className="text-sm font-medium text-foreground">
+          Confirmar Contraseña
+        </Label>
         <Input
           id="confirm-password"
           type="password"
           placeholder="••••••••"
+          required
+          className="rounded-sm border-input bg-background"
           value={formData.confirmPassword}
-          onChange={(e) => {
-            setFormData({ ...formData, confirmPassword: e.target.value })
-            if (errors.confirmPassword) setErrors({ ...errors, confirmPassword: "" })
-          }}
+          onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
           disabled={isLoading}
-          className={errors.confirmPassword ? "border-destructive" : ""}
         />
-        {errors.confirmPassword && (
-          <p className="text-xs text-destructive mt-1">{errors.confirmPassword}</p>
-        )}
       </div>
-      <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-        Registrarse
+      <Button 
+        type="submit" 
+        className="w-full bg-primary text-primary-foreground font-medium rounded-sm py-2 hover:opacity-90 transition-opacity" 
+        disabled={isLoading}
+      >
+        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Registrarse"}
       </Button>
     </form>
   )
