@@ -118,7 +118,7 @@ created_at (timestamp)
 - [x] GET `/api/admin/pending-users` — list pending approvals
 - [x] POST `/api/admin/approve-user/:id` — approve user
 - [x] POST `/api/admin/reject-user/:id` — reject user
-- [ ] Login page UI (`/login`)
+- [x] Login page UI (`/login`)
 - [ ] Admin dashboard UI (`/admin/approvals`)
 - [x] Middleware to protect routes (`/app/*`, `/admin/*`)
 - [ ] E2E tests (signup → pending → approve → signin → access)
@@ -159,7 +159,7 @@ created_at (timestamp)
 | 4 | GET `/api/admin/pending-users` (list pending) | Claude | 🔴 P0 | ✅ |
 | 5 | POST `/api/admin/approve-user/:id` (approve) | Claude | 🔴 P0 | ✅ |
 | 6 | POST `/api/auth/logout` (logout) | Claude | 🟠 P1 | ✅ |
-| 7 | Login page UI (`/login`) | Gemini | 🔴 P0 | ⏳ |
+| 7 | Login page UI (`/login`) | Gemini | 🔴 P0 | ✅ |
 | 8 | Admin dashboard (`/admin/approvals`) UI + logic | Gemini | 🔴 P0 | ⏳ |
 | 9 | Middleware: protect `/app/*` + `/admin/*` routes | Claude | 🔴 P0 | ✅ |
 | 10 | E2E tests: signup → pending → approve → signin | Codex | 🟠 P1 | ⏳ |
