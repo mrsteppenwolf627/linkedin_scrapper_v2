@@ -120,7 +120,7 @@ created_at (timestamp)
 - [x] POST `/api/admin/reject-user/:id` — reject user
 - [ ] Login page UI (`/login`)
 - [ ] Admin dashboard UI (`/admin/approvals`)
-- [ ] Middleware to protect routes (`/app/*`, `/admin/*`)
+- [x] Middleware to protect routes (`/app/*`, `/admin/*`)
 - [ ] E2E tests (signup → pending → approve → signin → access)
 
 ---
@@ -161,7 +161,7 @@ created_at (timestamp)
 | 6 | POST `/api/auth/logout` (logout) | Claude | 🟠 P1 | ✅ |
 | 7 | Login page UI (`/login`) | Gemini | 🔴 P0 | ⏳ |
 | 8 | Admin dashboard (`/admin/approvals`) UI + logic | Gemini | 🔴 P0 | ⏳ |
-| 9 | Middleware: protect `/app/*` + `/admin/*` routes | Claude | 🔴 P0 | ⏳ |
+| 9 | Middleware: protect `/app/*` + `/admin/*` routes | Claude | 🔴 P0 | ✅ |
 | 10 | E2E tests: signup → pending → approve → signin | Codex | 🟠 P1 | ⏳ |
 
 ---
