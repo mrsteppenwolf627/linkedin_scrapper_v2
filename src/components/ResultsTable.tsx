@@ -112,7 +112,7 @@ export function ResultsTable({ drafts }: ResultsTableProps) {
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
             <Filter className="w-4 h-4 text-muted-foreground" />
-            <Select value={filterTone} onValueChange={setFilterTone}>
+            <Select value={filterTone} onValueChange={(value) => setFilterTone(value ?? "all")}>
               <SelectTrigger className="w-[180px] h-10 text-xs font-bold uppercase border-2 border-[#1A1A1A] rounded-none focus:ring-[#D94F00] bg-white">
                 <SelectValue placeholder="Filtrar por tono" />
               </SelectTrigger>

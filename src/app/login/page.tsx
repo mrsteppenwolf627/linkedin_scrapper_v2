@@ -13,6 +13,14 @@ import { SignupForm } from "@/components/auth/SignupForm"
 import { cn } from "@/lib/utils"
 
 export default function LoginPage() {
+  return (
+    <React.Suspense fallback={<div className="min-h-screen w-full bg-[#1A1A1A]" />}>
+      <LoginPageContent />
+    </React.Suspense>
+  )
+}
+
+function LoginPageContent() {
   const searchParams = useSearchParams()
   const reason = searchParams.get("reason")
   const [email, setEmail] = React.useState("")

@@ -1,4 +1,4 @@
-// ============================================
+﻿// ============================================
 // LinkedIn Scraper V1 - Script de testing manual
 // Ejecutar: npm run test:search
 // Requiere .env.local con todas las variables
@@ -14,25 +14,26 @@ import { parseLinkedInSnippet, validateContact, generateGoogleQuery } from '../s
 import type { SearchFilters } from '../src/types'
 
 // ============================================
-// CONFIGURACIÓN DEL TEST
+// CONFIGURACIÃ“N DEL TEST
 // ============================================
 const TEST_FILTERS: SearchFilters = {
-  sector: 'energía',
-  years_min: 5,
-  keywords: ['consultor', 'energía', 'solar', 'renovables'],
+  jobTitle: 'consultor',
+  experience: '5+ años',
+  industry: 'energía',
   location: 'España',
+  maxResults: 10,
 }
 
 // ============================================
-// TEST 1: Generación de query
+// TEST 1: GeneraciÃ³n de query
 // ============================================
 async function testQueryGeneration() {
   console.log('\n' + '='.repeat(50))
-  console.log('TEST 1: Generación de query Google')
+  console.log('TEST 1: GeneraciÃ³n de query Google')
   console.log('='.repeat(50))
 
   const query = await generateGoogleQuery(TEST_FILTERS)
-  console.log('✅ Query generada:', query)
+  console.log('âœ… Query generada:', query)
   return query
 }
 
@@ -41,14 +42,14 @@ async function testQueryGeneration() {
 // ============================================
 async function testGoogleSearch(query: string) {
   console.log('\n' + '='.repeat(50))
-  console.log('TEST 2: Búsqueda en Google (Serper.dev)')
+  console.log('TEST 2: BÃºsqueda en Google (Serper.dev)')
   console.log('='.repeat(50))
 
   const allResults = await searchGoogle(query, 10)
   const profileResults = filterLinkedInProfiles(allResults)
 
-  console.log(`✅ Google devolvió ${allResults.length} resultados`)
-  console.log(`✅ Perfiles LinkedIn válidos: ${profileResults.length}`)
+  console.log(`âœ… Google devolviÃ³ ${allResults.length} resultados`)
+  console.log(`âœ… Perfiles LinkedIn vÃ¡lidos: ${profileResults.length}`)
 
   if (profileResults.length > 0) {
     console.log('\nPrimeros 3 resultados:')
@@ -72,7 +73,7 @@ async function testParsing(snippet: string, url: string) {
 
   console.log('Snippet a parsear:', snippet.slice(0, 150))
   const parsed = await parseLinkedInSnippet(snippet, url)
-  console.log('✅ Resultado del parsing:', JSON.stringify(parsed, null, 2))
+  console.log('âœ… Resultado del parsing:', JSON.stringify(parsed, null, 2))
   return parsed
 }
 
@@ -81,11 +82,11 @@ async function testParsing(snippet: string, url: string) {
 // ============================================
 async function testValidation(parsed: Awaited<ReturnType<typeof parseLinkedInSnippet>>) {
   console.log('\n' + '='.repeat(50))
-  console.log('TEST 4: Validación con OpenAI (gpt-4o-mini)')
+  console.log('TEST 4: ValidaciÃ³n con OpenAI (gpt-4o-mini)')
   console.log('='.repeat(50))
 
   const validated = await validateContact(parsed, TEST_FILTERS)
-  console.log('✅ Resultado de validación:', JSON.stringify(validated, null, 2))
+  console.log('âœ… Resultado de validaciÃ³n:', JSON.stringify(validated, null, 2))
   return validated
 }
 
@@ -98,7 +99,7 @@ async function testWithMockSnippet() {
   console.log('='.repeat(50))
 
   const mockSnippet =
-    'Carlos García - Senior Energy Consultant at Iberdrola · 8 years of experience in renewable energy and solar consulting in Spain'
+    'Carlos GarcÃ­a - Senior Energy Consultant at Iberdrola Â· 8 years of experience in renewable energy and solar consulting in Spain'
   const mockUrl = 'https://linkedin.com/in/carlos-garcia-energy'
 
   const parsed = await testParsing(mockSnippet, mockUrl)
@@ -106,7 +107,7 @@ async function testWithMockSnippet() {
   if (parsed.es_valido) {
     await testValidation(parsed)
   } else {
-    console.log('⚠️  Contacto inválido en parsing, saltando validación')
+    console.log('âš ï¸  Contacto invÃ¡lido en parsing, saltando validaciÃ³n')
   }
 }
 
@@ -114,8 +115,8 @@ async function testWithMockSnippet() {
 // MAIN
 // ============================================
 async function main() {
-  console.log('🚀 LinkedIn Scraper V1 - Test Suite')
-  console.log('Filtros de prueba:', TEST_FILTERS)
+  console.log('ðŸš€ LinkedIn Scraper V1 - Test Suite')
+  console.log('🔍 Filtros de prueba:', JSON.stringify(TEST_FILTERS, null, 2))
 
   const args = process.argv.slice(2)
   const runAll = args.includes('--all') || args.length === 0
@@ -123,7 +124,7 @@ async function main() {
 
   try {
     if (runMockOnly) {
-      // Test rápido sin consumir API de Google
+      // Test rÃ¡pido sin consumir API de Google
       await testWithMockSnippet()
     } else if (runAll) {
       // Test completo con APIs reales
@@ -137,18 +138,19 @@ async function main() {
           await testValidation(parsed)
         }
       } else {
-        console.log('\n⚠️  No se encontraron resultados de Google. Ejecutando test mock...')
+        console.log('\nâš ï¸  No se encontraron resultados de Google. Ejecutando test mock...')
         await testWithMockSnippet()
       }
     }
 
     console.log('\n' + '='.repeat(50))
-    console.log('✅ TODOS LOS TESTS COMPLETADOS')
+    console.log('âœ… TODOS LOS TESTS COMPLETADOS')
     console.log('='.repeat(50))
   } catch (err) {
-    console.error('\n❌ ERROR EN TESTS:', err)
+    console.error('\nâŒ ERROR EN TESTS:', err)
     process.exit(1)
   }
 }
 
 main()
+
