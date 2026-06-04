@@ -226,8 +226,10 @@ Ancla siempre en: empresa concreta + rol específico + contexto sectorial real y
 ## DECISIONES ARQUITECTÓNICAS DE MARCA (ADRs)
 ${adrsContent}
 
-## FORMATO DE RESPUESTA
-Responde EXCLUSIVAMENTE con JSON válido y parseable. Sin markdown, sin texto antes o después.
+## FORMATO DE RESPUESTA — CRÍTICO
+Tu respuesta debe ser ÚNICAMENTE el objeto JSON. Sin explicaciones, sin markdown, sin bloques de código.
+El primer carácter de tu respuesta debe ser { y el último debe ser }.
+NO uses \`\`\`json. NO uses \`\`\`. Solo JSON puro.
 Estructura obligatoria:
 {"observacion": "<texto>", "insight": "<texto>", "cta_abierto": "<texto>"}`
 
@@ -267,7 +269,11 @@ El nombre del lead NO debe aparecer en los mensajes.`
     const textBlock = message.content.find(
       (b): b is Anthropic.TextBlock => b.type === 'text'
     )
-    const raw = textBlock?.text ?? '{}'
+    // Strip markdown fences in case the model wraps JSON in ```json ... ```
+    const raw = (textBlock?.text ?? '{}')
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/\s*```\s*$/, '')
+      .trim()
     const drafted = JSON.parse(raw) as {
       observacion: string
       insight: string

@@ -1,58 +1,96 @@
 [
   {
-    "lead": "Carlos Mendoza",
-    "empresa": "Iberdrola",
-    "rol": "Senior Energy Consultant",
+    "lead": "Gabrielle M.",
+    "empresa": "Voodoo",
+    "rol": "Lead Gaming Talent Acquisition",
     "mensajes": [
       {
         "tipo": "observacion",
-        "texto": "He notado que trabajas como Senior Energy Consultant en Iberdrola, una empresa líder en el sector energético."
+        "texto": "Voodoo lleva dos años acelerando la transición de hypercasual a hybrid-casual, lo que ha cambiado radicalmente el perfil de los perfiles que necesitáis: ya no es suficiente con alguien que escale UA, ahora buscáis diseñadores que entiendan loops de retención y monetización dentro del mismo juego. Eso complica bastante el sourcing cuando el mercado de gaming talent en Europa sigue siendo finito."
       },
       {
         "tipo": "insight",
-        "texto": "La transición hacia energías más sostenibles está impulsando cambios significativos en la industria. Muchas empresas están encontrando oportunidades en la optimización de sus procesos y la implementación de nuevas tecnologías que no solo reducen costos, sino que también mejoran la eficiencia energética."
+        "texto": "El movimiento hacia hybrid-casual ha creado una franja de perfiles que no encaja bien en los filtros tradicionales de gaming recruitment: vienen de mobile pero con experiencia en mid-core, entienden métricas de LTV pero han trabajado en estudios pequeños sin el pedigree de las grandes publishers. Los equipos de talent acquisition que están encontrando esos perfiles antes que la competencia no están buscando en los mismos sitios de siempre — están trabajando comunidades de devs indie y jam circuits antes de que esos perfiles actualicen su LinkedIn."
       },
       {
         "tipo": "cta_abierto",
-        "texto": "Me gustaría saber tu opinión sobre cómo están abordando estos desafíos en Iberdrola. ¿Crees que hay áreas donde se podrían implementar mejoras?"
+        "texto": "¿Cómo estáis abordando el sourcing de esos perfiles híbridos desde el equipo de talent en Voodoo?"
       }
     ]
   },
   {
-    "lead": "Laura Sánchez",
-    "empresa": "Endesa",
-    "rol": "Directora de Desarrollo de Negocio",
+    "lead": "Anna Hernández",
+    "empresa": "",
+    "rol": "IT Talent Acquisition Partner",
     "mensajes": [
       {
         "tipo": "observacion",
-        "texto": "Hola Laura, he visto que como Directora de Desarrollo de Negocio en Endesa, estás en una posición clave para impulsar iniciativas estratégicas en el sector energético."
+        "texto": "Captar perfiles técnicos especializados en 2025 implica competir con ofertas que llevan semanas abiertas en empresas que ya tienen pipeline consolidado. Un IT Talent Acquisition Partner que trabaja sin respaldo de marca empleadora fuerte opera con una desventaja estructural desde el primer contacto."
       },
       {
         "tipo": "insight",
-        "texto": "En un entorno donde la sostenibilidad y la innovación son prioridades, muchas empresas están encontrando oportunidades al diversificar sus ofertas. Esto no solo mejora la competitividad, sino que también responde a la creciente demanda de soluciones energéticas más limpias y eficientes."
+        "texto": "Los datos de Stack Overflow Developer Survey 2024 muestran que el 65% de los desarrolladores descarta una oferta antes de hablar con recruiting si la empresa no tiene presencia técnica visible en GitHub, foros o comunidades especializadas. El problema no es la propuesta económica: es que el candidato ya tomó una decisión antes de la primera llamada. Quienes están invirtiendo en reducir ese gap lo están haciendo en el lado del contenido técnico generado por el propio equipo de ingeniería, no en el mensaje de outreach."
       },
       {
         "tipo": "cta_abierto",
-        "texto": "Me gustaría saber, ¿cuáles son los principales desafíos que enfrentas actualmente en el desarrollo de nuevas oportunidades de negocio en Endesa?"
+        "texto": "¿Qué palancas estás usando actualmente para acortar ese momento entre que el candidato ve la oferta y decide que merece su tiempo?"
       }
     ]
   },
   {
-    "lead": "Alejandro Torres",
-    "empresa": "Repsol",
-    "rol": "Head of Renewable Energy Projects",
+    "lead": "Cristina Ibern Aguilar",
+    "empresa": "Kenos Technology",
+    "rol": "HR Specialist | IT Talent Acquisition",
     "mensajes": [
       {
         "tipo": "observacion",
-        "texto": "Hola Alejandro, he notado que estás liderando los proyectos de energía renovable en Repsol, un área clave para la transición energética."
+        "texto": "Cubrir perfiles de IT en una empresa de tecnología como Kenos implica competir directamente con las áreas de RRHH de las grandes consultoras y los equipos internos de hiring de producto, donde los candidatos con perfil técnico reciben varios mensajes a la semana y el tiempo de decisión es muy corto."
       },
       {
         "tipo": "insight",
-        "texto": "La innovación en este sector es constante y la integración de nuevas tecnologías puede ser un diferenciador significativo. Muchas empresas están explorando formas de optimizar sus proyectos para no solo cumplir con regulaciones, sino también para mejorar su sostenibilidad y eficiencia operativa."
+        "texto": "En el sector de IT staffing y tech hiring en España, el cuello de botella no suele estar en la cantidad de candidatos sino en la velocidad de cualificación: los procesos que tardan más de 10 días en dar feedback pierden al candidato frente a ofertas de empresas que han automatizado el primer filtro técnico. Empresas como Factorial o Typeform han reducido su time-to-hire ajustando el punto exacto donde interviene el recruiter humano versus el proceso automatizado, no el volumen de sourcing."
       },
       {
         "tipo": "cta_abierto",
-        "texto": "Me gustaría saber tu perspectiva sobre los principales desafíos que enfrentas en la implementación de estos proyectos. ¿Te parece si conversamos sobre ello?"
+        "texto": "¿En qué parte del proceso de selección de perfiles IT estáis notando más fricción actualmente en Kenos?"
+      }
+    ]
+  },
+  {
+    "lead": "Abel Fernández Sánchez",
+    "empresa": "LABHOUSE",
+    "rol": "Talent Acquisition Manager",
+    "mensajes": [
+      {
+        "tipo": "observacion",
+        "texto": "Gestionar la adquisición de talento en una consultora boutique implica competir contra estructuras de employer branding de empresas diez veces más grandes, con equipos y presupuestos que no son comparables. La presión sobre el tiempo de cobertura de posiciones especializadas en este tipo de firmas suele recaer directamente sobre una sola figura."
+      },
+      {
+        "tipo": "insight",
+        "texto": "En consultoras de perfil mid-market, el principal cuello de botella no está en la atracción sino en la conversión: candidatos que entran en proceso y abandonan porque la propuesta de valor no está articulada con la misma precisión que la de las Big Four. Las firmas que han resuelto esto no lo han hecho invirtiendo más en sourcing, sino rediseñando el relato que el propio Talent Acquisition traslada en el primer contacto con el candidato."
+      },
+      {
+        "tipo": "cta_abierto",
+        "texto": "¿Dónde estáis poniendo el foco en LABHOUSE para diferenciarlo en ese momento concreto del primer contacto?"
+      }
+    ]
+  },
+  {
+    "lead": "Meritxell Lorente Vázquez",
+    "empresa": "bsport",
+    "rol": "Tech Talent Acquisition Partner",
+    "mensajes": [
+      {
+        "tipo": "observacion",
+        "texto": "bsport está en una fase de crecimiento técnico donde cada contratación de ingeniería define la velocidad del producto, y tú eres quien decide qué perfiles entran y con qué criterio. En plataformas SaaS de gestión deportiva, la competencia por talent con experiencia en arquitecturas multi-tenant o integraciones de pago es bastante más estrecha de lo que sugieren los volúmenes de candidatos disponibles."
+      },
+      {
+        "tipo": "insight",
+        "texto": "Los equipos de Tech TA en scale-ups B2B suelen enfrentarse a una tensión concreta: los hiring managers piden perfiles con experiencia en el stack exacto, pero el pool real de candidatos disponibles que además encajan con la cultura de producto es mucho más pequeño que los benchmarks salariales del sector asumen. En verticales como el fitness tech, donde bsport compite con Mindbody o Glofox por talento de backend y mobile, los candidatos con experiencia en integraciones de hardware (tornos, wearables) tienen una prima de mercado que no está bien documentada en las guías salariales estándar de España o Francia."
+      },
+      {
+        "tipo": "cta_abierto",
+        "texto": "¿Cuáles son los perfiles técnicos donde más estáis notando esa presión entre lo que pide el equipo de producto y lo que realmente existe en el mercado?"
       }
     ]
   }

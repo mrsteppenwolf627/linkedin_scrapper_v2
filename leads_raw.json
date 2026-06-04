@@ -1,20 +1,32 @@
 [
   {
-    "nombre": "Carlos Mendoza",
-    "empresa": "Iberdrola",
+    "nombre": "Gabrielle M.",
+    "empresa": "Voodoo",
     "posts_recientes": [],
-    "rol": "Senior Energy Consultant"
+    "rol": "Lead Gaming Talent Acquisition"
   },
   {
-    "nombre": "Laura Sánchez",
-    "empresa": "Endesa",
+    "nombre": "Anna Hernández",
+    "empresa": "",
     "posts_recientes": [],
-    "rol": "Directora de Desarrollo de Negocio"
+    "rol": "IT Talent Acquisition Partner"
   },
   {
-    "nombre": "Alejandro Torres",
-    "empresa": "Repsol",
+    "nombre": "Cristina Ibern Aguilar",
+    "empresa": "Kenos Technology",
     "posts_recientes": [],
-    "rol": "Head of Renewable Energy Projects"
+    "rol": "HR Specialist | IT Talent Acquisition"
+  },
+  {
+    "nombre": "Abel Fernández Sánchez",
+    "empresa": "LABHOUSE",
+    "posts_recientes": [],
+    "rol": "Talent Acquisition Manager"
+  },
+  {
+    "nombre": "Meritxell Lorente Vázquez",
+    "empresa": "bsport",
+    "posts_recientes": [],
+    "rol": "Tech Talent Acquisition Partner"
   }
 ]

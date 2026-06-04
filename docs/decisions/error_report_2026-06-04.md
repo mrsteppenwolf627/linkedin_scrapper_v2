@@ -9,68 +9,98 @@
 
 | Métrica | Valor |
 |---|---|
-| Leads auditados | 3 |
-| Mensajes totales | 9 |
-| 🔴 FALLOS | **6** |
-| 🟡 ADVERTENCIAS | **1** |
-| 🟢 OK | 2 |
-| Tasa de aprobación | 22% |
+| Leads auditados | 5 |
+| Mensajes totales | 15 |
+| 🔴 FALLOS | **0** |
+| 🟡 ADVERTENCIAS | **0** |
+| 🟢 OK | 15 |
+| Tasa de aprobación | 100% |
 
 ### Veredicto por Lead
 
 | Lead | Empresa | Rol | Veredicto |
 |---|---|---|---|
-| Carlos Mendoza | Iberdrola | Senior Energy Consultant | 🔴 FALLO |
-| Laura Sánchez | Endesa | Directora de Desarrollo de Negocio | 🔴 FALLO |
-| Alejandro Torres | Repsol | Head of Renewable Energy Projects | 🔴 FALLO |
+| Gabrielle M. | Voodoo | Lead Gaming Talent Acquisition | 🟢 OK |
+| Anna Hernández |  | IT Talent Acquisition Partner | 🟢 OK |
+| Cristina Ibern Aguilar | Kenos Technology | HR Specialist | IT Talent Acquisition | 🟢 OK |
+| Abel Fernández Sánchez | LABHOUSE | Talent Acquisition Manager | 🟢 OK |
+| Meritxell Lorente Vázquez | bsport | Tech Talent Acquisition Partner | 🟢 OK |
 
 ---
 
 ## Detalle por Lead y Pilar
 
-### Lead: Carlos Mendoza · Iberdrola · Senior Energy Consultant
+### Lead: Gabrielle M. · Voodoo · Lead Gaming Talent Acquisition
 
-**Veredicto global:** 🔴 FALLO
+**Veredicto global:** 🟢 OK
 
-#### Mensaje: `observacion` — 🟡 ADVERTENCIA (17 palabras)
+#### Mensaje: `observacion` — 🟢 OK (62 palabras)
 
-> He notado que trabajas como Senior Energy Consultant en Iberdrola, una empresa líder en el sector energético.
+> Voodoo lleva dos años acelerando la transición de hypercasual a hybrid-casual, lo que ha cambiado radicalmente el perfil de los perfiles que necesitáis: ya no es suficiente con alguien que escale UA, ahora buscáis diseñadores que entiendan loops de retención y monetización dentro del mismo juego. Eso complica bastante el sourcing cuando el mercado de gaming talent en Europa sigue siendo finito.
 
 **BREVEDAD** 🟢 OK
 
-**NATURALIDAD** 🟡 ADVERTENCIA
-- ⚠️ "empresa líder" (halago genérico sin sustancia)
-  - Fragmento: "...empresa líder..."
+**NATURALIDAD** 🟢 OK
 
 **CERO_PITCH** 🟢 OK
 
 ---
 
-#### Mensaje: `insight` — 🔴 FALLO (42 palabras)
+#### Mensaje: `insight` — 🟢 OK (87 palabras)
 
-> La transición hacia energías más sostenibles está impulsando cambios significativos en la industria. Muchas empresas están encontrando oportunidades en la optimización de sus procesos y la implementación de nuevas tecnologías que no solo reducen costos, sino que también mejoran la eficiencia energética.
+> El movimiento hacia hybrid-casual ha creado una franja de perfiles que no encaja bien en los filtros tradicionales de gaming recruitment: vienen de mobile pero con experiencia en mid-core, entienden métricas de LTV pero han trabajado en estudios pequeños sin el pedigree de las grandes publishers. Los equipos de talent acquisition que están encontrando esos perfiles antes que la competencia no están buscando en los mismos sitios de siempre — están trabajando comunidades de devs indie y jam circuits antes de que esos perfiles actualicen su LinkedIn.
 
 **BREVEDAD** 🟢 OK
 
-**NATURALIDAD** 🟡 ADVERTENCIA
-- ⚠️ "cambios significativos" (vaguedad corporativa)
-  - Fragmento: "...cambios significativos..."
+**NATURALIDAD** 🟢 OK
 
-**CERO_PITCH** 🔴 FALLO
-- ⚠️ "optimización de sus procesos" (consulting pitch)
-  - Fragmento: "...optimización de sus procesos..."
-- ⚠️ "no solo X sino también Y" (estructura de pitch de ventas)
-  - Fragmento: "...no solo reducen costos, sino que también..."
-- ⚠️ "muchas empresas están..." (estadística sin respaldo — ADR-004)
-  - Fragmento: "...Muchas empresas están..."
-- ⚠️ "eficiencia operativa/energética" (buzzword de consultoría)
-  - Fragmento: "...eficiencia energética..."
+**CERO_PITCH** 🟢 OK
+
+---
+
+#### Mensaje: `cta_abierto` — 🟢 OK (16 palabras)
+
+> ¿Cómo estáis abordando el sourcing de esos perfiles híbridos desde el equipo de talent en Voodoo?
+
+**BREVEDAD** 🟢 OK
+
+**NATURALIDAD** 🟢 OK
+
+**CERO_PITCH** 🟢 OK
+
+---
+
+### Lead: Anna Hernández ·  · IT Talent Acquisition Partner
+
+**Veredicto global:** 🟢 OK
+
+#### Mensaje: `observacion` — 🟢 OK (43 palabras)
+
+> Captar perfiles técnicos especializados en 2025 implica competir con ofertas que llevan semanas abiertas en empresas que ya tienen pipeline consolidado. Un IT Talent Acquisition Partner que trabaja sin respaldo de marca empleadora fuerte opera con una desventaja estructural desde el primer contacto.
+
+**BREVEDAD** 🟢 OK
+
+**NATURALIDAD** 🟢 OK
+
+**CERO_PITCH** 🟢 OK
+
+---
+
+#### Mensaje: `insight` — 🟢 OK (86 palabras)
+
+> Los datos de Stack Overflow Developer Survey 2024 muestran que el 65% de los desarrolladores descarta una oferta antes de hablar con recruiting si la empresa no tiene presencia técnica visible en GitHub, foros o comunidades especializadas. El problema no es la propuesta económica: es que el candidato ya tomó una decisión antes de la primera llamada. Quienes están invirtiendo en reducir ese gap lo están haciendo en el lado del contenido técnico generado por el propio equipo de ingeniería, no en el mensaje de outreach.
+
+**BREVEDAD** 🟢 OK
+
+**NATURALIDAD** 🟢 OK
+
+**CERO_PITCH** 🟢 OK
 
 ---
 
 #### Mensaje: `cta_abierto` — 🟢 OK (22 palabras)
 
-> Me gustaría saber tu opinión sobre cómo están abordando estos desafíos en Iberdrola. ¿Crees que hay áreas donde se podrían implementar mejoras?
+> ¿Qué palancas estás usando actualmente para acortar ese momento entre que el candidato ve la oferta y decide que merece su tiempo?
 
 **BREVEDAD** 🟢 OK
 
@@ -80,55 +110,13 @@
 
 ---
 
-### Lead: Laura Sánchez · Endesa · Directora de Desarrollo de Negocio
+### Lead: Cristina Ibern Aguilar · Kenos Technology · HR Specialist | IT Talent Acquisition
 
-**Veredicto global:** 🔴 FALLO
+**Veredicto global:** 🟢 OK
 
-#### Mensaje: `observacion` — 🔴 FALLO (26 palabras)
+#### Mensaje: `observacion` — 🟢 OK (51 palabras)
 
-> Hola Laura, he visto que como Directora de Desarrollo de Negocio en Endesa, estás en una posición clave para impulsar iniciativas estratégicas en el sector energético.
-
-**BREVEDAD** 🟢 OK
-
-**NATURALIDAD** 🔴 FALLO
-- ⚠️ "Hola [nombre]" al inicio (ADR-005: LinkedIn lo añade)
-  - Fragmento: "...Hola Laura..."
-- ⚠️ "he visto que" (referencia al perfil LinkedIn — ADR-004)
-  - Fragmento: "...he visto que..."
-- ⚠️ "posición clave" (halago genérico — ADR-004)
-  - Fragmento: "...posición clave..."
-
-**CERO_PITCH** 🟢 OK
-
----
-
-#### Mensaje: `insight` — 🔴 FALLO (41 palabras)
-
-> En un entorno donde la sostenibilidad y la innovación son prioridades, muchas empresas están encontrando oportunidades al diversificar sus ofertas. Esto no solo mejora la competitividad, sino que también responde a la creciente demanda de soluciones energéticas más limpias y eficientes.
-
-**BREVEDAD** 🟢 OK
-
-**NATURALIDAD** 🔴 FALLO
-- ⚠️ "en un entorno donde" (cliché prohibido — ADR-003)
-  - Fragmento: "...En un entorno donde..."
-
-**CERO_PITCH** 🔴 FALLO
-- ⚠️ "soluciones energéticas" (pitch implícito)
-  - Fragmento: "...soluciones energ..."
-- ⚠️ "diversificar sus ofertas" (consulting pitch)
-  - Fragmento: "...diversificar sus ofertas..."
-- ⚠️ "no solo X sino también Y" (estructura de pitch de ventas)
-  - Fragmento: "...no solo mejora la competitividad, sino que también..."
-- ⚠️ "muchas empresas están..." (estadística sin respaldo — ADR-004)
-  - Fragmento: "...muchas empresas están..."
-- ⚠️ "creciente demanda" (market-speak sin datos)
-  - Fragmento: "...creciente demanda..."
-
----
-
-#### Mensaje: `cta_abierto` — 🟢 OK (21 palabras)
-
-> Me gustaría saber, ¿cuáles son los principales desafíos que enfrentas actualmente en el desarrollo de nuevas oportunidades de negocio en Endesa?
+> Cubrir perfiles de IT en una empresa de tecnología como Kenos implica competir directamente con las áreas de RRHH de las grandes consultoras y los equipos internos de hiring de producto, donde los candidatos con perfil técnico reciben varios mensajes a la semana y el tiempo de decisión es muy corto.
 
 **BREVEDAD** 🟢 OK
 
@@ -138,80 +126,113 @@
 
 ---
 
-### Lead: Alejandro Torres · Repsol · Head of Renewable Energy Projects
+#### Mensaje: `insight` — 🟢 OK (82 palabras)
 
-**Veredicto global:** 🔴 FALLO
-
-#### Mensaje: `observacion` — 🔴 FALLO (21 palabras)
-
-> Hola Alejandro, he notado que estás liderando los proyectos de energía renovable en Repsol, un área clave para la transición energética.
+> En el sector de IT staffing y tech hiring en España, el cuello de botella no suele estar en la cantidad de candidatos sino en la velocidad de cualificación: los procesos que tardan más de 10 días en dar feedback pierden al candidato frente a ofertas de empresas que han automatizado el primer filtro técnico. Empresas como Factorial o Typeform han reducido su time-to-hire ajustando el punto exacto donde interviene el recruiter humano versus el proceso automatizado, no el volumen de sourcing.
 
 **BREVEDAD** 🟢 OK
 
-**NATURALIDAD** 🔴 FALLO
-- ⚠️ "Hola [nombre]" al inicio (ADR-005: LinkedIn lo añade)
-  - Fragmento: "...Hola Alejandro..."
-- ⚠️ "área clave" (cliché corporativo)
-  - Fragmento: "...área clave..."
+**NATURALIDAD** 🟢 OK
 
 **CERO_PITCH** 🟢 OK
 
 ---
 
-#### Mensaje: `insight` — 🔴 FALLO (42 palabras)
+#### Mensaje: `cta_abierto` — 🟢 OK (17 palabras)
 
-> La innovación en este sector es constante y la integración de nuevas tecnologías puede ser un diferenciador significativo. Muchas empresas están explorando formas de optimizar sus proyectos para no solo cumplir con regulaciones, sino también para mejorar su sostenibilidad y eficiencia operativa.
+> ¿En qué parte del proceso de selección de perfiles IT estáis notando más fricción actualmente en Kenos?
 
 **BREVEDAD** 🟢 OK
 
 **NATURALIDAD** 🟢 OK
 
-**CERO_PITCH** 🔴 FALLO
-- ⚠️ "diferenciador [X]" (sales buzzword)
-  - Fragmento: "...diferenciador significativo..."
-- ⚠️ "no solo X sino también Y" (estructura de pitch de ventas)
-  - Fragmento: "...no solo cumplir con regulaciones, sino también..."
-- ⚠️ "muchas empresas están..." (estadística sin respaldo — ADR-004)
-  - Fragmento: "...Muchas empresas están..."
-- ⚠️ "eficiencia operativa/energética" (buzzword de consultoría)
-  - Fragmento: "...eficiencia operativa..."
+**CERO_PITCH** 🟢 OK
 
 ---
 
-#### Mensaje: `cta_abierto` — 🔴 FALLO (23 palabras)
+### Lead: Abel Fernández Sánchez · LABHOUSE · Talent Acquisition Manager
 
-> Me gustaría saber tu perspectiva sobre los principales desafíos que enfrentas en la implementación de estos proyectos. ¿Te parece si conversamos sobre ello?
+**Veredicto global:** 🟢 OK
+
+#### Mensaje: `observacion` — 🟢 OK (52 palabras)
+
+> Gestionar la adquisición de talento en una consultora boutique implica competir contra estructuras de employer branding de empresas diez veces más grandes, con equipos y presupuestos que no son comparables. La presión sobre el tiempo de cobertura de posiciones especializadas en este tipo de firmas suele recaer directamente sobre una sola figura.
 
 **BREVEDAD** 🟢 OK
 
 **NATURALIDAD** 🟢 OK
 
-**CERO_PITCH** 🔴 FALLO
-- ⚠️ "¿Te parece si conversamos?" (CTA de reunión — ADR-004)
-  - Fragmento: "... ¿Te parece si conversamos..."
+**CERO_PITCH** 🟢 OK
+
+---
+
+#### Mensaje: `insight` — 🟢 OK (75 palabras)
+
+> En consultoras de perfil mid-market, el principal cuello de botella no está en la atracción sino en la conversión: candidatos que entran en proceso y abandonan porque la propuesta de valor no está articulada con la misma precisión que la de las Big Four. Las firmas que han resuelto esto no lo han hecho invirtiendo más en sourcing, sino rediseñando el relato que el propio Talent Acquisition traslada en el primer contacto con el candidato.
+
+**BREVEDAD** 🟢 OK
+
+**NATURALIDAD** 🟢 OK
+
+**CERO_PITCH** 🟢 OK
+
+---
+
+#### Mensaje: `cta_abierto` — 🟢 OK (16 palabras)
+
+> ¿Dónde estáis poniendo el foco en LABHOUSE para diferenciarlo en ese momento concreto del primer contacto?
+
+**BREVEDAD** 🟢 OK
+
+**NATURALIDAD** 🟢 OK
+
+**CERO_PITCH** 🟢 OK
+
+---
+
+### Lead: Meritxell Lorente Vázquez · bsport · Tech Talent Acquisition Partner
+
+**Veredicto global:** 🟢 OK
+
+#### Mensaje: `observacion` — 🟢 OK (62 palabras)
+
+> bsport está en una fase de crecimiento técnico donde cada contratación de ingeniería define la velocidad del producto, y tú eres quien decide qué perfiles entran y con qué criterio. En plataformas SaaS de gestión deportiva, la competencia por talent con experiencia en arquitecturas multi-tenant o integraciones de pago es bastante más estrecha de lo que sugieren los volúmenes de candidatos disponibles.
+
+**BREVEDAD** 🟢 OK
+
+**NATURALIDAD** 🟢 OK
+
+**CERO_PITCH** 🟢 OK
+
+---
+
+#### Mensaje: `insight` — 🟢 OK (99 palabras)
+
+> Los equipos de Tech TA en scale-ups B2B suelen enfrentarse a una tensión concreta: los hiring managers piden perfiles con experiencia en el stack exacto, pero el pool real de candidatos disponibles que además encajan con la cultura de producto es mucho más pequeño que los benchmarks salariales del sector asumen. En verticales como el fitness tech, donde bsport compite con Mindbody o Glofox por talento de backend y mobile, los candidatos con experiencia en integraciones de hardware (tornos, wearables) tienen una prima de mercado que no está bien documentada en las guías salariales estándar de España o Francia.
+
+**BREVEDAD** 🟢 OK
+
+**NATURALIDAD** 🟢 OK
+
+**CERO_PITCH** 🟢 OK
+
+---
+
+#### Mensaje: `cta_abierto` — 🟢 OK (27 palabras)
+
+> ¿Cuáles son los perfiles técnicos donde más estáis notando esa presión entre lo que pide el equipo de producto y lo que realmente existe en el mercado?
+
+**BREVEDAD** 🟢 OK
+
+**NATURALIDAD** 🟢 OK
+
+**CERO_PITCH** 🟢 OK
 
 ---
 
 ## Patrones Recurrentes (Top Ofensores)
 
-| Patrón | Ocurrencias | Severidad |
-|---|---|---|
-| "no solo X sino también Y" (estructura de pitch de ventas) | 3 | 🔴 |
-| "muchas empresas están..." (estadística sin respaldo — ADR-004) | 3 | 🔴 |
-| "eficiencia operativa/energética" (buzzword de consultoría) | 2 | 🟡 |
-| "Hola [nombre]" al inicio (ADR-005: LinkedIn lo añade) | 2 | 🔴 |
-| "empresa líder" (halago genérico sin sustancia) | 1 | 🟡 |
-| "cambios significativos" (vaguedad corporativa) | 1 | 🟡 |
-| "optimización de sus procesos" (consulting pitch) | 1 | 🔴 |
-| "he visto que" (referencia al perfil LinkedIn — ADR-004) | 1 | 🔴 |
-| "posición clave" (halago genérico — ADR-004) | 1 | 🟡 |
-| "en un entorno donde" (cliché prohibido — ADR-003) | 1 | 🔴 |
-| "soluciones energéticas" (pitch implícito) | 1 | 🔴 |
-| "diversificar sus ofertas" (consulting pitch) | 1 | 🔴 |
-| "creciente demanda" (market-speak sin datos) | 1 | 🟡 |
-| "área clave" (cliché corporativo) | 1 | 🟡 |
-| "diferenciador [X]" (sales buzzword) | 1 | 🔴 |
-| "¿Te parece si conversamos?" (CTA de reunión — ADR-004) | 1 | 🔴 |
+_No se detectaron patrones recurrentes._
 
 ## Optimización del System Prompt del Agente de Redacción
 
