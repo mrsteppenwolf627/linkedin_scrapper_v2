@@ -1,14 +1,15 @@
 // ============================================
 // Orquestador: Scraper → leads_raw.json → mensajes_listos.json
 // Ejecutar: tsx --tsconfig tsconfig.json scripts/orchestrate.ts
+// Agente de redacción: claude-sonnet-4-6 (Anthropic)
 // ============================================
 
 import { config } from 'dotenv'
 import { resolve, join } from 'path'
 config({ path: resolve(process.cwd(), '.env.local') })
 
+import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
-import OpenAI from 'openai'
 import { writeFileSync, existsSync, readFileSync } from 'fs'
 
 // ── Tipos ─────────────────────────────────────────────
@@ -36,8 +37,10 @@ function getSupabase() {
   return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } })
 }
 
-function getOpenAI() {
-  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY! })
+function getAnthropic() {
+  const apiKey = process.env.ANTHROPIC_API_KEY
+  if (!apiKey) throw new Error('ANTHROPIC_API_KEY no está configurada en .env.local')
+  return new Anthropic({ apiKey })
 }
 
 // Leads de referencia del módulo (representan el output real del scraper
@@ -105,7 +108,6 @@ function writeAndVerifyLeadsRaw(leads: LeadRaw[]): void {
   const outputPath = join(process.cwd(), 'leads_raw.json')
   writeFileSync(outputPath, JSON.stringify(leads, null, 2), 'utf-8')
 
-  // Verificación: releer y parsear
   const raw = readFileSync(outputPath, 'utf-8')
   const parsed: LeadRaw[] = JSON.parse(raw)
 
@@ -114,60 +116,118 @@ function writeAndVerifyLeadsRaw(leads: LeadRaw[]): void {
     for (const key of requiredKeys) {
       if (!(key in lead)) throw new Error(`leads_raw.json inválido: campo '${key}' ausente en ${JSON.stringify(lead)}`)
     }
-    if (!Array.isArray(lead.posts_recientes)) throw new Error(`leads_raw.json inválido: posts_recientes no es array`)
+    if (!Array.isArray(lead.posts_recientes)) throw new Error('leads_raw.json inválido: posts_recientes no es array')
   }
 
   console.log(`\n[PASO 2] leads_raw.json verificado — ${parsed.length} leads, esquema válido ✅`)
 }
 
 // ─────────────────────────────────────────────────────
-// PASO 3 — Agente de redacción (Claude/OpenAI)
+// PASO 3 — Agente de redacción (claude-sonnet-4-6)
 // Framework: Observación → Insight → CTA Abierto
+// El system prompt se cachea entre leads (prompt caching Anthropic).
+// El agente consulta ADRs.md antes de redactar para mantener
+// coherencia con las decisiones arquitectónicas congeladas.
 // ─────────────────────────────────────────────────────
 async function draftMessages(leads: LeadRaw[]): Promise<MensajeLead[]> {
-  console.log('\n[PASO 3] Agente de redacción — generando secuencias de mensajes...')
-  const openai = getOpenAI()
+  console.log('\n[PASO 3] Agente de redacción (claude-sonnet-4-6) — generando secuencias...')
+
+  const anthropic = getAnthropic()
+
+  // Leer ADRs.md para inyectar decisiones de marca en el system prompt
+  const adrsPath = join(process.cwd(), 'docs', 'adr', 'ADRs.md')
+  const adrsContent = existsSync(adrsPath)
+    ? readFileSync(adrsPath, 'utf-8')
+    : '(ADRs.md no encontrado — aplicar criterios de tono y estructura por defecto)'
+  console.log(`  → ADRs.md cargado (${adrsContent.length} caracteres)`)
+
+  // System prompt con el framework explícito + decisiones de marca
+  // Se marca con cache_control para reutilizarse entre todos los leads del run.
+  const systemPromptText = `Eres un Senior Copywriter especializado en ventas B2B y LinkedIn outreach en español.
+
+## TU MISIÓN
+Redactar secuencias de prospección para leads del sector energético siguiendo estrictamente el framework de 3 mensajes.
+
+## FRAMEWORK OBLIGATORIO: Observación → Insight → CTA Abierto
+
+### MENSAJE 1 — OBSERVACIÓN
+- Basada en un dato concreto y observable: rol del lead, empresa, sector o responsabilidad.
+- Longitud: exactamente 2-3 frases. Sin más.
+- Demuestra conocimiento del contexto sin decir que "viste su perfil".
+- El lead debe sentir que el remitente entiende su mundo, no que recibe spam.
+
+### MENSAJE 2 — INSIGHT
+- Un insight de valor que conecte la situación del lead con una tensión o oportunidad real de su sector.
+- Longitud: 3-4 frases. Sin pitch de producto ni mención del remitente.
+- Basado en dinámicas reales: regulación energética, transición renovable, presión de márgenes, digitalización.
+- El lead debe pensar: "Esto es relevante para mí", no "me están vendiendo algo".
+
+### MENSAJE 3 — CTA ABIERTO
+- Una sola pregunta abierta que invite al lead a compartir su perspectiva u opinión.
+- Longitud: 1-2 frases. Debe terminar con signo de interrogación (?).
+- No pedir reuniones, llamadas ni tiempo concreto.
+- El lead debe sentir que le piden su expertise, no su agenda.
+
+## DECISIONES ARQUITECTÓNICAS DE MARCA (ADRs)
+${adrsContent}
+
+## FORMATO DE RESPUESTA
+Responde EXCLUSIVAMENTE con JSON válido y parseable. Sin markdown, sin texto antes o después.
+Estructura obligatoria:
+{"observacion": "<texto>", "insight": "<texto>", "cta_abierto": "<texto>"}`
+
   const results: MensajeLead[] = []
 
   for (const lead of leads) {
     console.log(`  → Redactando para: ${lead.nombre} (${lead.rol} @ ${lead.empresa})`)
 
-    const systemPrompt = `Eres un experto en ventas B2B y copywriting para LinkedIn outreach en español.
-Tu misión es redactar secuencias de 3 mensajes de prospección siguiendo el framework:
-1. Observación: Mensaje corto (2-3 frases) basado en algo concreto y observable del perfil del lead.
-   No menciones que "viste su perfil". Sé específico con su rol o empresa.
-2. Insight: Insight de valor (3-4 frases) que conecte la situación del lead con una oportunidad de mejora.
-   Sin pitch de producto. Solo valor y perspectiva.
-3. CTA Abierto: Cierre con una pregunta abierta natural (1-2 frases) que invite a una conversación,
-   sin presión ni urgencia artificial.
-Tono: profesional, directo, humano. Sin clichés corporativos.
-Responde SOLO con JSON válido, sin markdown.`
+    const userPrompt = `Redacta la secuencia de 3 mensajes para este lead:
 
-    const userPrompt = `Lead:
-- Nombre: ${lead.nombre}
-- Empresa: ${lead.empresa}
-- Rol: ${lead.rol}
-- Posts recientes: ${lead.posts_recientes.length > 0 ? lead.posts_recientes.join(' | ') : 'No disponibles'}
+NOMBRE: ${lead.nombre}
+EMPRESA: ${lead.empresa}
+ROL: ${lead.rol}
+POSTS RECIENTES: ${lead.posts_recientes.length > 0 ? lead.posts_recientes.join(' | ') : 'No disponibles — infiere el contexto desde rol y empresa'}
 
-Genera la secuencia de 3 mensajes. Formato exacto de respuesta:
-{
-  "observacion": "texto del mensaje 1",
-  "insight": "texto del mensaje 2",
-  "cta_abierto": "texto del mensaje 3"
-}`
+Sigue el framework Observación → Insight → CTA Abierto y todas las decisiones de marca de los ADRs.
+El nombre del lead NO debe aparecer en los mensajes.`
 
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
+    // Streaming con prompt caching en el system prompt.
+    // El system prompt es estable para todos los leads: se escribe en caché
+    // en el primer lead y se lee desde caché en los siguientes (~0.1x coste).
+    const stream = anthropic.messages.stream({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1024,
+      system: [
+        {
+          type: 'text',
+          text: systemPromptText,
+          cache_control: { type: 'ephemeral' },
+        },
       ],
-      temperature: 0.7,
-      response_format: { type: 'json_object' },
+      messages: [{ role: 'user', content: userPrompt }],
     })
 
-    const raw = completion.choices[0].message.content ?? '{}'
-    const drafted = JSON.parse(raw) as { observacion: string; insight: string; cta_abierto: string }
+    const message = await stream.finalMessage()
+
+    const textBlock = message.content.find(
+      (b): b is Anthropic.TextBlock => b.type === 'text'
+    )
+    const raw = textBlock?.text ?? '{}'
+    const drafted = JSON.parse(raw) as {
+      observacion: string
+      insight: string
+      cta_abierto: string
+    }
+
+    // Log de uso de caché para verificación
+    const usage = message.usage as Anthropic.Usage & {
+      cache_creation_input_tokens?: number
+      cache_read_input_tokens?: number
+    }
+    const cacheStatus = usage.cache_read_input_tokens
+      ? `(caché HIT: ${usage.cache_read_input_tokens} tokens desde caché)`
+      : `(caché WRITE: ${usage.cache_creation_input_tokens ?? 0} tokens escritos)`
+    console.log(`     ${cacheStatus}`)
 
     results.push({
       lead: lead.nombre,
@@ -181,7 +241,7 @@ Genera la secuencia de 3 mensajes. Formato exacto de respuesta:
     })
   }
 
-  console.log(`  ✅ ${results.length} secuencias generadas`)
+  console.log(`  ✅ ${results.length} secuencias generadas (modelo: claude-sonnet-4-6)`)
   return results
 }
 
@@ -200,19 +260,13 @@ function saveMensajes(mensajes: MensajeLead[]): void {
 async function main() {
   console.log('════════════════════════════════════════════')
   console.log('  ORQUESTADOR: LinkedIn Scraper → Mensajes')
+  console.log('  Agente: claude-sonnet-4-6 + ADRs.md')
   console.log('════════════════════════════════════════════')
 
   try {
-    // Paso 1: Ejecutar módulo scraper
     const leads = await runScraper()
-
-    // Paso 2: Escribir y verificar leads_raw.json
     writeAndVerifyLeadsRaw(leads)
-
-    // Paso 3: Agente de redacción
     const mensajes = await draftMessages(leads)
-
-    // Paso 4: Guardar resultado final
     saveMensajes(mensajes)
 
     console.log('\n════════════════════════════════════════════')

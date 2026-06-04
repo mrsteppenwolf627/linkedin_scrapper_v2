@@ -83,14 +83,16 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Grid 2×2 con 4 módulos: Buscador · Mis Búsquedas · Generador · Hub de Mensajes
 - Header persistente con Logout; sombras sólidas estilo brutalista
 
-### Pipeline de Datos: Orquestador ✅ COMPLETO — Ciclo #2 ejecutado 2026-06-04T08:10:18Z
-- `scripts/orchestrate.ts`: runner standalone (tsx) — Scraper → leads_raw.json → mensajes_listos.json
-- `src/lib/linkedin_scraper.ts`: exporta leads validados a `leads_raw.json` tras cada búsqueda
-- Contrato de datos: `{ nombre, empresa, posts_recientes[], rol }` por lead
-- Agente de redacción: gpt-4o-mini con framework Observación → Insight → CTA Abierto
-- Artefactos generados: `leads_raw.json` (3 leads · 19 líneas) · `mensajes_listos.json` (3 × 3 mensajes · 58 líneas)
-- Validación pre-ejecución: 13/13 checks ✅ · Orquestador EXIT_CODE: 0 ✅
-- Supabase: no accesible en este entorno (proyecto pausado) → seed leads activado automáticamente
+### Pipeline de Datos: Orquestador ✅ COMPLETO — Refactor a claude-sonnet-4-6 (2026-06-04)
+- `scripts/orchestrate.ts`: Agente de redacción migrado de gpt-4o-mini → **claude-sonnet-4-6** (Anthropic SDK)
+- `docs/adr/ADRs.md`: Decisiones de marca congeladas inyectadas en system prompt antes de redactar
+- Framework explícito en system prompt: Observación (2-3 frases) → Insight (3-4 frases) → CTA Abierto (1-2 frases + ?)
+- Prompt caching habilitado: system prompt cacheado entre leads (~0.1x coste por HIT)
+- `scripts/test_drafting_agent.ts`: Suite de integración — 60 checks por 3 leads (estructura, tono, ADRs)
+  - Checks incluyen: frases prohibidas (ADR-004), patrones robóticos, nombre del lead ausente (ADR-005), CTA con ?
+  - Modo estático: `npm run test:drafting` · Modo live API: `npm run test:drafting:live`
+- Tests sobre output gpt-4o-mini anterior: 4/60 fallos detectados (correctos — el viejo modelo violaba ADR-004 y ADR-005)
+- Requiere `ANTHROPIC_API_KEY` en `.env.local` para el agente de redacción
 
 ### V3: E2E Tests 🕒 PENDIENTE
 - Flujo: Signup → Pending → Admin Approve → Signin → Access
