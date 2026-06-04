@@ -11,7 +11,7 @@ export default async function DashboardLayout({
   await requireApproved()
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-[#F0EDE4] text-[#1A1A1A]">
       {children}
     </div>
   )

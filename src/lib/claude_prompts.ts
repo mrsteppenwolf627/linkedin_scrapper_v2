@@ -14,8 +14,10 @@ import type {
   HumanizedMessage,
   MessageDraft,
   MessageStrategy,
+  MessageSequenceMeta,
   GenerateMessagesResponse,
   TokenUsage,
+  LatamCountry,
 } from '@/types'
 
 // gpt-4o-mini pricing (USD per token, April 2026 reference)
@@ -302,6 +304,66 @@ Ejemplo de salida: site:linkedin.com/in/ "Director de Marketing" "Salud" Madrid`
 }
 
 // ============================================
+// extractTriggerAndVoice
+// Función standalone: extrae el trigger real + voz del prospect.
+// Más ligera que enrichLeadProfile (solo 2 campos, ~200 tokens).
+// Llamar explícitamente cuando se quiera visibilidad en la pipeline
+// o cuando solo se necesiten estos dos campos sin el enriquecimiento completo.
+// ============================================
+
+export async function extractTriggerAndVoice(
+  name: string,
+  title: string,
+  company: string,
+  industry: string,
+  snippet?: string
+): Promise<{ trigger: string; voice_of_customer: string[] }> {
+  const openai = getOpenAI()
+
+  const snippetBlock = snippet?.trim()
+    ? `\nSNIPPET DEL PERFIL:\n"${snippet}"`
+    : ''
+
+  const response = await openai.chat.completions.create({
+    model: MODEL,
+    max_tokens: 200,
+    response_format: { type: 'json_object' },
+    messages: [
+      {
+        role: 'system',
+        content: `Extraes señales de outreach de perfiles LinkedIn. Buscas eventos REALES que justifiquen contactar a esta persona AHORA, y las palabras exactas que usa para describir su trabajo. Responde siempre con JSON válido.`,
+      },
+      {
+        role: 'user',
+        content: `Analiza este perfil y extrae trigger y voz del prospect.
+
+PERFIL:
+- Nombre: ${name}
+- Título: ${title}
+- Empresa: ${company}
+- Sector: ${industry}${snippetBlock}
+
+Devuelve exactamente este JSON:
+{
+  "trigger": "Evento REAL y ESPECÍFICO del perfil/snippet que justifica contactar AHORA. Ej: 'Cambió de empresa hace 3 meses', 'Publicó sobre X problema', 'Empresa contrató en Y área'. Si no hay evidencia concreta → 'Sin trigger identificado'.",
+  "voice_of_customer": ["frase o término exacto del snippet", "otro término suyo", "keyword de su sector"]
+}
+
+Reglas trigger: ESPECÍFICO > GENÉRICO ("Contrataron 3 DevOps" > "empresa en crecimiento"). Solo usa lo visible en el snippet.
+Reglas voice: palabras TEXTUALES del snippet, no sinónimos. Máx 5. Si no hay snippet, usa términos estándar del sector + título.`,
+      },
+    ],
+  })
+
+  const text = response.choices[0].message.content ?? '{}'
+  const result = JSON.parse(text) as { trigger?: string; voice_of_customer?: string[] }
+  return {
+    trigger: result.trigger ?? 'Sin trigger identificado',
+    voice_of_customer: result.voice_of_customer ?? [],
+  }
+}
+
+// ============================================
 // PROMPT A: enrich_lead_profile_v1
 // Fase 1: Extrae insights de venta del perfil del lead
 // ============================================
@@ -311,13 +373,18 @@ export async function enrichLeadProfile(
   title: string,
   company: string,
   industry: string,
-  location: string
+  location: string,
+  profileSnippet?: string
 ): Promise<LeadProfile> {
   const openai = getOpenAI()
 
+  const snippetBlock = profileSnippet?.trim()
+    ? `\nSNIPPET / TEXTO DEL PERFIL:\n"${profileSnippet}"`
+    : ''
+
   const response = await openai.chat.completions.create({
     model: MODEL,
-    max_tokens: 400,
+    max_tokens: 600,
     response_format: { type: 'json_object' },
     messages: [
       {
@@ -333,7 +400,7 @@ PERFIL:
 - Título: ${title}
 - Empresa: ${company}
 - Sector: ${industry}
-- Ubicación: ${location}
+- Ubicación: ${location}${snippetBlock}
 
 Devuelve exactamente este JSON:
 {
@@ -342,15 +409,19 @@ Devuelve exactamente este JSON:
   "likely_priorities": ["priority1", "priority2"],
   "company_size": "small" | "mid" | "enterprise",
   "sector_keywords": ["keyword1", "keyword2", "keyword3"],
-  "role_psychology": "Una frase describiendo qué motiva y presiona a esta persona en su rol"
+  "role_psychology": "Una frase describiendo qué motiva y presiona a esta persona en su rol",
+  "trigger": "Evento o señal REAL que justifica contactar a esta persona AHORA (cambio de rol, contratación visible, expansión, publicación reciente, etc.). Si no hay evidencia real, escribe 'Sin trigger identificado'.",
+  "voice_of_customer": ["palabra1", "palabra2", "palabra3"]
 }
 
 Reglas:
-- Basa TODO en datos reales del perfil. NUNCA inventar datos sin fundamento.
-- decision_maker_level: "executive" si tiene C-level/VP/Director; "manager" si lidera equipo; "specialist" si es individual contributor
-- company_size: "enterprise" si es multinacional/gran empresa; "mid" si es mediana empresa; "small" si es startup/pyme
-- sector_keywords: términos técnicos/de negocio propios de su sector
-- role_psychology: qué le quita el sueño y qué quiere conseguir en su rol`,
+- Basa TODO en datos reales del perfil/snippet. NUNCA inventar.
+- decision_maker_level: "executive" si C-level/VP/Director; "manager" si lidera equipo; "specialist" si IC
+- company_size: "enterprise" multinacional/gran empresa; "mid" mediana; "small" startup/pyme
+- sector_keywords: términos técnicos/negocio propios del sector
+- role_psychology: qué le quita el sueño y qué quiere conseguir
+- trigger: el EVENTO ESPECÍFICO, no inferencia genérica. "Contrataron 3 ingenieros" > "la empresa está creciendo"
+- voice_of_customer: palabras/frases TEXTUALES del snippet que describen su rol o problemas. Si no hay snippet, usa términos estándar de su industria/título`,
       },
     ],
   })
@@ -364,6 +435,17 @@ Reglas:
 // Fase 2: Generación con estrategia de vendedor experto + anti-IA
 // ============================================
 
+function getPronounInstruction(country?: LatamCountry | string): string {
+  switch ((country ?? '').toUpperCase()) {
+    case 'AR': return 'vos (tuteo rioplatense; en B2B formal también se acepta usted)'
+    case 'CO':
+    case 'CL':
+    case 'PE': return 'usted'
+    case 'BR': return 'você'
+    default:   return 'tú' // ES, MX, default
+  }
+}
+
 export async function generateLinkedInMessages(
   lead: LeadInput,
   profile?: LeadProfile
@@ -371,15 +453,20 @@ export async function generateLinkedInMessages(
   const openai = getOpenAI()
 
   const product = lead.your_product?.trim() || 'Tu Producto/Servicio'
+  const pronoun = getPronounInstruction(lead.country)
 
-  const snippetSection = lead.profile_snippet?.trim()
-    ? `\nCONTEXTO DEL PERFIL: "${lead.profile_snippet}"`
-    : ''
+  const trigger = profile?.trigger && profile.trigger !== 'Sin trigger identificado'
+    ? profile.trigger
+    : 'Sin trigger específico identificado'
+
+  const voiceOfCustomer = profile?.voice_of_customer?.length
+    ? profile.voice_of_customer.join('", "')
+    : null
 
   const profileSection = profile
     ? `
 PERFIL ENRIQUECIDO:
-- Pain points probables: ${profile.likely_pain_points.join(', ')}
+- Pain points: ${profile.likely_pain_points.join(', ')}
 - Nivel de decisión: ${profile.decision_maker_level}
 - Prioridades: ${profile.likely_priorities.join(', ')}
 - Tamaño empresa: ${profile.company_size}
@@ -389,96 +476,129 @@ PERFIL ENRIQUECIDO:
 
   const response = await openai.chat.completions.create({
     model: MODEL_MESSAGES,
-    max_tokens: 1500,
+    max_tokens: 1800,
+    temperature: 0.9,
     response_format: { type: 'json_object' },
     messages: [
       {
         role: 'system',
-        content: `Eres un vendedor B2B de élite con 15+ años cerrando deals de 6-7 figuras en cold outreach. Conoces psicología de ventas en profundidad, detectas patrones IA y los evitas instintivamente, y escribes como vendedor de verdad, no como chatbot.
+        content: `Eres un vendedor B2B que hace investigación real antes de escribir. Tus mensajes suenan como alguien que VENDE, no como alguien que ENUNCIA.
 
-MISIÓN: Generar 3 mensajes LinkedIn que hagan que el lead TENGA QUE responder.
+DIFERENCIA CLAVE:
+- Vendedor real: "Vi que contrataron 3 DevOps el mes pasado. ¿Escalando infraestructura?"
+- Chatbot que enuncia: "Organizations prioritize infrastructure scalability in today's competitive landscape."
 
-RESTRICCIONES ABSOLUTAS (no negociables):
-1. Máx 280 caracteres por mensaje — cuenta siempre antes de entregar
-2. Tuteo ("tú", "tu") — más cercano y natural
-3. Sin emojis salvo que encajen orgánicamente (máx 1 en toda la secuencia)
-4. Sin listas con viñetas, sin markdown, sin asteriscos
-5. Sin frases IA: "espero que estés bien", "quería contactarte", "como experto", "además", "por otra parte", "en conclusión"
-6. Sin exclamaciones excesivas (máx 1 si es muy necesaria)
-7. Lenguaje profesional pero humano — no robótico, no demasiado informal
+REGLA DE ORO: Si no lo dirías tomando un café con alguien, no lo escribas en el mensaje.
 
-TÉCNICAS ANTI-IA (aplicar obligatoriamente en cada mensaje):
-- Asimetría: mezcla frases cortas y largas (no todas igual de largas)
-- Especificidad: menciona datos reales del perfil (nombre, empresa, sector, rol)
-- Imperfecciones controladas: puntos suspensivos si hay duda, pregunta al final
-- Voz personal: como si lo escribiera un vendedor real, no un template
-- Puntuación variada: no todas las frases perfectamente construidas
-- Transiciones directas: nada de "además", "por lo tanto", "en conclusión"
+RESTRICCIONES ABSOLUTAS:
+1. Máx 280 caracteres por mensaje
+2. Pronombre: ${pronoun}
+3. Sin emojis (máx 1 en toda la secuencia si encaja orgánicamente)
+4. Sin listas, sin markdown, sin asteriscos
+5. Sin exclamaciones innecesarias (máx 1 en toda la secuencia)
 
-ESTRATEGIA POR MENSAJE:
-[1 - hook] Pattern interrupt, problema del sector o estadística inesperada. No empieces con "Hola".
-[2 - social_proof] Ángulo diferente al primero, caso similar, observación específica de su perfil.
-[3 - urgency] "Voy a ser directo" — beneficio claro, cierre educado sin presión, decisión en manos del lead.
+RESTRICCIONES ESTRUCTURALES (más importantes que el vocabulario):
+- VARIACIÓN DE LONGITUD: alterna frases cortas (5-10 palabras) con largas (18-25 palabras). Patrón ideal: corta → larga → corta → corta → larga
+- VARIACIÓN SINTÁCTICA: no iniciar dos oraciones consecutivas con el mismo patrón
+- SIN TRIADAS: mata "rápido, confiable y escalable" y cualquier lista de 3 adjetivos
+- SIN PATRONES IA DETECTADOS:
+  • "No X, sino Y" / "Not X but Y"
+  • "En el panorama actual..." / "En la era digital..." / "Hoy más que nunca..."
+  • Conclusiones explícitas: "En resumen", "En conclusión", "En definitiva"
+  • Anáfora: iniciar 2+ oraciones seguidas con la misma estructura
+  • "Espero que estés bien", "Quería contactarte", "Como experto en"
+- CIERRE: preguntas abiertas > CTAs cerradas. "¿Tiene sentido?" o "¿Vale la pena 10 min?" > "Avísame si te interesa"
+
+ESTRATEGIA DE SECUENCIA:
+[1 - hook]: Trigger real del prospect + pregunta que apunta al dolor. Sin CTA. Genera solo curiosidad.
+[2 - social_proof]: Observación DIFERENTE del perfil + caso específico CON MÉTRICA CONCRETA en formato "[Sector] redujo [métrica] de X a Y en Z semanas" (inventa números plausibles para el sector) + pregunta de curiosidad. CTA ligero: "¿10 min?" o "¿Lo ves así también?"
+[3 - urgency]: Elige UNA de estas aperturas (varía entre leads, no siempre la misma): "Voy a ser directo:", "Te digo la realidad:", "Sin filtros:", "La verdad es que:" — luego beneficio claro + cierre de autonomía sin presión.
 
 Responde ÚNICAMENTE con JSON válido.`,
       },
       {
         role: 'user',
-        content: `Genera la secuencia de 3 mensajes para este lead.
+        content: `Genera 3 mensajes LinkedIn para este lead.
 
 DATOS DEL LEAD:
 - Nombre: ${lead.name}
 - Título: ${lead.title || 'No especificado'}
 - Empresa: ${lead.company || 'No especificada'}
 - Sector: ${lead.industry || 'No especificado'}
-- Ubicación: ${lead.location || 'No especificada'}${snippetSection}${profileSection}
+- Ubicación: ${lead.location || 'No especificada'}${profileSection}
 
-TU PRODUCTO/SERVICIO:
+TRIGGER / EVENTO REAL: ${trigger}
+← Úsalo como gancho concreto. No lo ignores ni lo generalices.
+
+${voiceOfCustomer ? `VOZ DEL PROSPECT (palabras suyas exactas): "${voiceOfCustomer}"
+← Refleja su vocabulario. No uses sinónimos "más bonitos" si él no los usa.` : ''}
+
+PRODUCTO/SERVICIO:
 ${product}
 
-INSTRUCCIONES ESPECÍFICAS:
+PRONOMBRE PARA ESTE PAÍS: ${pronoun}
 
-[MENSAJE 1 - hook]
-Rompe la atención con un problema del sector o dato inesperado.
-Conecta con tu producto de forma no obvia. No vendas — genera curiosidad.
-No empieces con "Hola ${lead.name}," genérico. Empieza con el hook directamente.
-
-[MENSAJE 2 - social_proof]
-Ángulo completamente diferente al mensaje 1 (no repitas el mismo argumento).
-Haz una observación específica del perfil/empresa del lead.
-Menciona un caso similar que resolviste (sin revelar todo).
-Termina con pregunta o propuesta concreta (¿10 min?).
-
-[MENSAJE 3 - urgency]
-"Voy a ser directo:" — honestidad sin presión.
-Menciona cambios en el sector que hacen urgente actuar.
-Beneficio claro y directo. Cierre: decisión en manos del lead.
-
-CHECKLIST (verifica antes de responder):
-☐ ¿Cada mensaje ≤280 caracteres? (cuenta y recorta si no)
-☐ ¿Menciona datos reales del perfil (nombre, empresa o sector)?
-☐ ¿Parece escrito por un vendedor humano? (no IA)
-☐ ¿Estrategia diferente en cada mensaje?
-☐ ¿Sin frases genéricas de IA?
+CHECKLIST ANTES DE ENTREGAR:
+☐ ¿Leí cada mensaje en voz alta? ¿Suena como yo hablando?
+☐ ¿Usé el trigger REAL, no una inferencia genérica?
+☐ ¿Varié la longitud de frases? (patrón corta→larga→corta)
+☐ ¿No empiezo 2 frases seguidas con el mismo patrón?
+☐ ¿Eliminé triadas de adjetivos?
+☐ ¿Eliminé "No X sino Y", "Hoy más que nunca", "En conclusión"?
+☐ ¿El pronombre es correcto (${pronoun})?
+☐ ¿Cierro con preguntas abiertas, no CTAs?
+☐ ¿Cada mensaje ≤280 caracteres?
 
 Devuelve exactamente este JSON:
 {
-  "sequence_1": { "text": "...", "strategy": "hook", "ai_detector_risk": 0.0, "confidence": 0.0 },
-  "sequence_2": { "text": "...", "strategy": "social_proof", "ai_detector_risk": 0.0, "confidence": 0.0 },
-  "sequence_3": { "text": "...", "strategy": "urgency", "ai_detector_risk": 0.0, "confidence": 0.0 }
+  "sequence_1": {
+    "text": "...",
+    "strategy": "hook",
+    "ai_detector_risk": 0.0,
+    "confidence": 0.0,
+    "sounds_human": 0.0,
+    "structure_notes": "breve nota sobre variación de estructura usada"
+  },
+  "sequence_2": {
+    "text": "...",
+    "strategy": "social_proof",
+    "ai_detector_risk": 0.0,
+    "confidence": 0.0,
+    "sounds_human": 0.0,
+    "structure_notes": "..."
+  },
+  "sequence_3": {
+    "text": "...",
+    "strategy": "urgency",
+    "ai_detector_risk": 0.0,
+    "confidence": 0.0,
+    "sounds_human": 0.0,
+    "structure_notes": "..."
+  },
+  "meta": {
+    "trigger_used": "trigger que usaste",
+    "voice_detected": ["palabras", "de", "su", "vocabulario"],
+    "structure_score": 0.0,
+    "avg_sounds_human": 0.0,
+    "readability_warning": "solo si algo estuvo bajo o faltó información"
+  }
 }
 
-ai_detector_risk: 0.0–1.0 (probabilidad de detección como IA; meta < 0.20)
-confidence: 0.0–1.0 (qué tan personalizado y efectivo es el mensaje; penaliza −0.08 si sin datos de perfil)`,
+ai_detector_risk: 0.0–1.0 (probabilidad de detección IA; meta < 0.20)
+sounds_human: 0.0–1.0 (¿suena como humano en conversación real?; meta > 0.75)
+avg_sounds_human: promedio de sounds_human de los 3 mensajes
+confidence: 0.0–1.0 (personalización y efectividad; −0.10 si no hay trigger real)
+structure_score: 0.0–1.0 (variación de estructura sintáctica lograda)`,
       },
     ],
   })
 
   const raw = response.choices[0].message.content ?? '{}'
   const parsed = JSON.parse(raw) as {
-    sequence_1: { text: string; strategy: string; ai_detector_risk: number; confidence: number }
-    sequence_2: { text: string; strategy: string; ai_detector_risk: number; confidence: number }
-    sequence_3: { text: string; strategy: string; ai_detector_risk: number; confidence: number }
+    sequence_1: { text: string; strategy: string; ai_detector_risk: number; confidence: number; sounds_human: number; structure_notes: string }
+    sequence_2: { text: string; strategy: string; ai_detector_risk: number; confidence: number; sounds_human: number; structure_notes: string }
+    sequence_3: { text: string; strategy: string; ai_detector_risk: number; confidence: number; sounds_human: number; structure_notes: string }
+    meta?: { trigger_used: string; voice_detected: string[]; structure_score: number; avg_sounds_human: number; readability_warning?: string }
   }
 
   const drafts: MessageDraft[] = [
@@ -489,6 +609,8 @@ confidence: 0.0–1.0 (qué tan personalizado y efectivo es el mensaje; penaliza
       confidence: normalizeConfidence(parsed.sequence_1?.confidence),
       strategy: (parsed.sequence_1?.strategy as MessageStrategy) ?? 'hook',
       ai_detector_risk: parsed.sequence_1?.ai_detector_risk ?? 0,
+      sounds_human: parsed.sequence_1?.sounds_human ?? 0,
+      structure_notes: parsed.sequence_1?.structure_notes ?? '',
     },
     {
       draft_id: 2,
@@ -497,6 +619,8 @@ confidence: 0.0–1.0 (qué tan personalizado y efectivo es el mensaje; penaliza
       confidence: normalizeConfidence(parsed.sequence_2?.confidence),
       strategy: (parsed.sequence_2?.strategy as MessageStrategy) ?? 'social_proof',
       ai_detector_risk: parsed.sequence_2?.ai_detector_risk ?? 0,
+      sounds_human: parsed.sequence_2?.sounds_human ?? 0,
+      structure_notes: parsed.sequence_2?.structure_notes ?? '',
     },
     {
       draft_id: 3,
@@ -505,52 +629,83 @@ confidence: 0.0–1.0 (qué tan personalizado y efectivo es el mensaje; penaliza
       confidence: normalizeConfidence(parsed.sequence_3?.confidence),
       strategy: (parsed.sequence_3?.strategy as MessageStrategy) ?? 'urgency',
       ai_detector_risk: parsed.sequence_3?.ai_detector_risk ?? 0,
+      sounds_human: parsed.sequence_3?.sounds_human ?? 0,
+      structure_notes: parsed.sequence_3?.structure_notes ?? '',
     },
   ]
+
+  const meta: MessageSequenceMeta | undefined = parsed.meta
+    ? {
+        trigger_used: parsed.meta.trigger_used ?? trigger,
+        voice_detected: parsed.meta.voice_detected ?? [],
+        structure_score: parsed.meta.structure_score ?? 0,
+        avg_sounds_human: parsed.meta.avg_sounds_human
+          ?? (drafts.reduce((sum, d) => sum + (d.sounds_human ?? 0), 0) / drafts.length),
+        readability_warning: parsed.meta.readability_warning,
+      }
+    : undefined
 
   const usage = calcUsage(
     response.usage?.prompt_tokens ?? 0,
     response.usage?.completion_tokens ?? 0
   )
 
-  return { drafts, usage }
+  return { drafts, usage, meta }
 }
 
 // ============================================
-// PROMPT C: humanize_message_v1
-// Fase 3: Post-procesamiento para reducir AI detection score
-// Solo se llama cuando ai_detector_risk > 0.30
+// PROMPT C: humanize_message_v2
+// Fase 3: Post-procesamiento estructural para reducir AI detection
+// Solo se llama cuando ai_detector_risk > 0.45 O sounds_human < 0.6
 // ============================================
 
 export async function humanizeMessage(text: string): Promise<HumanizedMessage> {
   const openai = getOpenAI()
 
+  const escapedText = text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
+
   const response = await openai.chat.completions.create({
     model: MODEL,
     max_tokens: 500,
+    temperature: 0.9,
     response_format: { type: 'json_object' },
     messages: [
       {
         role: 'system',
-        content: `Eres editor de copywriting experto en cold outreach. Tu trabajo: hacer que un mensaje generado por IA parezca escrito por un vendedor humano de verdad. Sin perder el hook ni la estrategia del original. Sin superar 280 caracteres. Responde siempre con JSON válido.`,
+        content: `Tu única tarea: este mensaje suena a IA. Reescríbelo para que suene a humano.
+
+La detección IA es ESTADÍSTICA (perplexity, burstiness), no de vocabulario.
+Cambiar "meticulous" por "cuidadoso" NO resuelve el problema.
+
+LO QUE SÍ FUNCIONA:
+1. Variación de longitud de frases: alterna cortas (5-10 palabras) con largas (18-25)
+2. Variación sintáctica: no iniciar 2 oraciones seguidas con el mismo patrón
+3. Eliminar triadas de adjetivos (rápido, confiable, escalable → elige uno y desarrolla)
+4. Eliminar patrones detectados: "No X sino Y", "Hoy más que nunca", "En conclusión"
+5. Eliminar anáfora: 2+ oraciones que empiezan igual estructuralmente
+6. Pregunta de cierre abierta > CTA cerrado
+
+Preserva: hook original, estrategia, datos específicos del prospect. Máx 280 caracteres.
+Responde siempre con JSON válido.`,
       },
       {
         role: 'user',
-        content: `Humaniza este mensaje LinkedIn para reducir su detección como IA:
+        content: `Humaniza este mensaje. El problema NO es el vocabulario — es la estructura.
 
-MENSAJE: "${text}"
+MENSAJE ORIGINAL: "${escapedText}"
 
-Analiza y corrige:
-1. Palabras o frases que suenan robóticas o genéricas
-2. Estructura demasiado perfecta (todas las frases igual de largas)
-3. Transiciones explícitas de IA ("además", "por lo tanto", "en conclusión")
-4. Falta de especificidad o imperfecciones naturales
+Analiza:
+1. ¿Todas las frases tienen longitud parecida? → Varía
+2. ¿Hay patrones repetidos al inicio de oraciones? → Rompe
+3. ¿Hay triadas de adjetivos o beneficios? → Elimina
+4. ¿Hay "No X sino Y"? ¿"Hoy más que nunca"? → Elimina
+5. ¿El cierre es un CTA genérico? → Convierte en pregunta
 
 Devuelve exactamente este JSON:
 {
-  "original": "${text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}",
+  "original": "${escapedText}",
   "humanized": "...",
-  "changes_made": ["cambio 1", "cambio 2"],
+  "changes_made": ["cambio estructural 1", "cambio estructural 2"],
   "ai_score_before": 0.0,
   "ai_score_after": 0.0,
   "confidence": 0.0
@@ -558,10 +713,9 @@ Devuelve exactamente este JSON:
 
 Reglas:
 - humanized ≤ 280 caracteres (obligatorio)
-- Preserva el hook y la estrategia del original
-- ai_score_after debe ser < 0.20
-- Solo haz cambios que reduzcan detección IA (no reescribas sin razón)
-- Añade asimetría: frases de longitud variada, pregunta al final, puntos suspensivos si encajan`,
+- ai_score_after < 0.20
+- Solo cambia estructura y flujo, NO inventes datos nuevos del prospect
+- Lee el resultado en voz alta: ¿suena como alguien hablando de verdad?`,
       },
     ],
   })
@@ -572,30 +726,46 @@ Reglas:
 
 // ============================================
 // PIPELINE: enrich → generate → humanize
-// Orquestador completo de generación de mensajes (v4)
+// Orquestador completo de generación de mensajes (v5)
 // ============================================
 
-const AI_RISK_HUMANIZE_THRESHOLD = 0.30
+// Humanize only when clearly AI-written; threshold raised from 0.30 to 0.45
+// to avoid over-processing messages that are already decent.
+const AI_RISK_HUMANIZE_THRESHOLD = 0.45
+const SOUNDS_HUMAN_HUMANIZE_THRESHOLD = 0.6
+
+function needsHumanization(draft: MessageDraft): boolean {
+  return (
+    (draft.ai_detector_risk ?? 0) > AI_RISK_HUMANIZE_THRESHOLD ||
+    (draft.sounds_human !== undefined && draft.sounds_human < SOUNDS_HUMAN_HUMANIZE_THRESHOLD)
+  )
+}
 
 export async function generateMessagesWithPipeline(
   lead: LeadInput
 ): Promise<GenerateMessagesResponse> {
-  // Fase 1: Enriquecer perfil del lead
+  // Fase 1: Enriquecer perfil
   const profile = await enrichLeadProfile(
     lead.name,
     lead.title,
     lead.company,
     lead.industry,
-    lead.location
+    lead.location,
+    lead.profile_snippet
   )
 
-  // Fase 2: Generar mensajes con perfil enriquecido
-  const { drafts, usage } = await generateLinkedInMessages(lead, profile)
+  // Si el caller pre-extrajo trigger/voice (via extractTriggerAndVoice()), esos
+  // valores tienen prioridad sobre lo que devolvió enrichLeadProfile.
+  if (lead.trigger) profile.trigger = lead.trigger
+  if (lead.voice_of_customer?.length) profile.voice_of_customer = lead.voice_of_customer
 
-  // Fase 3: Humanizar mensajes con alto riesgo de detección IA
+  // Fase 2: Generar mensajes con perfil enriquecido, trigger, voz y país
+  const { drafts, usage, meta } = await generateLinkedInMessages(lead, profile)
+
+  // Fase 3: Humanizar solo mensajes con detección IA alta O sounds_human bajo
   const finalDrafts = await Promise.all(
     drafts.map(async (draft) => {
-      if ((draft.ai_detector_risk ?? 0) > AI_RISK_HUMANIZE_THRESHOLD) {
+      if (needsHumanization(draft)) {
         try {
           const result = await humanizeMessage(draft.text)
           return {
@@ -611,5 +781,5 @@ export async function generateMessagesWithPipeline(
     })
   )
 
-  return { drafts: finalDrafts, usage }
+  return { drafts: finalDrafts, usage, meta }
 }

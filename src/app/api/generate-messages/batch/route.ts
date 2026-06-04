@@ -11,8 +11,8 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
-import { generateMessagesWithPipeline } from '@/lib/claude_prompts'
-import { saveLeadWithDrafts } from '@/lib/message_store'
+import { generateMessagesWithPipeline, extractTriggerAndVoice } from '@/lib/claude_prompts'
+import { createMessageBatch, saveLeadWithDrafts } from '@/lib/message_store'
 import type {
   BatchGenerateRequestBody,
   BatchGenerateResult,
@@ -115,6 +115,7 @@ export async function POST(req: NextRequest) {
   if (!contacts || contacts.length === 0) {
     return NextResponse.json<BatchGenerateResult>({
       search_id,
+      batch_id: '',
       total_contacts: 0,
       processed: 0,
       failed: 0,
@@ -126,21 +127,42 @@ export async function POST(req: NextRequest) {
 
   type RawContact = (typeof contacts)[0]
 
-  // --- 3. Process all contacts (max CONCURRENCY parallel) ---
+  // --- 3. Create a batch record for this generation run ---
+  const batch_id = await createMessageBatch(search_id, your_product, contacts.length)
+  console.log(`[batch] Created batch ${batch_id} for search ${search_id} (${contacts.length} contacts)`)
+
+  // --- 4. Process all contacts (max CONCURRENCY parallel) ---
   const settled = await runConcurrent(contacts, async (contact: RawContact) => {
-    const leadInput: LeadInput = {
-      name:            contact.name ?? '',
-      title:           contact.job_title ?? '',
-      company:         contact.company ?? '',
+    const snippet = contact.raw_google_snippet ?? undefined
+
+    // Step A: extract trigger + voice explicitly so they're visible in logs
+    const { trigger, voice_of_customer } = await extractTriggerAndVoice(
+      contact.name ?? '',
+      contact.job_title ?? '',
+      contact.company ?? '',
       industry,
-      location:        contact.location ?? '',
-      linkedin_url:    contact.linkedin_url,
-      profile_snippet: contact.raw_google_snippet ?? undefined,
+      snippet
+    )
+    console.log(
+      `[batch] trigger for ${contact.name}: "${trigger}" | voice: [${voice_of_customer.join(', ')}]`
+    )
+
+    // Step B: build lead with pre-extracted values — pipeline won't re-extract them
+    const leadInput: LeadInput = {
+      name:             contact.name ?? '',
+      title:            contact.job_title ?? '',
+      company:          contact.company ?? '',
+      industry,
+      location:         contact.location ?? '',
+      linkedin_url:     contact.linkedin_url,
+      profile_snippet:  snippet,
       your_product,
+      trigger,
+      voice_of_customer,
     }
 
     const { drafts, usage } = await generateMessagesWithPipeline(leadInput)
-    const { lead_id } = await saveLeadWithDrafts(leadInput, drafts, { search_id })
+    const { lead_id } = await saveLeadWithDrafts(leadInput, drafts, { search_id, batch_id })
 
     return { lead_id, usage }
   })
@@ -183,6 +205,7 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json<BatchGenerateResult>({
     search_id,
+    batch_id,
     total_contacts: contacts.length,
     processed,
     failed,

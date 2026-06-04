@@ -1,11 +1,12 @@
 // ============================================
-// GET /api/drafts?search_id=uuid
+// GET /api/drafts
 // Devuelve todos los drafts (flat array) con info del lead y búsqueda.
 //
 // Query params:
-//   search_id  (optional) — uuid de la búsqueda; si se omite, devuelve todos
+//   search_id  (optional) — filtra por búsqueda
+//   batch_id   (optional) — filtra por lote de generación (preferred)
 //
-// Response: array plano ordenado por search_id → lead_id → sequence (1, 2, 3)
+// Response: array plano ordenado por lead_id → sequence (1, 2, 3)
 // ============================================
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -19,6 +20,7 @@ interface DraftItem {
   lead_linkedin_url: string
   lead_company:      string | null
   search_name:       string | null
+  batch_id:          string | null
   sequence:          number
   draft_text:        string
   confidence:        number
@@ -36,10 +38,11 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url)
   const search_id = searchParams.get('search_id')
+  const batch_id  = searchParams.get('batch_id')
+  const legacy    = searchParams.get('legacy') === 'true' // batch_id IS NULL
 
   const supabase = createServerClient()
 
-  // Fetch leads (+ nested drafts + search name), ordered by search_id then lead id
   let query = supabase
     .from('leads')
     .select(
@@ -48,6 +51,7 @@ export async function GET(req: NextRequest) {
        linkedin_url,
        company,
        search_id,
+       batch_id,
        searches (name),
        message_drafts (
          id,
@@ -56,10 +60,13 @@ export async function GET(req: NextRequest) {
          confidence
        )`
     )
-    .order('search_id', { ascending: true })
     .order('id', { ascending: true })
 
-  if (search_id) {
+  if (legacy) {
+    query = query.is('batch_id', null)
+  } else if (batch_id) {
+    query = query.eq('batch_id', batch_id)
+  } else if (search_id) {
     query = query.eq('search_id', search_id)
   }
 
@@ -93,6 +100,7 @@ export async function GET(req: NextRequest) {
         lead_linkedin_url: lead.linkedin_url,
         lead_company:      lead.company ?? null,
         search_name:       searchName,
+        batch_id:          lead.batch_id ?? null,
         sequence:          d.sequence,
         draft_text:        d.draft_text,
         confidence:        d.confidence,

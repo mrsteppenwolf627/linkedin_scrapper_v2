@@ -17,7 +17,8 @@ Sistema de prospeccion B2B con flujo completo:
 - V1-V2 Message Generator: COMPLETO
 - V3 Auth System: COMPLETO
 - V3 Admin Approvals Dashboard (`/admin/approvals`): COMPLETO
-- V3 User Management Panel (`/dashboard/users`, solo admins): COMPLETO (TAREA 13)
+- V3 User Management Panel (`/dashboard/users`, solo admins): COMPLETO
+- V3 Dashboard Visual Refactor (2x2 Grid + 4 Buttons): COMPLETO (TAREA 14)
 - E2E auth flow (TAREA 12): PENDIENTE
 
 ## Rutas principales

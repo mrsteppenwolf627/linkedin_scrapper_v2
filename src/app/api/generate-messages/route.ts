@@ -29,7 +29,11 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const { name, title, company, industry, location, linkedin_url, profile_snippet, your_product } = body
+  const {
+    name, title, company, industry, location,
+    linkedin_url, profile_snippet, your_product,
+    country, trigger, voice_of_customer,
+  } = body
 
   if (!name || !title || !company || !industry || !linkedin_url || !your_product) {
     return NextResponse.json<ApiError>(
@@ -50,6 +54,9 @@ export async function POST(req: NextRequest) {
     linkedin_url,
     profile_snippet,
     your_product,
+    country,
+    trigger,
+    voice_of_customer,
   }
 
   try {

@@ -102,6 +102,8 @@ export interface ContactRecord {
 }
 
 // --- Message Generator ---
+export type LatamCountry = 'ES' | 'MX' | 'CO' | 'AR' | 'CL' | 'PE' | 'BR'
+
 export interface LeadInput {
   name: string
   title: string
@@ -110,7 +112,11 @@ export interface LeadInput {
   location: string
   linkedin_url: string
   profile_snippet?: string
-  your_product?: string  // Required for single endpoint; omitted in batch mode
+  your_product?: string    // Required for single endpoint; omitted in batch mode
+  country?: LatamCountry   // Determines pronoun: ES/MX=tú, CO/CL/PE=usted, AR=vos, BR=você
+  // Pre-extracted by extractTriggerAndVoice() — if present the pipeline skips re-extraction
+  trigger?: string
+  voice_of_customer?: string[]
 }
 
 // --- Lead Profile Enrichment (Phase 1 of pipeline) ---
@@ -125,6 +131,8 @@ export interface LeadProfile {
   company_size: CompanySize
   sector_keywords: string[]
   role_psychology: string
+  trigger: string          // Real event/signal that motivates outreach NOW
+  voice_of_customer: string[] // Exact words the prospect uses (from snippet/profile)
 }
 
 // --- Humanized Message (Phase 3 of pipeline) ---
@@ -146,6 +154,16 @@ export interface MessageDraft {
   confidence: number
   strategy?: MessageStrategy
   ai_detector_risk?: number
+  sounds_human?: number    // 0-1 scale; < 0.6 triggers humanization
+  structure_notes?: string // Notes on sentence-length variation and syntax patterns
+}
+
+export interface MessageSequenceMeta {
+  trigger_used: string
+  voice_detected: string[]
+  structure_score: number
+  avg_sounds_human: number
+  readability_warning?: string
 }
 
 export interface TokenUsage {
@@ -158,6 +176,7 @@ export interface TokenUsage {
 export interface GenerateMessagesResponse {
   drafts: MessageDraft[]
   usage: TokenUsage
+  meta?: MessageSequenceMeta
 }
 
 // API response includes the persisted lead_id from Supabase
@@ -171,6 +190,16 @@ export interface GenerateMessagesRequestBody extends LeadInput {
 }
 
 // --- Batch Message Generation ---
+
+export interface MessageBatch {
+  id: string
+  created_at: string
+  search_id: string | null
+  search_name?: string | null
+  label: string | null
+  total_leads: number
+  your_product: string | null
+}
 
 export interface BatchGenerateRequestBody {
   search_id: string
@@ -188,6 +217,7 @@ export interface BatchItemResult {
 
 export interface BatchGenerateResult {
   search_id: string
+  batch_id: string
   total_contacts: number
   processed: number
   failed: number

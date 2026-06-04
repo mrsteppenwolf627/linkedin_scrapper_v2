@@ -33,6 +33,8 @@ export async function GET(
   const supabase = createServerClient()
 
   // Construir query base
+  // select('*') incluye raw_google_snippet — lo necesita la UI para pasarlo
+  // como profile_snippet al endpoint de generación de mensajes.
   let query = supabase
     .from('contacts')
     .select('*', { count: 'exact' })
