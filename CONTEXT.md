@@ -131,11 +131,11 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | Campo | Valor |
 |---|---|
 | Fecha | 2026-06-04 |
-| Timestamp UTC | 2026-06-04T08:10:18Z |
-| Responsable | Claude Code (Arquitecto de Software) |
-| Motivo | Ciclo de orquestación #2 ejecutado bajo Guía Proyectos Grandes — validate-context 13/13 → orchestrate.ts EXIT_CODE 0 |
-| Artefactos | `leads_raw.json` · `mensajes_listos.json` regenerados |
-| Build | ✅ `tsc --noEmit` sin errores · validate-context.sh 13/13 |
+| Responsable | Claude Code (Ingeniero de Infraestructura) |
+| Motivo | Parches de configuración aplicados: ANTHROPIC_API_KEY + NEXT_PUBLIC_SUPABASE_ANON_KEY |
+| validate-context.sh | ✅ 13/13 EXIT_CODE 0 |
+| Build | ✅ `tsc --noEmit` sin errores |
+| Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
 
 ---
 
