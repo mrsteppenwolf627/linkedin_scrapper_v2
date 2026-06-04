@@ -83,6 +83,18 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Grid 2×2 con 4 módulos: Buscador · Mis Búsquedas · Generador · Hub de Mensajes
 - Header persistente con Logout; sombras sólidas estilo brutalista
 
+### Auditoría Técnica de Mensajes ✅ EJECUTADA (2026-06-04)
+- `scripts/audit_messages.ts`: auditor de tres pilares (Brevedad · Naturalidad · Cero Pitch)
+- Resultado sobre `mensajes_listos.json` (gpt-4o-mini): **6 FALLOS · 1 ADVERTENCIA · 2 OK**
+- `docs/decisions/error_report_2026-06-04.md`: reporte detallado con violaciones por lead/mensaje
+- `scripts/orchestrate.ts` system prompt v2: 5 patches aplicados post-auditoría
+  - Patch 1: anti-restatement en Observación (prohibido repetir cargo+empresa)
+  - Patch 2: prohibición "no solo X sino también Y" + "Muchas empresas están..."
+  - Patch 3: CTA = exactamente 1 pregunta, sin invitar a conversar/reunirse
+  - Patch 4: lista negra de 8 buzzwords corporativos
+  - Patch 5: regla de especificidad global (test de genericidad antes de redactar)
+- `npm run audit:messages` para auditar el artefacto más reciente
+
 ### ADR-004: Fallback de Leads ✅ REGISTRADA Y ACTIVA (2026-06-04)
 - `docs/adr/ADR-004-fallback-leads-entornos-restringidos.md` — Status: CONGELADA
 - Decisión: seed leads activados automáticamente cuando Supabase no es accesible

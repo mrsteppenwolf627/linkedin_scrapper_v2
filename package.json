@@ -12,7 +12,9 @@
     "test:messages": "tsx scripts/test_messages.ts",
     "test:messages:lead": "tsx scripts/test_messages.ts",
     "test:drafting": "tsx --tsconfig tsconfig.json scripts/test_drafting_agent.ts",
-    "test:drafting:live": "tsx --tsconfig tsconfig.json scripts/test_drafting_agent.ts --live"
+    "test:drafting:live": "tsx --tsconfig tsconfig.json scripts/test_drafting_agent.ts --live",
+    "audit:messages": "tsx --tsconfig tsconfig.json scripts/audit_messages.ts",
+    "audit:messages:file": "tsx --tsconfig tsconfig.json scripts/audit_messages.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.1",
