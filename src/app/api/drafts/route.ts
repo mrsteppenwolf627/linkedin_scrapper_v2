@@ -108,5 +108,7 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  return NextResponse.json(drafts)
+  return NextResponse.json(drafts, {
+    headers: { 'Cache-Control': 'no-store' },
+  })
 }

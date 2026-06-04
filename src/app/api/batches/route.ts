@@ -51,7 +51,9 @@ export async function GET(req: NextRequest) {
     your_product: row.your_product,
   }))
 
-  return NextResponse.json(batches)
+  return NextResponse.json(batches, {
+    headers: { 'Cache-Control': 'no-store' },
+  })
 }
 
 // --- DELETE ---

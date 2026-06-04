@@ -148,14 +148,21 @@ export default function MessagesPage() {
     setIsLoadingDrafts(true);
     setLeads([]);
     try {
+      // cache: 'no-store' prevents browser from serving stale drafts
       const res = await fetch(`/api/drafts?batch_id=${batchId}`, {
         headers: { "x-api-key": API_KEY },
+        cache: "no-store",
       });
-      if (!res.ok) throw new Error("Failed to load drafts");
+      if (!res.ok) {
+        const body = await res.text().catch(() => "");
+        console.error(`[fetchDrafts] HTTP ${res.status}`, body);
+        throw new Error(`Error ${res.status} al cargar mensajes`);
+      }
 
       const arr: RawDraft[] = await res.json();
+      console.log(`[fetchDrafts] batch=${batchId} → ${arr.length} drafts`);
 
-      // Group by lead name
+      // Group by lead (key: name + url — unique per lead within a batch)
       const map = new Map<string, LeadRow>();
       for (const d of arr) {
         const key = d.lead_name + d.lead_linkedin_url;
@@ -171,8 +178,8 @@ export default function MessagesPage() {
       }
       setLeads(Array.from(map.values()));
     } catch (err) {
-      console.error(err);
-      toast.error("No se pudieron cargar los mensajes");
+      console.error("[fetchDrafts] error:", err);
+      toast.error(err instanceof Error ? err.message : "No se pudieron cargar los mensajes");
     } finally {
       setIsLoadingDrafts(false);
     }
@@ -180,14 +187,20 @@ export default function MessagesPage() {
 
   useEffect(() => { fetchBatches(); }, [fetchBatches]);
 
+  // Effect 1: cuando cambia el batch seleccionado → cargar sus drafts
+  // legacyLeads NO está en las dependencias: cambiar los legacy no debe
+  // re-disparar fetchDrafts (causaba setLeads([]) innecesario → "0 leads")
   useEffect(() => {
-    if (!selectedBatchId || selectedBatchId === "__legacy__") {
-      // Legacy drafts already loaded in fetchBatches — just swap the display
-      if (selectedBatchId === "__legacy__") setLeads(legacyLeads);
-      return;
-    }
+    if (!selectedBatchId || selectedBatchId === "__legacy__") return;
     fetchDrafts(selectedBatchId);
-  }, [selectedBatchId, fetchDrafts, legacyLeads]);
+  }, [selectedBatchId, fetchDrafts]);
+
+  // Effect 2: cuando se selecciona legacy O cuando los legacy cambian con legacy activo
+  useEffect(() => {
+    if (selectedBatchId === "__legacy__") {
+      setLeads(legacyLeads);
+    }
+  }, [selectedBatchId, legacyLeads]);
 
   // ── Copy ──────────────────────────────────────────────────────────────────
   const handleCopy = async (text: string, key: string) => {
@@ -261,12 +274,26 @@ export default function MessagesPage() {
               Secuencias listas para enviar · Gestión por lotes
             </p>
           </div>
-          <Link
-            href="/dashboard"
-            className="text-xs font-bold border-2 border-[#1A1A1A] px-6 py-3 hover:bg-[#1A1A1A] hover:text-white transition-colors uppercase shadow-[4px_4px_0px_#1A1A1A] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none whitespace-nowrap"
-          >
-            &lt; VOLVER
-          </Link>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => {
+                setSelectedBatchId(null);
+                setLeads([]);
+                fetchBatches();
+              }}
+              disabled={isLoadingBatches}
+              className="text-xs font-bold border-2 border-[#1A1A1A] px-4 py-3 hover:bg-[#4A7C59] hover:text-white hover:border-[#4A7C59] transition-colors uppercase shadow-[4px_4px_0px_#1A1A1A] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
+              title="Recargar lotes desde la BD"
+            >
+              {isLoadingBatches ? "..." : "↻ ACTUALIZAR"}
+            </button>
+            <Link
+              href="/dashboard"
+              className="text-xs font-bold border-2 border-[#1A1A1A] px-6 py-3 hover:bg-[#1A1A1A] hover:text-white transition-colors uppercase shadow-[4px_4px_0px_#1A1A1A] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none whitespace-nowrap"
+            >
+              &lt; VOLVER
+            </Link>
+          </div>
         </header>
 
         {/* ── Migration required banner ── */}
@@ -434,10 +461,16 @@ export default function MessagesPage() {
 
               {/* No drafts for batch */}
               {!isLoadingDrafts && selectedBatchId && selectedBatchId !== "__legacy__" && leads.length === 0 && (
-                <div className="border-4 border-[#1A1A1A] p-10 text-center bg-white shadow-[6px_6px_0px_#1A1A1A]">
+                <div className="border-4 border-[#1A1A1A] p-10 text-center bg-white shadow-[6px_6px_0px_#1A1A1A] space-y-4">
                   <p className="text-sm font-black uppercase tracking-widest opacity-40">
                     Este lote no tiene mensajes guardados
                   </p>
+                  <button
+                    onClick={() => selectedBatchId && fetchDrafts(selectedBatchId)}
+                    className="text-xs font-black uppercase border-2 border-[#1A1A1A] px-4 py-2 hover:bg-[#D94F00] hover:text-white hover:border-[#D94F00] transition-colors shadow-[2px_2px_0px_#1A1A1A] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+                  >
+                    ↻ Reintentar carga
+                  </button>
                 </div>
               )}
 
