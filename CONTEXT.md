@@ -83,6 +83,13 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Grid 2×2 con 4 módulos: Buscador · Mis Búsquedas · Generador · Hub de Mensajes
 - Header persistente con Logout; sombras sólidas estilo brutalista
 
+### Auditoría de Infraestructura / Credenciales ✅ EJECUTADA (2026-06-04)
+- `docs/decisions/missing_credentials_report_2026-06-04.md`: reporte completo
+- 🔴 CRÍTICO #1: `ANTHROPIC_API_KEY` ausente en `.env.local` → orquestador crashea
+- 🔴 CRÍTICO #2: `NEXT_PUBLIC_SUPABASE_ANON_KEY` ausente → `createBrowserClient()` falla
+- Frontend: 100% rutas relativas `/api/...` — correcto para localhost:3000
+- `.env.example` actualizado: eliminadas vars obsoletas V1 (GOOGLE_API_KEY/GOOGLE_CX), añadidas ANTHROPIC_API_KEY, SEARCHAPI_IO_KEY, NEXT_PUBLIC_SEARCH_API_KEY, SUPABASE_ANON_KEY dual
+
 ### Auditoría Técnica de Mensajes ✅ EJECUTADA (2026-06-04)
 - `scripts/audit_messages.ts`: auditor de tres pilares (Brevedad · Naturalidad · Cero Pitch)
 - Resultado sobre `mensajes_listos.json` (gpt-4o-mini): **6 FALLOS · 1 ADVERTENCIA · 2 OK**
