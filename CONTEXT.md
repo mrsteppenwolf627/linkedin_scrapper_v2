@@ -83,6 +83,13 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Grid 2×2 con 4 módulos: Buscador · Mis Búsquedas · Generador · Hub de Mensajes
 - Header persistente con Logout; sombras sólidas estilo brutalista
 
+### ADR-004: Fallback de Leads ✅ REGISTRADA Y ACTIVA (2026-06-04)
+- `docs/adr/ADR-004-fallback-leads-entornos-restringidos.md` — Status: CONGELADA
+- Decisión: seed leads activados automáticamente cuando Supabase no es accesible
+- `docs/decisions/index.md` creado como índice canónico de todas las decisiones
+- `orchestrate.ts` actualizado: carga TODOS los `.md` de `docs/adr/` (no solo `ADRs.md`)
+- Cualquier agente que opere sobre el pipeline debe consultar `docs/adr/` antes de generar código
+
 ### Pipeline de Datos: Orquestador ✅ COMPLETO — Refactor a claude-sonnet-4-6 (2026-06-04)
 - `scripts/orchestrate.ts`: Agente de redacción migrado de gpt-4o-mini → **claude-sonnet-4-6** (Anthropic SDK)
 - `docs/adr/ADRs.md`: Decisiones de marca congeladas inyectadas en system prompt antes de redactar

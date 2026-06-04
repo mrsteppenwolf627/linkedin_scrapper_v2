@@ -10,7 +10,7 @@ config({ path: resolve(process.cwd(), '.env.local') })
 
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
-import { writeFileSync, existsSync, readFileSync } from 'fs'
+import { writeFileSync, existsSync, readFileSync, readdirSync } from 'fs'
 
 // ── Tipos ─────────────────────────────────────────────
 interface LeadRaw {
@@ -123,23 +123,47 @@ function writeAndVerifyLeadsRaw(leads: LeadRaw[]): void {
 }
 
 // ─────────────────────────────────────────────────────
+// Carga todas las ADRs del directorio docs/adr/ en orden alfabético.
+// Esto garantiza que cualquier ADR añadida al directorio sea consultada
+// automáticamente por el agente sin cambios de código (ADR-004 incluida).
+// ─────────────────────────────────────────────────────
+function loadAllADRs(): string {
+  const adrDir = join(process.cwd(), 'docs', 'adr')
+  if (!existsSync(adrDir)) return '(directorio docs/adr/ no encontrado)'
+
+  const files = readdirSync(adrDir)
+    .filter(f => f.endsWith('.md'))
+    .sort() // orden alfabético → ADR-001 antes que ADR-004
+
+  if (files.length === 0) return '(no hay archivos .md en docs/adr/)'
+
+  const contents = files.map(f => {
+    const content = readFileSync(join(adrDir, f), 'utf-8')
+    return `\n${'─'.repeat(60)}\n## ARCHIVO: ${f}\n${'─'.repeat(60)}\n${content}`
+  })
+
+  return contents.join('\n')
+}
+
+// ─────────────────────────────────────────────────────
 // PASO 3 — Agente de redacción (claude-sonnet-4-6)
 // Framework: Observación → Insight → CTA Abierto
 // El system prompt se cachea entre leads (prompt caching Anthropic).
-// El agente consulta ADRs.md antes de redactar para mantener
-// coherencia con las decisiones arquitectónicas congeladas.
+// El agente carga TODOS los ficheros .md de docs/adr/ antes de redactar,
+// incluyendo ADR-004 (fallback leads) y cualquier ADR futura.
 // ─────────────────────────────────────────────────────
 async function draftMessages(leads: LeadRaw[]): Promise<MensajeLead[]> {
   console.log('\n[PASO 3] Agente de redacción (claude-sonnet-4-6) — generando secuencias...')
 
   const anthropic = getAnthropic()
 
-  // Leer ADRs.md para inyectar decisiones de marca en el system prompt
-  const adrsPath = join(process.cwd(), 'docs', 'adr', 'ADRs.md')
-  const adrsContent = existsSync(adrsPath)
-    ? readFileSync(adrsPath, 'utf-8')
-    : '(ADRs.md no encontrado — aplicar criterios de tono y estructura por defecto)'
-  console.log(`  → ADRs.md cargado (${adrsContent.length} caracteres)`)
+  // Cargar todas las ADRs del directorio docs/adr/ (incluye ADR-004 y futuras)
+  const adrsContent = loadAllADRs()
+  const adrDir = join(process.cwd(), 'docs', 'adr')
+  const adrFiles = existsSync(adrDir)
+    ? readdirSync(adrDir).filter(f => f.endsWith('.md')).sort()
+    : []
+  console.log(`  → ${adrFiles.length} ADR(s) cargadas: ${adrFiles.join(', ')} (${adrsContent.length} chars total)`)
 
   // System prompt con el framework explícito + decisiones de marca
   // Se marca con cache_control para reutilizarse entre todos los leads del run.
