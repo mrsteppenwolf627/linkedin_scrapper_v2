@@ -83,12 +83,14 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Grid 2×2 con 4 módulos: Buscador · Mis Búsquedas · Generador · Hub de Mensajes
 - Header persistente con Logout; sombras sólidas estilo brutalista
 
-### Pipeline de Datos: Orquestador ✅ COMPLETO
+### Pipeline de Datos: Orquestador ✅ COMPLETO — Ciclo #2 ejecutado 2026-06-04T08:10:18Z
 - `scripts/orchestrate.ts`: runner standalone (tsx) — Scraper → leads_raw.json → mensajes_listos.json
 - `src/lib/linkedin_scraper.ts`: exporta leads validados a `leads_raw.json` tras cada búsqueda
 - Contrato de datos: `{ nombre, empresa, posts_recientes[], rol }` por lead
 - Agente de redacción: gpt-4o-mini con framework Observación → Insight → CTA Abierto
-- Artefactos generados: `leads_raw.json` (3 leads) · `mensajes_listos.json` (3 × 3 mensajes)
+- Artefactos generados: `leads_raw.json` (3 leads · 19 líneas) · `mensajes_listos.json` (3 × 3 mensajes · 58 líneas)
+- Validación pre-ejecución: 13/13 checks ✅ · Orquestador EXIT_CODE: 0 ✅
+- Supabase: no accesible en este entorno (proyecto pausado) → seed leads activado automáticamente
 
 ### V3: E2E Tests 🕒 PENDIENTE
 - Flujo: Signup → Pending → Admin Approve → Signin → Access
@@ -101,9 +103,11 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | Campo | Valor |
 |---|---|
 | Fecha | 2026-06-04 |
-| Responsable | Claude Code |
-| Motivo | Orquestador pipeline: Scraper → leads_raw.json → mensajes_listos.json completado |
-| Build | ✅ `npm run build` passing · `tsc --noEmit` sin errores |
+| Timestamp UTC | 2026-06-04T08:10:18Z |
+| Responsable | Claude Code (Arquitecto de Software) |
+| Motivo | Ciclo de orquestación #2 ejecutado bajo Guía Proyectos Grandes — validate-context 13/13 → orchestrate.ts EXIT_CODE 0 |
+| Artefactos | `leads_raw.json` · `mensajes_listos.json` regenerados |
+| Build | ✅ `tsc --noEmit` sin errores · validate-context.sh 13/13 |
 
 ---
 
