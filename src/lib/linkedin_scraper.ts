@@ -3,6 +3,8 @@
 // executeLinkedInSearch: Google → Claude → Supabase
 // ============================================
 
+import { writeFileSync } from 'fs'
+import { join } from 'path'
 import { createServerClient } from '@/lib/supabase'
 import {
   searchGoogle,
@@ -21,6 +23,14 @@ import type {
   ParsedContact,
   ValidatedContact,
 } from '@/types'
+
+// Contrato de datos para el módulo de prospección
+interface LeadRawExport {
+  nombre: string
+  empresa: string
+  posts_recientes: string[]
+  rol: string
+}
 
 // ============================================
 // VALIDACIÓN EN CÓDIGO (sin LLM, determinista)
@@ -183,6 +193,7 @@ export async function executeLinkedInSearch(
   let totalDuplicates = 0
   let totalInvalid = 0
   const results: ContactRecord[] = []
+  const leadsRaw: LeadRawExport[] = []
 
   try {
     // --- PASO 2: Buscar en Google (con paginación) ---
@@ -329,6 +340,12 @@ export async function executeLinkedInSearch(
           if (created) {
             const newLead = created as ContactRecord;
             results.push(newLead);
+            leadsRaw.push({
+              nombre: validated.nombre ?? 'Desconocido',
+              empresa: validated.empresa ?? '',
+              posts_recientes: [],
+              rol: validated.titulo ?? '',
+            });
             if (onProgress) onProgress(newLead); // <-- EMITE EL LEAD EN TIEMPO REAL
           }
         }
@@ -355,6 +372,10 @@ export async function executeLinkedInSearch(
     console.log(`   Creados:     ${totalCreated}`)
     console.log(`   Duplicados:  ${totalDuplicates}`)
     console.log(`   Inválidos:   ${totalInvalid}`)
+
+    const outputPath = join(process.cwd(), 'leads_raw.json')
+    writeFileSync(outputPath, JSON.stringify(leadsRaw, null, 2), 'utf-8')
+    console.log(`📄 [Scraper] Exportado: leads_raw.json (${leadsRaw.length} leads)`)
   } catch (err) {
     // Error fatal: marcar búsqueda como fallida
     console.error(`\n💥 [Scraper] Error fatal:`, err)

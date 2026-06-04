@@ -83,6 +83,13 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Grid 2×2 con 4 módulos: Buscador · Mis Búsquedas · Generador · Hub de Mensajes
 - Header persistente con Logout; sombras sólidas estilo brutalista
 
+### Pipeline de Datos: Orquestador ✅ COMPLETO
+- `scripts/orchestrate.ts`: runner standalone (tsx) — Scraper → leads_raw.json → mensajes_listos.json
+- `src/lib/linkedin_scraper.ts`: exporta leads validados a `leads_raw.json` tras cada búsqueda
+- Contrato de datos: `{ nombre, empresa, posts_recientes[], rol }` por lead
+- Agente de redacción: gpt-4o-mini con framework Observación → Insight → CTA Abierto
+- Artefactos generados: `leads_raw.json` (3 leads) · `mensajes_listos.json` (3 × 3 mensajes)
+
 ### V3: E2E Tests 🕒 PENDIENTE
 - Flujo: Signup → Pending → Admin Approve → Signin → Access
 - Asignado a: Codex
@@ -95,8 +102,8 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-04 |
 | Responsable | Claude Code |
-| Motivo | Inicialización estructura Guía Proyectos Grandes |
-| Build | ✅ `npm run build` passing (commit fd75c09) |
+| Motivo | Orquestador pipeline: Scraper → leads_raw.json → mensajes_listos.json completado |
+| Build | ✅ `npm run build` passing · `tsc --noEmit` sin errores |
 
 ---
 
@@ -106,6 +113,8 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|---|---|---|
 | 14 | Dashboard Visual Refactor (grid 2×2 + design system) | Gemini CLI | ✅ COMPLETO | — |
 | 13 | User Management Panel (`/dashboard/users`) | Codex | ✅ COMPLETO | — |
+| 20 | Refactor export: `linkedin_scraper.ts` → `leads_raw.json` (contrato datos) | Claude Code | ✅ COMPLETO | — |
+| 21 | Orquestador pipeline Scraper → leads_raw.json → mensajes_listos.json | Claude Code | ✅ COMPLETO | — |
 | 12 | E2E Tests (Signup → Approve → Signin → Access) | Codex | 🕒 PENDIENTE | Alta |
 | 15 | Funcionalidad real `/dashboard/search` (Buscador) | Gemini CLI | 🕒 PENDIENTE | Alta |
 | 16 | Paginación real en tabla de contactos | Gemini CLI | 🕒 PENDIENTE | Media |

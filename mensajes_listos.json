@@ -1,0 +1,59 @@
+[
+  {
+    "lead": "Carlos Mendoza",
+    "empresa": "Iberdrola",
+    "rol": "Senior Energy Consultant",
+    "mensajes": [
+      {
+        "tipo": "observacion",
+        "texto": "Carlos, he notado que en Iberdrola están impulsando proyectos innovadores en el sector energético, lo cual es fascinante."
+      },
+      {
+        "tipo": "insight",
+        "texto": "En un entorno tan dinámico, la adaptación a nuevas tecnologías puede marcar la diferencia en la eficiencia y sostenibilidad de los proyectos. Muchas empresas están descubriendo que optimizar sus procesos energéticos no solo reduce costos, sino que también mejora su competitividad en el mercado."
+      },
+      {
+        "tipo": "cta_abierto",
+        "texto": "Me gustaría saber tu opinión sobre cómo ven en Iberdrola la integración de nuevas soluciones en sus proyectos. ¿Crees que hay oportunidades para mejorar en este aspecto?"
+      }
+    ]
+  },
+  {
+    "lead": "Laura Sánchez",
+    "empresa": "Endesa",
+    "rol": "Directora de Desarrollo de Negocio",
+    "mensajes": [
+      {
+        "tipo": "observacion",
+        "texto": "Hola Laura, he notado que como Directora de Desarrollo de Negocio en Endesa, estás en una posición clave para impulsar nuevas oportunidades en el sector energético."
+      },
+      {
+        "tipo": "insight",
+        "texto": "En un entorno tan cambiante, identificar áreas de innovación puede ser crucial para mantener la competitividad. Las empresas que adoptan estrategias proactivas en desarrollo de negocio suelen ver un crecimiento sostenido y la capacidad de adaptarse a las demandas del mercado."
+      },
+      {
+        "tipo": "cta_abierto",
+        "texto": "Me gustaría saber tu perspectiva sobre cómo ves la evolución de las oportunidades en el sector energético. ¿Te gustaría intercambiar ideas al respecto?"
+      }
+    ]
+  },
+  {
+    "lead": "Alejandro Torres",
+    "empresa": "Repsol",
+    "rol": "Head of Renewable Energy Projects",
+    "mensajes": [
+      {
+        "tipo": "observacion",
+        "texto": "Hola Alejandro, he notado que lideras los proyectos de energía renovable en Repsol, un área clave para la transición energética actual."
+      },
+      {
+        "tipo": "insight",
+        "texto": "La creciente demanda de soluciones sostenibles presenta una oportunidad única para optimizar los proyectos y maximizar el impacto. Muchas empresas están explorando tecnologías innovadoras que no solo cumplen con las regulaciones, sino que también mejoran la eficiencia y reducen costos operativos."
+      },
+      {
+        "tipo": "cta_abierto",
+        "texto": "¿Te gustaría intercambiar ideas sobre las tendencias actuales en energías renovables y cómo podrían influir en tus proyectos en Repsol?"
+      }
+    ]
+  }
+]

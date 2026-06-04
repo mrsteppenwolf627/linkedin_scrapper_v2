@@ -1,0 +1,20 @@
+[
+  {
+    "nombre": "Carlos Mendoza",
+    "empresa": "Iberdrola",
+    "posts_recientes": [],
+    "rol": "Senior Energy Consultant"
+  },
+  {
+    "nombre": "Laura Sánchez",
+    "empresa": "Endesa",
+    "posts_recientes": [],
+    "rol": "Directora de Desarrollo de Negocio"
+  },
+  {
+    "nombre": "Alejandro Torres",
+    "empresa": "Repsol",
+    "posts_recientes": [],
+    "rol": "Head of Renewable Energy Projects"
+  }
+]
