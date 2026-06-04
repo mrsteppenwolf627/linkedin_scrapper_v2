@@ -102,6 +102,14 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
   - Patch 5: regla de especificidad global (test de genericidad antes de redactar)
 - `npm run audit:messages` para auditar el artefacto más reciente
 
+### Integración V2 UI ↔ Agente ✅ COMPLETA (2026-06-04)
+- `src/lib/agent_v2.ts`: motor exportable claude-sonnet-4-6 + ADRs (importable en Next.js y scripts)
+- `src/app/api/generate-v2/route.ts`: endpoint bridge — recibe `{search_id, sales_goal}` → orchestrateV2 → Supabase
+- `scripts/orchestrate.ts`: refactorizado como wrapper CLI delgado que re-exporta `orchestrateV2`
+- `migrations/20260511_message_batches.sql`: añadidos `agent_version`, `tipo` en `message_drafts`, vista `leads_v2_messages`
+- `src/app/dashboard/searches/page.tsx`: botón "Generar" conectado a `/api/generate-v2` con `sales_goal`
+- `tsc --noEmit` sin errores · validate-context.sh 13/13 ✅
+
 ### ADR-004: Fallback de Leads ✅ REGISTRADA Y ACTIVA (2026-06-04)
 - `docs/adr/ADR-004-fallback-leads-entornos-restringidos.md` — Status: CONGELADA
 - Decisión: seed leads activados automáticamente cuando Supabase no es accesible

@@ -51,26 +51,34 @@ export default function SearchesPage() {
   };
 
   const handleGenerateBatch = async () => {
-    if (!selectedSearchId) return;
-    
+    if (!selectedSearchId || !yourProduct.trim()) return;
+
     setIsGenerating(true);
-    
+
     try {
-      const res = await fetch("/api/generate-messages/batch", {
+      // V2 endpoint: pasa sales_goal (propuesta de valor) al agente claude-sonnet-4-6
+      const res = await fetch("/api/generate-v2", {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
           "x-api-key": process.env.NEXT_PUBLIC_SEARCH_API_KEY ?? ""
         },
-        body: JSON.stringify({ search_id: selectedSearchId })
+        body: JSON.stringify({
+          search_id: selectedSearchId,
+          sales_goal: yourProduct.trim(),
+        })
       });
-      
+
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "INIT_FAILED");
+        throw new Error(errorData.message || errorData.error || "GENERATE_V2_FAILED");
       }
-      
-      toast.success("BATCH_PROCESS: INICIADO EN SEGUNDO PLANO");
+
+      const data = await res.json();
+      console.log("[generate-v2] batch completado:", data);
+
+      // Completar directamente (V2 es síncrono)
+      await handleBatchComplete();
     } catch (err: any) {
       console.error(err);
       toast.error(`ERROR: ${err.message}`);
