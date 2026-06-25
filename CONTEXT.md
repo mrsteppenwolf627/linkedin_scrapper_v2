@@ -176,7 +176,7 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | MSG-AUDIT-01: auditoría del motor de mensajes completada — defecto crítico en posts_recientes identificado |
+| Motivo | MSG-STYLE-01: guía de estilo de conversación humana para mensajes Talent4Pro definida |
 | validate-context.sh | ✅ EXIT_CODE 0 |
 | Build | ✅ `npm run build` limpio — 26/26 páginas, 0 errores (verificado 2026-06-25) |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
@@ -194,7 +194,8 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | 21 | Orquestador pipeline Scraper → leads_raw.json → mensajes_listos.json | Claude Code | ✅ COMPLETO | — |
 | 22 | DEPLOY-PREP-01: `maxDuration` en /api/search + `.vercelignore` | Claude Code | ✅ COMPLETO | — |
 | 23 | MSG-AUDIT-01: auditar motor de mensajes V2 para Talent4Pro | Claude Code | ✅ COMPLETO | — |
-| 24 | MSG-FIX-01: pasar raw_google_snippet + contexto Talent4Pro al agente V2 | Claude Code | 🕒 PENDIENTE | Alta |
+| 24 | MSG-STYLE-01: guía de estilo humano para mensajes Talent4Pro | Claude Code | ✅ COMPLETO | — |
+| 25 | MSG-FIX-01B: aplicar guía de estilo + snippet al system prompt del motor V2 | Claude Code | 🕒 PENDIENTE | Alta |
 | 12 | E2E Tests (Signup → Approve → Signin → Access) | Codex | 🕒 PENDIENTE | Alta |
 | 15 | Funcionalidad real `/dashboard/search` (Buscador) | Gemini CLI | 🕒 PENDIENTE | Alta |
 | 16 | Paginación real en tabla de contactos | Gemini CLI | 🕒 PENDIENTE | Media |
