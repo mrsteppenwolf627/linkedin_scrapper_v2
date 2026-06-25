@@ -147,6 +147,16 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Tests sobre output gpt-4o-mini anterior: 4/60 fallos detectados (correctos — el viejo modelo violaba ADR-004 y ADR-005)
 - Requiere `ANTHROPIC_API_KEY` en `.env.local` para el agente de redacción
 
+### MSG-TEST-04: Prueba Final de Naturalidad ✅ COMPLETA (2026-06-25)
+- 4 leads probados — **3 APTO, 1 APTO CON RETOQUES, 0 NO APTO** ✅
+- Veredicto: **LISTO PARA DEPLOY OPERATIVO**
+- Ningún mensaje usa palabras prohibidas · Ninguno excede límites de caracteres
+- Lead-C: pasó de NO APTO (226 chars, "programas de desarrollo") a APTO (145 chars, limpio)
+- Lead-B: mejor mensaje generado hasta ahora — "Curioso lo que comentas de ir más allá del ERP"
+- Repetición residual: "Me da la sensación de que" en Lead-B y Lead-D (bajo impacto práctico, origen arquitectónico)
+- Motor V2 apto para uso en campañas de prospección Talent4Pro en Vercel
+- Próxima tarea: DEPLOY-02 — confirmar en producción
+
 ### MSG-FIX-04: Patrones Repetitivos Eliminados ✅ COMPLETO (2026-06-25)
 - Prohibidos 7 patrones de apertura del insight ("Lo que estoy viendo es que...", etc.)
 - Regla de variedad añadida: cada mensaje debe parecer escrito a mano para esa persona
@@ -241,7 +251,7 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | REPO-CLEAN-01: working tree limpiado — .gitignore actualizado, script de test versionado |
+| Motivo | MSG-TEST-04: 3 APTO, 1 APTO CON RETOQUES, 0 NO APTO — motor V2 listo para deploy operativo |
 | validate-context.sh | ✅ EXIT_CODE 0 |
 | Build | ✅ `npm run build` limpio — 26/26 páginas, 0 errores (verificado 2026-06-25) |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
@@ -268,7 +278,8 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | 30 | MSG-FIX-03: lenguaje simple y humano aplicado al motor V2 | Claude Code | ✅ COMPLETO | — |
 | 31 | MSG-TEST-03: naturalidad real — 1 APTO, 2 APTO CON RETOQUES, 1 NO APTO | Claude Code | ✅ COMPLETO | — |
 | 32 | MSG-FIX-04: patrones repetitivos eliminados + palabras prohibidas ampliadas + sustituciones | Claude Code | ✅ COMPLETO | — |
-| 33 | MSG-TEST-04: prueba final con 4 leads — si 3/4 APTO → deploy operativo | Claude Code | 🕒 PENDIENTE | Alta |
+| 33 | MSG-TEST-04: prueba final — 3 APTO, 1 APTO CON RETOQUES, 0 NO APTO | Claude Code | ✅ COMPLETO | — |
+| 34 | DEPLOY-02: confirmar motor V2 en Vercel y probar búsqueda + generación real | Claude Code | 🕒 PENDIENTE | Alta |
 | 12 | E2E Tests (Signup → Approve → Signin → Access) | Codex | 🕒 PENDIENTE | Alta |
 | 15 | Funcionalidad real `/dashboard/search` (Buscador) | Gemini CLI | 🕒 PENDIENTE | Alta |
 | 16 | Paginación real en tabla de contactos | Gemini CLI | 🕒 PENDIENTE | Media |
