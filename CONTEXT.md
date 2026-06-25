@@ -159,11 +159,11 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | DEPLOY-PREP-01: bloqueadores de staging Vercel resueltos (`maxDuration` + `.vercelignore`) |
+| Motivo | DEPLOY-VALIDATE-01: validación final predeploy completada — proyecto listo con advertencias |
 | validate-context.sh | ✅ EXIT_CODE 0 |
-| Build | ⚠️ `tsc --noEmit` ok (2026-06-04) — `npm run build` completo pendiente de verificar antes del primer deploy |
+| Build | ✅ `npm run build` limpio — 26/26 páginas, 0 errores (verificado 2026-06-25) |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
-| Vercel staging | 🟢 DESBLOQUEADO — bloqueadores DEPLOY-CHECK-01 resueltos; pendiente configurar env vars en Vercel dashboard |
+| Vercel staging | 🟡 LISTO CON ADVERTENCIAS — configurar 11 vars en Vercel dashboard antes del primer deploy |
 
 ---
 
