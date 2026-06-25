@@ -147,6 +147,13 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Tests sobre output gpt-4o-mini anterior: 4/60 fallos detectados (correctos — el viejo modelo violaba ADR-004 y ADR-005)
 - Requiere `ANTHROPIC_API_KEY` en `.env.local` para el agente de redacción
 
+### MSG-FIX-01B: Motor V2 Mejorado ✅ COMPLETO (2026-06-25)
+- `posts_recientes` ahora recibe `raw_google_snippet` del perfil real (antes siempre vacío)
+- System prompt ampliado: contexto Talent4Pro + guía de estilo humano + frases prohibidas adicionales
+- CTA ejemplos actualizados: preguntas conversacionales naturales vs. CTAs de reunión
+- Build ✅ 26/26 páginas · 0 errores · V1 sin tocar · UI sin tocar · schema sin tocar
+- Pendiente: prueba con leads reales para validar mejora de calidad (MSG-TEST-01)
+
 ### MSG-AUDIT-01: Auditoría del Motor de Mensajes ✅ COMPLETA (2026-06-25)
 - Dos motores identificados: V1 (`claude_prompts.ts`, OpenAI) y V2 (`agent_v2.ts`, Anthropic)
 - Solo V2 tiene el framework correcto para Talent4Pro (Observación → Insight → CTA Abierto)
@@ -176,7 +183,7 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | MSG-STYLE-01: guía de estilo de conversación humana para mensajes Talent4Pro definida |
+| Motivo | MSG-FIX-01B: señal real del perfil y estilo humano aplicados al motor V2 |
 | validate-context.sh | ✅ EXIT_CODE 0 |
 | Build | ✅ `npm run build` limpio — 26/26 páginas, 0 errores (verificado 2026-06-25) |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
@@ -195,7 +202,8 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | 22 | DEPLOY-PREP-01: `maxDuration` en /api/search + `.vercelignore` | Claude Code | ✅ COMPLETO | — |
 | 23 | MSG-AUDIT-01: auditar motor de mensajes V2 para Talent4Pro | Claude Code | ✅ COMPLETO | — |
 | 24 | MSG-STYLE-01: guía de estilo humano para mensajes Talent4Pro | Claude Code | ✅ COMPLETO | — |
-| 25 | MSG-FIX-01B: aplicar guía de estilo + snippet al system prompt del motor V2 | Claude Code | 🕒 PENDIENTE | Alta |
+| 25 | MSG-FIX-01B: señal real de perfil + estilo humano en motor V2 | Claude Code | ✅ COMPLETO | — |
+| 26 | MSG-TEST-01: prueba controlada con 3–5 leads reales en producción | Claude Code | 🕒 PENDIENTE | Alta |
 | 12 | E2E Tests (Signup → Approve → Signin → Access) | Codex | 🕒 PENDIENTE | Alta |
 | 15 | Funcionalidad real `/dashboard/search` (Buscador) | Gemini CLI | 🕒 PENDIENTE | Alta |
 | 16 | Paginación real en tabla de contactos | Gemini CLI | 🕒 PENDIENTE | Media |

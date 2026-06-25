@@ -1,6 +1,6 @@
 # Índice de Decisiones Arquitectónicas
 > Guía Proyectos Grandes — Herramienta de Captación LinkedIn para Talent4Pro
-> Última actualización: 2026-06-25 (MSG-STYLE-01)
+> Última actualización: 2026-06-25 (MSG-FIX-01B)
 
 Este directorio es el punto de entrada canónico para todas las decisiones de diseño del proyecto.
 Los agentes de IA deben leer este índice antes de operar sobre cualquier componente del sistema.
@@ -20,6 +20,7 @@ Ubicación: `docs/decisions/DOC-BASE-NNN-*.md`
 | [POST-DEPLOY-01](POST-DEPLOY-01-vercel-functional-validation.md) | Validación Funcional del Despliegue en Vercel | **COMPLETA** | Infraestructura · Validación Funcional | https://linkedin-scrapper-v2.vercel.app |
 | [MSG-AUDIT-01](MSG-AUDIT-01-message-engine-audit-talent4pro.md) | Auditoría del Motor de Mensajes para Talent4Pro | **COMPLETA** | Motor de Mensajes · IA · Producto | `agent_v2.ts` · `claude_prompts.ts` · `/api/generate-v2` |
 | [MSG-STYLE-01](MSG-STYLE-01-human-conversation-style-talent4pro.md) | Guía de Estilo de Conversación Humana para Talent4Pro | **ACTIVA** | Motor de Mensajes · Estilo · Producto | `agent_v2.ts` (system prompt) · futura tarea MSG-FIX-01B |
+| [MSG-FIX-01B](MSG-FIX-01B-v2-human-style-and-profile-signal.md) | Señal Real de Perfil y Estilo Humano en Motor V2 | **COMPLETA** | Motor de Mensajes · IA · Fix | `generate-v2/route.ts` · `agent_v2.ts` |
 
 ---
 
