@@ -1,6 +1,25 @@
-# CONTEXT.md — LinkedIn Scraper v2: Message Generator + User System
+# CONTEXT.md — Herramienta de Captación LinkedIn para Talent4Pro
 > **Metodología:** Guía para Proyectos Grandes  
 > **Mantenido por:** Claude Code (Backend) · Gemini CLI (Frontend) · Codex (Testing)
+
+---
+
+## Objetivo Comercial
+
+Esta herramienta tiene como objetivo captar alumnos potenciales para la **certificación de Talent4Pro** a través de LinkedIn outreach.
+
+El flujo operativo es:
+1. Buscar perfiles de LinkedIn de profesionales que encajan con el perfil de alumno objetivo.
+2. Generar secuencias de mensajes personalizados que abran conversación — sin vender directamente.
+3. El usuario copia los mensajes y los envía manualmente por LinkedIn.
+
+**Prioridad actual:** mejorar la calidad y conversión de las secuencias de mensajes (motor de mensajes). La búsqueda de perfiles está funcionando y no se toca en esta fase.
+
+**Riesgo principal:** mensajes genéricos, robóticos o demasiado comerciales que el receptor ignora o rechaza. El objetivo NO es vender la certificación en el primer contacto, sino abrir una conversación.
+
+**Métrica principal futura:** tasa de respuesta / conversación abierta (no clicks, no leads generados).
+
+**Restricción operativa — SearchAPI:** el motor de búsqueda usa SearchAPI.io con créditos gratuitos. No se optimiza, no se cambia ni se escala en esta fase. Cualquier mejora al sistema de búsqueda queda fuera del alcance hasta nueva decisión.
 
 ---
 
@@ -138,11 +157,11 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 
 | Campo | Valor |
 |---|---|
-| Fecha | 2026-06-04 |
+| Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | Parches de configuración aplicados: ANTHROPIC_API_KEY + NEXT_PUBLIC_SUPABASE_ANON_KEY |
-| validate-context.sh | ✅ 13/13 EXIT_CODE 0 |
-| Build | ✅ `tsc --noEmit` sin errores |
+| Motivo | DOC-BASE-01: alineación del contexto del proyecto con objetivo comercial Talent4Pro |
+| validate-context.sh | ✅ EXIT_CODE 0 |
+| Build | ✅ `tsc --noEmit` sin errores (última verificación: 2026-06-04) |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
 
 ---
