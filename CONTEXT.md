@@ -147,6 +147,15 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Tests sobre output gpt-4o-mini anterior: 4/60 fallos detectados (correctos — el viejo modelo violaba ADR-004 y ADR-005)
 - Requiere `ANTHROPIC_API_KEY` en `.env.local` para el agente de redacción
 
+### MSG-AUDIT-01: Auditoría del Motor de Mensajes ✅ COMPLETA (2026-06-25)
+- Dos motores identificados: V1 (`claude_prompts.ts`, OpenAI) y V2 (`agent_v2.ts`, Anthropic)
+- Solo V2 tiene el framework correcto para Talent4Pro (Observación → Insight → CTA Abierto)
+- **Defecto crítico:** `posts_recientes` siempre vacío → observaciones genéricas para todos los leads
+- **Corrección disponible:** pasar `raw_google_snippet` existente en BD al campo `posts_recientes`
+- **Sin contexto Talent4Pro en prompt:** agente trata captación educativa como B2B genérico
+- Próxima tarea: MSG-FIX-01 — pasar snippet + añadir contexto Talent4Pro al system prompt V2
+- Ver: `docs/decisions/MSG-AUDIT-01-message-engine-audit-talent4pro.md`
+
 ### Despliegue en Vercel ✅ FUNCIONAL (2026-06-25)
 - URL: https://linkedin-scrapper-v2.vercel.app
 - Entorno: Production usado como staging privado · Rama: `master` · Commit: `2cf8294`
@@ -167,7 +176,7 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | POST-DEPLOY-01: despliegue funcional en Vercel confirmado |
+| Motivo | MSG-AUDIT-01: auditoría del motor de mensajes completada — defecto crítico en posts_recientes identificado |
 | validate-context.sh | ✅ EXIT_CODE 0 |
 | Build | ✅ `npm run build` limpio — 26/26 páginas, 0 errores (verificado 2026-06-25) |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
@@ -184,7 +193,8 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | 20 | Refactor export: `linkedin_scraper.ts` → `leads_raw.json` (contrato datos) | Claude Code | ✅ COMPLETO | — |
 | 21 | Orquestador pipeline Scraper → leads_raw.json → mensajes_listos.json | Claude Code | ✅ COMPLETO | — |
 | 22 | DEPLOY-PREP-01: `maxDuration` en /api/search + `.vercelignore` | Claude Code | ✅ COMPLETO | — |
-| 23 | MSG-AUDIT-01: auditar motor de mensajes V2 para Talent4Pro | Claude Code | 🕒 PENDIENTE | Alta |
+| 23 | MSG-AUDIT-01: auditar motor de mensajes V2 para Talent4Pro | Claude Code | ✅ COMPLETO | — |
+| 24 | MSG-FIX-01: pasar raw_google_snippet + contexto Talent4Pro al agente V2 | Claude Code | 🕒 PENDIENTE | Alta |
 | 12 | E2E Tests (Signup → Approve → Signin → Access) | Codex | 🕒 PENDIENTE | Alta |
 | 15 | Funcionalidad real `/dashboard/search` (Buscador) | Gemini CLI | 🕒 PENDIENTE | Alta |
 | 16 | Paginación real en tabla de contactos | Gemini CLI | 🕒 PENDIENTE | Media |

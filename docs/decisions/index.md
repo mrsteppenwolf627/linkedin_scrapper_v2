@@ -1,6 +1,6 @@
 # Índice de Decisiones Arquitectónicas
 > Guía Proyectos Grandes — Herramienta de Captación LinkedIn para Talent4Pro
-> Última actualización: 2026-06-25 (POST-DEPLOY-01)
+> Última actualización: 2026-06-25 (MSG-AUDIT-01)
 
 Este directorio es el punto de entrada canónico para todas las decisiones de diseño del proyecto.
 Los agentes de IA deben leer este índice antes de operar sobre cualquier componente del sistema.
@@ -18,6 +18,7 @@ Ubicación: `docs/decisions/DOC-BASE-NNN-*.md`
 | [DEPLOY-PREP-01](DEPLOY-PREP-01-vercel-staging-prep.md) | Preparación Mínima para Staging en Vercel | **COMPLETA** | Infraestructura · Despliegue | `src/app/api/search/route.ts` · `.vercelignore` |
 | [DEPLOY-VALIDATE-01](DEPLOY-VALIDATE-01-final-predeploy-check.md) | Validación Final Predeploy para Vercel Staging | **COMPLETA** | Infraestructura · Validación | build · lint · checklist · variables de entorno |
 | [POST-DEPLOY-01](POST-DEPLOY-01-vercel-functional-validation.md) | Validación Funcional del Despliegue en Vercel | **COMPLETA** | Infraestructura · Validación Funcional | https://linkedin-scrapper-v2.vercel.app |
+| [MSG-AUDIT-01](MSG-AUDIT-01-message-engine-audit-talent4pro.md) | Auditoría del Motor de Mensajes para Talent4Pro | **COMPLETA** | Motor de Mensajes · IA · Producto | `agent_v2.ts` · `claude_prompts.ts` · `/api/generate-v2` |
 
 ---
 
