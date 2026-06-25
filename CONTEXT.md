@@ -147,6 +147,14 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Tests sobre output gpt-4o-mini anterior: 4/60 fallos detectados (correctos — el viejo modelo violaba ADR-004 y ADR-005)
 - Requiere `ANTHROPIC_API_KEY` en `.env.local` para el agente de redacción
 
+### MSG-TEST-03: Prueba de Naturalidad Real ✅ COMPLETA (2026-06-25)
+- 4 leads probados — 1 APTO (Lead-D), 2 APTO CON RETOQUES (A, B), 1 NO APTO (C)
+- Veredicto: NECESITA AJUSTE MENOR — tono dramáticamente mejor vs MSG-TEST-02
+- Palabras prohibidas que siguen apareciendo: "criterio" (Lead-A) y "programas de desarrollo" (Lead-C)
+- Patrón sistemático: "Lo que estoy viendo es que..." abre el insight en 4/4 leads — delataría automatización
+- Lead-C observación: 226 chars (6 chars sobre el límite de 220)
+- Próxima tarea: MSG-FIX-04 — eliminar el patrón repetitivo y añadir sustituciones
+
 ### MSG-FIX-03: Estilo DM Simple Aplicado al Motor V2 ✅ COMPLETO (2026-06-25)
 - Rol del agente cambiado: de "redactor especializado" a "alguien que escribe desde el móvil"
 - Sección ESTILO reemplazada: regla central "¿podría escribirlo desde el móvil en 2 minutos?"
@@ -225,7 +233,7 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | MSG-FIX-03: lenguaje simple aplicado al motor V2 — rol, estilo, prohibiciones y framework actualizados |
+| Motivo | MSG-TEST-03: 1 APTO / 2 APTO CON RETOQUES / 1 NO APTO — patrón repetitivo y 2 palabras prohibidas detectadas |
 | validate-context.sh | ✅ EXIT_CODE 0 |
 | Build | ✅ `npm run build` limpio — 26/26 páginas, 0 errores (verificado 2026-06-25) |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
@@ -250,7 +258,8 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | 28 | MSG-TEST-02: confirmar límites con 4 leads — todos OK, listo para deploy | Claude Code | ✅ COMPLETO | — |
 | 29 | MSG-STYLE-02: guía de lenguaje simple para DMs (mensajes siguen sonando consultivos) | Claude Code | ✅ COMPLETO | — |
 | 30 | MSG-FIX-03: lenguaje simple y humano aplicado al motor V2 | Claude Code | ✅ COMPLETO | — |
-| 31 | MSG-TEST-03: prueba de naturalidad con 3-4 leads tras MSG-FIX-03 | Claude Code | 🕒 PENDIENTE | Alta |
+| 31 | MSG-TEST-03: naturalidad real — 1 APTO, 2 APTO CON RETOQUES, 1 NO APTO | Claude Code | ✅ COMPLETO | — |
+| 32 | MSG-FIX-04: eliminar patrón "Lo que estoy viendo es que..." + sustituciones palabras recurrentes | Claude Code | 🕒 PENDIENTE | Alta |
 | 12 | E2E Tests (Signup → Approve → Signin → Access) | Codex | 🕒 PENDIENTE | Alta |
 | 15 | Funcionalidad real `/dashboard/search` (Buscador) | Gemini CLI | 🕒 PENDIENTE | Alta |
 | 16 | Paginación real en tabla de contactos | Gemini CLI | 🕒 PENDIENTE | Media |
