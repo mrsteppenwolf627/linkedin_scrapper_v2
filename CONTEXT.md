@@ -147,6 +147,14 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Tests sobre output gpt-4o-mini anterior: 4/60 fallos detectados (correctos — el viejo modelo violaba ADR-004 y ADR-005)
 - Requiere `ANTHROPIC_API_KEY` en `.env.local` para el agente de redacción
 
+### Despliegue en Vercel ✅ FUNCIONAL (2026-06-25)
+- URL: https://linkedin-scrapper-v2.vercel.app
+- Entorno: Production usado como staging privado · Rama: `master` · Commit: `2cf8294`
+- Validado: landing, navegación, botón "Empezar ahora", búsqueda real ejecutada sin errores
+- Motor de búsqueda operativo en producción (SearchAPI.io + SSE con `maxDuration = 300`)
+- **Siguiente foco del proyecto: motor de mensajes y conversión para Talent4Pro**
+- Flujo completo de auth y generación de mensajes V2 pendientes de validar en Vercel
+
 ### V3: E2E Tests 🕒 PENDIENTE
 - Flujo: Signup → Pending → Admin Approve → Signin → Access
 - Asignado a: Codex
@@ -159,11 +167,11 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | DEPLOY-VALIDATE-01: validación final predeploy completada — proyecto listo con advertencias |
+| Motivo | POST-DEPLOY-01: despliegue funcional en Vercel confirmado |
 | validate-context.sh | ✅ EXIT_CODE 0 |
 | Build | ✅ `npm run build` limpio — 26/26 páginas, 0 errores (verificado 2026-06-25) |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
-| Vercel staging | 🟡 LISTO CON ADVERTENCIAS — configurar 11 vars en Vercel dashboard antes del primer deploy |
+| Vercel | ✅ DESPLEGADO Y FUNCIONAL — https://linkedin-scrapper-v2.vercel.app |
 
 ---
 
@@ -176,6 +184,7 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | 20 | Refactor export: `linkedin_scraper.ts` → `leads_raw.json` (contrato datos) | Claude Code | ✅ COMPLETO | — |
 | 21 | Orquestador pipeline Scraper → leads_raw.json → mensajes_listos.json | Claude Code | ✅ COMPLETO | — |
 | 22 | DEPLOY-PREP-01: `maxDuration` en /api/search + `.vercelignore` | Claude Code | ✅ COMPLETO | — |
+| 23 | MSG-AUDIT-01: auditar motor de mensajes V2 para Talent4Pro | Claude Code | 🕒 PENDIENTE | Alta |
 | 12 | E2E Tests (Signup → Approve → Signin → Access) | Codex | 🕒 PENDIENTE | Alta |
 | 15 | Funcionalidad real `/dashboard/search` (Buscador) | Gemini CLI | 🕒 PENDIENTE | Alta |
 | 16 | Paginación real en tabla de contactos | Gemini CLI | 🕒 PENDIENTE | Media |
