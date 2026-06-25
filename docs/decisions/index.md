@@ -1,6 +1,6 @@
 # Índice de Decisiones Arquitectónicas
 > Guía Proyectos Grandes — Herramienta de Captación LinkedIn para Talent4Pro
-> Última actualización: 2026-06-25
+> Última actualización: 2026-06-25 (DEPLOY-CHECK-01)
 
 Este directorio es el punto de entrada canónico para todas las decisiones de diseño del proyecto.
 Los agentes de IA deben leer este índice antes de operar sobre cualquier componente del sistema.
@@ -14,6 +14,7 @@ Ubicación: `docs/decisions/DOC-BASE-NNN-*.md`
 | Doc | Título | Estado | Categoría | Afecta a |
 |---|---|---|---|---|
 | [DOC-BASE-01](DOC-BASE-01-objetivo-comercial-talent4pro.md) | Objetivo Comercial — Captación de Alumnos para Talent4Pro | **ACTIVA** | Estrategia · Producto · Motor de Mensajes | `CONTEXT.md` · ADRs del agente de redacción |
+| [DEPLOY-CHECK-01](DEPLOY-CHECK-01-vercel-staging-readiness.md) | Auditoría de Preparación para Vercel Staging | **ACTIVA** | Infraestructura · Despliegue · Seguridad | `next.config.mjs` · `/api/search/route.ts` · `.gitignore` |
 
 ---
 
