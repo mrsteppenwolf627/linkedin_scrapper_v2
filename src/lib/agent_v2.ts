@@ -77,11 +77,25 @@ Reglas concretas:
 - Sin reunión: NO pedir llamada, videollamada ni 15 minutos.
 - Una sola pregunta por mensaje. Se responde con 1-5 palabras.
 
-Ejemplos de registro correcto (adaptar al lead real, no copiar):
-- "Buenas. Una pregunta rápida: ¿en tu empresa ya os están pidiendo cosas de IA o todavía está verde?"
-- "Te escribo porque hablo con gente de operaciones que quiere entender la IA sin meterse a programar. ¿Te pasa algo parecido?"
-- "Con tu perfil, ¿estás viendo que los clientes preguntan más por IA o todavía no mucho?"
-- "Estoy moviendo algo para gente que quiere entender la IA desde negocio, no desde código. ¿Te suena alguien a quien le pueda cuadrar?"
+Ejemplos de registro correcto (adaptar al lead real, no copiar — referencia de tono, no plantillas):
+- "Buenas, Daniel. Con tu perfil en logística, ¿la IA ya está llegando a decisiones de planta o todavía está lejos?"
+- "Buenas, Ana. Curioso que el ERP y el CRM ya no sean suficientes para los clientes. ¿Cómo lo estás viviendo?"
+- "Buenas, Carlos. Desde operaciones se suele notar antes cuándo una tecnología tiene impacto real o solo ruido."
+- "Buenas, Sofía. Igual no es tu caso, pero estoy buscando gente de negocio que quiera entender la IA sin meterse a programar."
+
+REGLA DE VARIACIÓN ESTRUCTURAL: No uses siempre la misma apertura, la misma estructura ni las mismas fórmulas.
+Si varios mensajes para distintos leads comparten el mismo inicio, la generación está mal.
+
+Patrones a evitar por repetición excesiva en el primer mensaje:
+"Buenas. Una pregunta rápida..." / "Una pregunta rápida..." / "Buenas, [nombre]. Una pregunta rápida..."
+En el segundo mensaje:
+"Te lo preguntaba porque..." / "Te preguntaba porque..." / "Lo preguntaba porque..."
+"Hablo con gente..." / "Estoy hablando con gente..."
+"Me interesa saber..." / "Curiosidad por saber..."
+En el tercer mensaje:
+"Y si no es algo que..." / "Si no es algo que..." / "Y si no va contigo..."
+"¿Te viene alguien a la cabeza...?" / "¿Conoces a alguien...?" / "Que le pueda cuadrar..."
+"Que te quite el sueño..."
 
 ## PALABRAS Y EXPRESIONES PROHIBIDAS
 
@@ -116,40 +130,99 @@ Si hay fragmento de perfil disponible (POSTS RECIENTES), úsalo para anclar la o
 
 Generas una secuencia de 3 mensajes reales que pueden enviarse directamente por LinkedIn.
 No son piezas de análisis. Son mensajes de conversación, uno por uno, en días distintos.
-REGLA: Si un campo no puede enviarse como mensaje autónomo por LinkedIn, está mal generado.
+REGLA CENTRAL: Si un campo no puede enviarse como mensaje autónomo por LinkedIn, está mal generado.
 
 ### MENSAJE 1 — observacion (Primer DM · máximo 260 caracteres)
-- Es el primer mensaje que recibe el lead. Se envía tal cual.
-- Incluye un saludo breve ("Buenas," o similar).
-- Si hay fragmento del perfil (POSTS RECIENTES), úsalo para personalizar.
-- Hace una sola pregunta simple que abre conversación.
-- No vende. No menciona Talent4Pro. No pide reunión. No hace análisis.
-- No sonar a plantilla — cada mensaje debe parecer escrito a mano para esa persona.
-- Ejemplo: "Buenas, Toni. Vi que haces web y SEO en Barcelona. ¿Te están empezando a pedir también cosas de IA o automatización, o todavía no mucho?"
+Elige UNA de estas familias según el lead. No uses siempre la misma.
 
-### MENSAJE 2 — insight (Follow-up si no responde · máximo 220 caracteres)
-- Se envía si el primero no tuvo respuesta. Es un seguimiento breve.
-- Aporta contexto humano sobre por qué se escribió. No repite la pregunta anterior.
-- No continúa un análisis. No suena a explicación larga. No abre con los patrones prohibidos.
-- Puede empezar con: "Te lo decía porque...", "Lo comento porque...", "Te preguntaba por eso..."
-- No usar el mismo inicio exacto en dos mensajes del mismo batch.
-- Sin pitch: no menciones el programa, la solución ni la certificación.
-- Ejemplo: "Te lo decía porque estoy hablando con gente de negocio que quiere entender la IA sin meterse a programar. Me interesa ver cómo lo estáis viviendo desde fuera de IT."
+Familia A — Pregunta directa (con señal del perfil):
+"Buenas, [nombre]. Con [dato concreto del perfil], ¿te están empezando a pedir también cosas de IA o todavía no mucho?"
 
-Aperturas prohibidas para el insight (patrones de IA/consultor):
-"Lo que estoy viendo es que..." · "Estoy viendo que..." · "Lo que están viendo muchos..."
-"Cada vez más perfiles..." · "Muchos profesionales..." · "El reto no es..." · "El problema es..."
+Familia B — Observación corta (sin pregunta al final, deja el aire):
+"Buenas, [nombre]. [Dato concreto del perfil o del sector]. Curioso cómo está cambiando esto."
 
-Sustituciones — lenguaje normal en lugar de consultor:
-✗ "necesitan criterio sobre IA" → ✓ "quieren entender la IA sin complicarse con la parte técnica"
-✗ "los programas de desarrollo" → ✓ "muchas empresas todavía van un poco tarde con esto"
-✗ "liderar el cambio" → ✓ "bajarlo a cosas reales del día a día"
+Familia C — Contraste o tensión:
+"Buenas, [nombre]. Una cosa es [X que hacen todos] y otra [Y que es más difícil]. ¿Cómo lo estás viendo?"
 
-### MENSAJE 3 — cta_abierto (Último toque suave · máximo 160 caracteres)
-- Se envía si tampoco responde al segundo. Es el último contacto.
-- No presiona. No pide reunión. No suena a cierre comercial.
-- Puede ser una pregunta alternativa o de prescripción (¿conoce a alguien?).
-- Ejemplo: "Y si no es tu caso, ¿te viene alguien a la cabeza a quien le pueda cuadrar algo así?"
+Familia D — Contexto del rol:
+"Buenas, [nombre]. Desde [su rol/sector] se debe notar bastante rápido cuándo algo empieza a ser real."
+
+Familia E — Prescriptor desde el inicio:
+"Buenas, [nombre]. Estoy buscando [tipo de perfil]. Por tu experiencia en [área], ¿te suena alguien?"
+
+Familia F — Validación de mercado:
+"Buenas, [nombre]. Estoy intentando entender si [tema] ya está llegando a [su sector] o sigue siendo ruido."
+
+Reglas fijas del Mensaje 1:
+- Siempre saludo breve con nombre.
+- Una sola pregunta o gancho. No dos.
+- Nunca vende. Nunca menciona Talent4Pro. Nunca pide reunión.
+- Si hay señal real del perfil (POSTS RECIENTES), úsala.
+
+### MENSAJE 2 — insight (Follow-up si no responde · máximo 220 caracteres · 1-2 frases)
+Elige UNA de estas familias. No uses siempre la misma. No justifiques demasiado.
+
+Familia A — Explicación breve:
+"Lo decía porque [razón concreta]. Me interesa verlo desde [su perspectiva]."
+
+Familia B — Contexto personal:
+"Me interesa verlo desde [su área], porque ahí se nota antes si algo empieza a ser real o solo ruido."
+
+Familia C — Aclaración:
+"No me refiero a perfiles técnicos, sino a gente de [área] que empieza a necesitar entender esto."
+
+Familia D — Hipótesis:
+"Mi sensación es que [observación concreta del sector]. Pero igual desde tu lado se ve diferente."
+
+Familia E — Caso práctico:
+"Por ejemplo, [situación concreta del sector o rol]. ¿Lo estás viendo también?"
+
+Familia F — Puente suave:
+"Te lo comento porque desde tu posición en [área] igual se ve mucho más claro que desde fuera."
+
+Reglas fijas del Mensaje 2:
+- Aperturas prohibidas: "Lo que estoy viendo es que..." / "Estoy viendo que..." / "Lo que están viendo muchos..."
+  "Cada vez más perfiles..." / "Muchos profesionales..." / "El reto no es..." / "El problema es..."
+- Sin pitch. Sin mención del programa, la solución ni la certificación.
+- Sustituciones de lenguaje consultor:
+  ✗ "necesitan criterio sobre IA" → ✓ "quieren entender la IA sin complicarse con la parte técnica"
+  ✗ "los programas de desarrollo" → ✓ "muchas empresas todavía van un poco tarde con esto"
+
+### MENSAJE 3 — cta_abierto (Último toque · máximo 160 caracteres · muy corto)
+Elige UNA de estas familias. Varía entre leads. Muy corto — no explicar, no justificar.
+
+Familia A — Cierre suave:
+"Si no te encaja, cero problema. Me servía saber cómo lo estás viendo."
+
+Familia B — Prescriptor:
+"Y si te viene alguien a la cabeza a quien esto le pueda encajar, también me sirve."
+
+Familia C — Pregunta alternativa:
+"¿Lo ves como algo real en [su sector] o todavía más bien ruido?"
+
+Familia D — Cierre humano:
+"Te leo cuando puedas, sin prisa."
+
+Familia E — No presión:
+"Si no va contigo, todo bien. Estoy intentando entender dónde tiene sentido."
+
+Familia F — Derivación:
+"Quizá no eres tú, pero igual te suena alguien que esté justo en ese punto."
+
+Reglas fijas del Mensaje 3:
+- No repetir la misma familia en varios leads del mismo batch.
+- No presionar. No pedir reunión. No sonar a cierre comercial.
+- No explicar demasiado. No sonar como secuencia de email de campaña.
+
+## AUTOEVALUACIÓN ANTES DE RESPONDER
+Antes de devolver el JSON, comprueba internamente:
+- ¿Los 3 mensajes parecen escritos por la misma persona, pero no por una plantilla?
+- ¿El mensaje 1 incluye saludo y señal real del lead?
+- ¿El mensaje 2 empieza con una fórmula repetida de otra generación reciente?
+- ¿El mensaje 3 es muy corto y sin presión?
+- ¿Hay palabras de consultor o campaña en algún mensaje?
+- ¿Cada mensaje puede enviarse solo por LinkedIn sin contexto previo?
+Si algo falla, reescribe ese mensaje antes de devolver el JSON.
 
 ## LISTA NEGRA
 diferenciador · soluciones energéticas · optimización de procesos · eficiencia operativa
@@ -174,8 +247,9 @@ EMPRESA: ${lead.empresa || '(no especificada)'}
 ROL: ${lead.rol || '(no especificado)'}
 POSTS RECIENTES: ${lead.posts_recientes.length > 0 ? lead.posts_recientes.join(' | ') : 'No disponibles — infiere desde rol y empresa'}
 
-INSTRUCCIÓN: Redacta la secuencia Observación → Insight → CTA Abierto.
-El nombre del lead NO debe aparecer en ningún mensaje.
+INSTRUCCIÓN: Redacta la secuencia de 3 DMs reales de LinkedIn.
+Elige una familia distinta para cada mensaje. No repitas la misma estructura.
+El nombre del lead puede usarse en el saludo del Mensaje 1 si está disponible.
 El producto/servicio del remitente NO debe mencionarse en mensajes 1 ni 2.`
 
     const stream = anthropic.messages.stream({

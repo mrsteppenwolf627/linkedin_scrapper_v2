@@ -147,6 +147,15 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Tests sobre output gpt-4o-mini anterior: 4/60 fallos detectados (correctos — el viejo modelo violaba ADR-004 y ADR-005)
 - Requiere `ANTHROPIC_API_KEY` en `.env.local` para el agente de redacción
 
+### MSG-FIX-06: Variación Estructural en Secuencias de DMs ✅ COMPLETO (2026-06-25)
+- Problema: patrones repetitivos entre leads ("Buenas. Una pregunta rápida...", "Te lo preguntaba porque...", etc.)
+- 6 familias de enfoque por posición (Mensaje 1, 2 y 3) — el modelo elige, no copia
+- Regla de variación estructural: si dos leads comparten el mismo inicio, la generación está mal
+- Autoevaluación añadida: 6 checks internos antes de devolver el JSON
+- User prompt actualizado: "Elige una familia distinta para cada mensaje"
+- Build ✅ 26/26 · solo `agent_v2.ts` tocado como código
+- Pendiente: MSG-TEST-06 — verificar variación con 10+ leads
+
 ### MSG-FIX-05: Motor V2 → Secuencia Real de DMs ✅ COMPLETO (2026-06-25)
 - Cambio conceptual: los 3 campos JSON ahora son DMs reales, no piezas de análisis
 - observacion = Primer DM completo con saludo (≤260 chars)
@@ -260,7 +269,7 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | MSG-FIX-05: motor V2 convertido en generador de secuencia real de 3 DMs de LinkedIn |
+| Motivo | MSG-FIX-06: 6 familias por mensaje + variación estructural + autoevaluación antes de responder |
 | validate-context.sh | ✅ EXIT_CODE 0 |
 | Build | ✅ `npm run build` limpio — 26/26 páginas, 0 errores (verificado 2026-06-25) |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
@@ -289,7 +298,8 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | 32 | MSG-FIX-04: patrones repetitivos eliminados + palabras prohibidas ampliadas + sustituciones | Claude Code | ✅ COMPLETO | — |
 | 33 | MSG-TEST-04: prueba final — 3 APTO, 1 APTO CON RETOQUES, 0 NO APTO | Claude Code | ✅ COMPLETO | — |
 | 34 | MSG-FIX-05: motor V2 → secuencia real de 3 DMs LinkedIn (obs=primer DM, insight=follow-up, cta=último toque) | Claude Code | ✅ COMPLETO | — |
-| 35 | MSG-TEST-05: prueba real de secuencia de DMs con 4 leads | Claude Code | 🕒 PENDIENTE | Alta |
+| 35 | MSG-FIX-06: 6 familias de mensajes + variación estructural + autoevaluación | Claude Code | ✅ COMPLETO | — |
+| 36 | MSG-TEST-06: generar 10+ leads y revisar variación estructural antes de campaña | Claude Code | 🕒 PENDIENTE | Alta |
 | 12 | E2E Tests (Signup → Approve → Signin → Access) | Codex | 🕒 PENDIENTE | Alta |
 | 15 | Funcionalidad real `/dashboard/search` (Buscador) | Gemini CLI | 🕒 PENDIENTE | Alta |
 | 16 | Paginación real en tabla de contactos | Gemini CLI | 🕒 PENDIENTE | Media |
