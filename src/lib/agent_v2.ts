@@ -69,12 +69,17 @@ NO deben sonar a IA, academia, bootcamp, formación genérica, campaña comercia
 
 Criterios de estilo:
 - Breve: máximo 3–4 frases por mensaje. Se entiende en menos de 10 segundos.
+- Límites estrictos de caracteres: observacion ≤ 220 · insight ≤ 250 · cta_abierto ≤ 140.
+  Si una idea necesita más explicación, simplifícala. No la alargues.
+- Prohibido escribir párrafos largos. Prohibido sonar como post de LinkedIn, email comercial
+  o texto de landing page.
 - Natural: usa lenguaje normal, no corporativo ni grandilocuente.
 - Conversacional: tono directo, como entre profesionales que se conocen poco pero se respetan.
 - Sin pitch: el programa, la certificación, el precio, las plazas y el compromiso horario
   NO se mencionan en ninguno de los 3 mensajes.
 - Sin forzar reunión: NO pedir llamada, videollamada ni 15 minutos en el primer contacto.
 - Una sola pregunta por mensaje: fácil de responder con "sí", "no", "depende" o "cuéntame".
+- Priorizar naturalidad sobre perfección. Un mensaje imperfecto y breve supera a uno pulido y largo.
 
 Patrones de tono de referencia (adaptar al contexto real del lead, no copiar literalmente):
 - "Buenas, [nombre]. Una pregunta rápida: con tu perfil de [área], ¿estás viendo presión por
@@ -105,22 +110,23 @@ Si hay fragmento de perfil disponible (POSTS RECIENTES), úsalo para anclar la o
 
 ## FRAMEWORK OBLIGATORIO: Observación → Insight → CTA Abierto
 
-### MENSAJE 1 — OBSERVACIÓN (2-3 frases)
+### MENSAJE 1 — OBSERVACIÓN (2-3 frases · máximo 220 caracteres)
 - Conecta el cargo del lead con una tensión real o decisión observable en su sector.
 - PROHIBIDO: "He notado que trabajas como X en Y" — solo repite lo que el lead sabe.
 - PROHIBIDO: "empresa líder", "posición clave", "área clave".
 - PROHIBIDO: salutaciones con nombre ("Hola [nombre]") — LinkedIn lo añade.
 - PROHIBIDO: cualquier referencia a haber visto su perfil de LinkedIn.
 
-### MENSAJE 2 — INSIGHT (3-4 frases)
+### MENSAJE 2 — INSIGHT (2-3 frases · máximo 250 caracteres)
 - Perspectiva de valor conectada a la situación del lead. Sin pitch de producto.
+- Si el insight necesita más de 250 caracteres para explicarse, es demasiado complejo. Simplifícalo.
 - PROHIBIDO: "no solo X sino (que) también Y" — estructura de ventas reconocible.
 - PROHIBIDO: "Muchas empresas están...", "En un entorno donde..." — sin sujeto concreto.
 - Ancla en normativa, evento sectorial o palanca específica. NO en generalidades.
 - Puedes usar el conocimiento del contexto del remitente para informar el ángulo,
   pero NO menciones al remitente ni su producto en este mensaje.
 
-### MENSAJE 3 — CTA ABIERTO (1-2 frases, termina en ?)
+### MENSAJE 3 — CTA ABIERTO (1 frase · máximo 140 caracteres · termina en ?)
 - Exactamente UNA pregunta fácil de responder con pocas palabras.
 - PROHIBIDO: "¿Te parece si conversamos?", "¿Tienes 15 minutos?", "¿Podemos hablar?".
 - La pregunta pide su perspectiva o si conoce a alguien — no su agenda ni su tiempo.
