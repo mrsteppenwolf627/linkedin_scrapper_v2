@@ -14,6 +14,7 @@ export interface LeadRawV2 {
   empresa: string
   rol: string
   posts_recientes: string[]
+  style_variant?: number  // 0-5 → variantes 1-6; asignado por generate-v2 vía index % 6
 }
 
 export interface MensajeV2 {
@@ -27,6 +28,50 @@ export interface MensajeLeadV2 {
   rol: string
   sales_goal: string
   mensajes: MensajeV2[]
+}
+
+// ── Instrucción de variante de estilo por lead ───────
+function getVariantInstruction(variant: number): string {
+  const v = variant % 6
+  const variants = [
+    // 0 → VARIANTE 1 — Directa
+    `VARIANTE ASIGNADA: 1 — DIRECTA
+Mensaje 1: pregunta directa y concreta basada en el perfil. Saludo + dato + pregunta. Sin rodeos.
+Mensaje 2: una sola frase de aclaración. No empieces con "Te lo preguntaba porque" ni con "Me lo preguntaba porque".
+Mensaje 3: cierre suave sin prescriptor ("Me servía saber cómo lo ves" o similar).`,
+
+    // 1 → VARIANTE 2 — Observación casual
+    `VARIANTE ASIGNADA: 2 — OBSERVACIÓN CASUAL
+Mensaje 1: observación breve y concreta sobre el rol o el sector. Puede no terminar en pregunta.
+Mensaje 2: una frase de contexto. No empieces con "Mi sensación es que".
+Mensaje 3: pregunta alternativa sobre el tema. No "¿te viene alguien a la cabeza?".`,
+
+    // 2 → VARIANTE 3 — Prescriptor
+    `VARIANTE ASIGNADA: 3 — PRESCRIPTOR
+Mensaje 1: plantea que estás buscando perfiles de un tipo concreto. Pregunta si conoce a alguien.
+Mensaje 2: explica en una frase qué tipo de perfil, sin tecnicismos.
+Mensaje 3: derivación directa. No uses "si no va contigo", "que le pueda cuadrar" ni "que te quite el sueño".`,
+
+    // 3 → VARIANTE 4 — Validación de mercado
+    `VARIANTE ASIGNADA: 4 — VALIDACIÓN DE MERCADO
+Mensaje 1: pregunta si el tema ya está llegando a su sector o sigue siendo ruido.
+Mensaje 2: explica que estás validando si es real. No uses generalizaciones tipo "desde [rol] se nota antes que nadie".
+Mensaje 3: pregunta cómo lo ve desde su posición concreta.`,
+
+    // 4 → VARIANTE 5 — Rol concreto
+    `VARIANTE ASIGNADA: 5 — ROL CONCRETO
+Mensaje 1: menciona algo específico del rol o empresa. Ancla en lo concreto.
+Mensaje 2: baja el tema a algo práctico del día a día. No uses "me interesa saber".
+Mensaje 3: cierre muy corto. Una sola frase. Sin presión.`,
+
+    // 5 → VARIANTE 6 — Minimalista
+    `VARIANTE ASIGNADA: 6 — MINIMALISTA
+Los tres mensajes deben ser muy cortos. Menos es más.
+Mensaje 1: máximo 2 frases. Saludo + pregunta o gancho.
+Mensaje 2: máximo 1 frase.
+Mensaje 3: máximo 1 frase. Sin explicar nada.`,
+  ]
+  return variants[v]
 }
 
 // ── Carga de ADRs ─────────────────────────────────────
@@ -69,7 +114,7 @@ Si el mensaje requiere vocabulario especial, estructura elaborada o tono analít
 Reglas concretas:
 - Castellano sencillo. Sin palabras que no usarías hablando con un conocido.
 - Frases cortas. Máximo 2 frases por bloque.
-- Límites de caracteres: observacion ≤ 260 · insight ≤ 220 · cta_abierto ≤ 160.
+- Límites de caracteres: observacion ≤ 240 · insight ≤ 160 · cta_abierto ≤ 120.
 - No intentar sonar inteligente. No usar tono de consultor. No usar tono de post de LinkedIn.
 - No usar tono académico. No usar tono de landing page.
 - Mejor sonar simple e imperfecto que demasiado pulido.
@@ -120,6 +165,13 @@ programas de desarrollo · programa de desarrollo · aval · perfiles como el tu
 los [roles] que... · lo que están viendo muchos... · estrategia · estratégico
 reto · evolución profesional · competencias · certificar · validar
 
+Frases de transición repetitivas (NUNCA usar en ningún mensaje):
+"Te lo preguntaba porque" · "Me lo preguntaba porque" · "Lo preguntaba porque"
+"Mi sensación es que" · "Me interesa saber" · "Curiosidad por saber"
+"Desde selección se nota antes que nadie" · "Desde [rol] se nota antes que nadie"
+"Si no va contigo" · "Si no es algo que" · "Si te viene alguien a la cabeza"
+"Que le pueda cuadrar" · "Que te quite el sueño"
+
 ## REGLA DE ESPECIFICIDAD
 Antes de redactar pregúntate: ¿Podría este mensaje enviarse a cualquier persona con este cargo,
 o es específico para este lead concreto? Si es genérico, reescríbelo.
@@ -159,7 +211,7 @@ Reglas fijas del Mensaje 1:
 - Nunca vende. Nunca menciona Talent4Pro. Nunca pide reunión.
 - Si hay señal real del perfil (POSTS RECIENTES), úsala.
 
-### MENSAJE 2 — insight (Follow-up si no responde · máximo 220 caracteres · 1-2 frases)
+### MENSAJE 2 — insight (Follow-up si no responde · máximo 160 caracteres · 1 frase)
 Elige UNA de estas familias. No uses siempre la misma. No justifiques demasiado.
 
 Familia A — Explicación breve:
@@ -188,7 +240,7 @@ Reglas fijas del Mensaje 2:
   ✗ "necesitan criterio sobre IA" → ✓ "quieren entender la IA sin complicarse con la parte técnica"
   ✗ "los programas de desarrollo" → ✓ "muchas empresas todavía van un poco tarde con esto"
 
-### MENSAJE 3 — cta_abierto (Último toque · máximo 160 caracteres · muy corto)
+### MENSAJE 3 — cta_abierto (Último toque · máximo 120 caracteres · muy corto)
 Elige UNA de estas familias. Varía entre leads. Muy corto — no explicar, no justificar.
 
 Familia A — Cierre suave:
@@ -239,17 +291,22 @@ El primer carácter debe ser { y el último }.
   const results: MensajeLeadV2[] = []
 
   for (const lead of leads) {
+    const variantInstruction = getVariantInstruction(lead.style_variant ?? 0)
+
     const userPrompt = `CONTEXTO DEL REMITENTE (úsalo solo para informar el insight, no para mencionar en los mensajes 1-2):
 Propuesta de valor que ofrece el remitente: ${salesGoal || 'No especificada'}
 
 LEAD A PROSPECTAR:
+NOMBRE: ${lead.nombre || '(no disponible)'}
 EMPRESA: ${lead.empresa || '(no especificada)'}
 ROL: ${lead.rol || '(no especificado)'}
 POSTS RECIENTES: ${lead.posts_recientes.length > 0 ? lead.posts_recientes.join(' | ') : 'No disponibles — infiere desde rol y empresa'}
 
-INSTRUCCIÓN: Redacta la secuencia de 3 DMs reales de LinkedIn.
-Elige una familia distinta para cada mensaje. No repitas la misma estructura.
-El nombre del lead puede usarse en el saludo del Mensaje 1 si está disponible.
+${variantInstruction}
+
+INSTRUCCIÓN: Redacta la secuencia de 3 DMs reales de LinkedIn siguiendo la VARIANTE ASIGNADA.
+La variante es obligatoria — determina la estructura de cada mensaje.
+El nombre del lead puede usarse en el saludo del Mensaje 1.
 El producto/servicio del remitente NO debe mencionarse en mensajes 1 ni 2.`
 
     const stream = anthropic.messages.stream({

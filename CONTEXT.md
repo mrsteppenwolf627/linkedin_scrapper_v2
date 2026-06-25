@@ -147,6 +147,18 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Tests sobre output gpt-4o-mini anterior: 4/60 fallos detectados (correctos — el viejo modelo violaba ADR-004 y ADR-005)
 - Requiere `ANTHROPIC_API_KEY` en `.env.local` para el agente de redacción
 
+### MSG-FIX-07: Variante de Estilo Forzada por Lead ✅ COMPLETO (2026-06-25)
+- Hipótesis confirmada: el agente no tiene memoria entre leads — genera cada uno de forma independiente
+- Solución estructural: `style_variant: index % 6` en generate-v2/route.ts — la variante se asigna ANTES de llamar al agente
+- 6 variantes (Directa, Observación casual, Prescriptor, Validación de mercado, Rol concreto, Minimalista)
+- `getVariantInstruction()` en agent_v2.ts — traduce el número a instrucciones específicas en el user prompt
+- Nombre del lead ahora incluido en el user prompt para personalización del saludo
+- Límites reducidos: observacion≤240, insight≤160 (antes 220), cta_abierto≤120 (antes 160)
+- Prohibiciones reforzadas: 13 frases de transición repetitivas añadidas a la lista negra
+- 3 archivos de código tocados: agent_v2.ts, generate-v2/route.ts, scripts/test_msg_v2_talent4pro.ts
+- Build ✅ 26/26 · 0 errores
+- Pendiente: MSG-TEST-07 — prueba con 10+ leads para verificar variación real
+
 ### MSG-FIX-06: Variación Estructural en Secuencias de DMs ✅ COMPLETO (2026-06-25)
 - Problema: patrones repetitivos entre leads ("Buenas. Una pregunta rápida...", "Te lo preguntaba porque...", etc.)
 - 6 familias de enfoque por posición (Mensaje 1, 2 y 3) — el modelo elige, no copia
@@ -269,7 +281,7 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | MSG-FIX-06: 6 familias por mensaje + variación estructural + autoevaluación antes de responder |
+| Motivo | MSG-FIX-07: variante de estilo forzada por lead (index % 6) — hipótesis de memoria confirmada |
 | validate-context.sh | ✅ EXIT_CODE 0 |
 | Build | ✅ `npm run build` limpio — 26/26 páginas, 0 errores (verificado 2026-06-25) |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
@@ -299,7 +311,8 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | 33 | MSG-TEST-04: prueba final — 3 APTO, 1 APTO CON RETOQUES, 0 NO APTO | Claude Code | ✅ COMPLETO | — |
 | 34 | MSG-FIX-05: motor V2 → secuencia real de 3 DMs LinkedIn (obs=primer DM, insight=follow-up, cta=último toque) | Claude Code | ✅ COMPLETO | — |
 | 35 | MSG-FIX-06: 6 familias de mensajes + variación estructural + autoevaluación | Claude Code | ✅ COMPLETO | — |
-| 36 | MSG-TEST-06: generar 10+ leads y revisar variación estructural antes de campaña | Claude Code | 🕒 PENDIENTE | Alta |
+| 36 | MSG-FIX-07: variante por lead (index % 6) + prohibiciones reforzadas + límites 240/160/120 | Claude Code | ✅ COMPLETO | — |
+| 37 | MSG-TEST-07: prueba de 10+ leads para verificar variación estructural real | Claude Code | 🕒 PENDIENTE | Alta |
 | 12 | E2E Tests (Signup → Approve → Signin → Access) | Codex | 🕒 PENDIENTE | Alta |
 | 15 | Funcionalidad real `/dashboard/search` (Buscador) | Gemini CLI | 🕒 PENDIENTE | Alta |
 | 16 | Paginación real en tabla de contactos | Gemini CLI | 🕒 PENDIENTE | Media |

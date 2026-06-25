@@ -20,6 +20,7 @@ const TEST_LEADS: LeadRawV2[] = [
       'Certificado PMP · Pilotando digitalización de la cadena de suministro · ' +
       'Interesado en cómo la IA puede mejorar la toma de decisiones en planta'
     ],
+    style_variant: 0,  // VARIANTE 1 — Directa
   },
   {
     nombre: 'Lead-B',
@@ -30,6 +31,7 @@ const TEST_LEADS: LeadRawV2[] = [
       'herramientas digitales sin perder el negocio de vista · MBA por IE · ' +
       'Buscando formas de añadir más valor más allá del ERP y el CRM'
     ],
+    style_variant: 1,  // VARIANTE 2 — Observación casual
   },
   {
     nombre: 'Lead-C',
@@ -40,6 +42,7 @@ const TEST_LEADS: LeadRawV2[] = [
       'mandos medios y directivos · Viendo cómo la IA cambia los perfiles que nuestros ' +
       'managers necesitan desarrollar · Buscando soluciones de upskilling práctico'
     ],
+    style_variant: 2,  // VARIANTE 3 — Prescriptor
   },
   {
     nombre: 'Lead-D',
@@ -50,6 +53,7 @@ const TEST_LEADS: LeadRawV2[] = [
       'Interesado en metodologías de liderazgo ágil · Reflexionando sobre cómo los ' +
       'product managers deben evolucionar con la IA generativa'
     ],
+    style_variant: 3,  // VARIANTE 4 — Validación de mercado
   },
 ]
 

@@ -177,11 +177,12 @@ export async function POST(req: NextRequest) {
   // raw_google_snippet: fragmento real del perfil LinkedIn extraído por SearchAPI.
   // Se pasa como posts_recientes[0] para que el agente V2 pueda anclar
   // la observación en algo concreto del perfil en lugar de inferir solo desde rol+empresa.
-  const leads: LeadRawV2[] = contacts.map(c => ({
+  const leads: LeadRawV2[] = contacts.map((c, index) => ({
     nombre:          c.name     ?? 'Desconocido',
     empresa:         c.company  ?? '',
     rol:             c.job_title ?? '',
     posts_recientes: c.raw_google_snippet ? [c.raw_google_snippet] : [],
+    style_variant:   index % 6,  // rota entre 6 variantes para evitar repetición en el batch
   }))
 
   // ── 3. Crear message_batch y CAPTURAR el id ───────────
