@@ -69,7 +69,7 @@ Si el mensaje requiere vocabulario especial, estructura elaborada o tono analít
 Reglas concretas:
 - Castellano sencillo. Sin palabras que no usarías hablando con un conocido.
 - Frases cortas. Máximo 2 frases por bloque.
-- Límites de caracteres: observacion ≤ 220 · insight ≤ 250 · cta_abierto ≤ 140.
+- Límites de caracteres: observacion ≤ 260 · insight ≤ 220 · cta_abierto ≤ 160.
 - No intentar sonar inteligente. No usar tono de consultor. No usar tono de post de LinkedIn.
 - No usar tono académico. No usar tono de landing page.
 - Mejor sonar simple e imperfecto que demasiado pulido.
@@ -112,56 +112,44 @@ o es específico para este lead concreto? Si es genérico, reescríbelo.
 Ancla siempre en empresa + rol + contexto sectorial real y nombrado.
 Si hay fragmento de perfil disponible (POSTS RECIENTES), úsalo para anclar la observación.
 
-## FRAMEWORK OBLIGATORIO: Observación → Insight → CTA Abierto
+## SECUENCIA OBLIGATORIA: 3 DMs reales de LinkedIn
 
-### MENSAJE 1 — OBSERVACIÓN (máximo 220 caracteres)
-- Una frase o dos. Algo concreto del sector o del rol del lead. No un análisis — una observación corta.
-- Si hay fragmento del perfil (POSTS RECIENTES), úsalo. Si no, infiere desde empresa y rol.
-- PROHIBIDO: salutaciones con nombre — LinkedIn lo añade automáticamente.
-- PROHIBIDO: "empresa líder", "posición clave", cualquier halago genérico.
-- PROHIBIDO: mencionar que has visto su perfil.
+Generas una secuencia de 3 mensajes reales que pueden enviarse directamente por LinkedIn.
+No son piezas de análisis. Son mensajes de conversación, uno por uno, en días distintos.
+REGLA: Si un campo no puede enviarse como mensaje autónomo por LinkedIn, está mal generado.
 
-### MENSAJE 2 — INSIGHT (máximo 250 caracteres)
-- Una idea simple sobre lo que está pasando en su entorno. Sin palabras de consultor.
-- No expliques el mercado. Di una cosa concreta y para.
+### MENSAJE 1 — observacion (Primer DM · máximo 260 caracteres)
+- Es el primer mensaje que recibe el lead. Se envía tal cual.
+- Incluye un saludo breve ("Buenas," o similar).
+- Si hay fragmento del perfil (POSTS RECIENTES), úsalo para personalizar.
+- Hace una sola pregunta simple que abre conversación.
+- No vende. No menciona Talent4Pro. No pide reunión. No hace análisis.
+- No sonar a plantilla — cada mensaje debe parecer escrito a mano para esa persona.
+- Ejemplo: "Buenas, Toni. Vi que haces web y SEO en Barcelona. ¿Te están empezando a pedir también cosas de IA o automatización, o todavía no mucho?"
+
+### MENSAJE 2 — insight (Follow-up si no responde · máximo 220 caracteres)
+- Se envía si el primero no tuvo respuesta. Es un seguimiento breve.
+- Aporta contexto humano sobre por qué se escribió. No repite la pregunta anterior.
+- No continúa un análisis. No suena a explicación larga. No abre con los patrones prohibidos.
+- Puede empezar con: "Te lo decía porque...", "Lo comento porque...", "Te preguntaba por eso..."
+- No usar el mismo inicio exacto en dos mensajes del mismo batch.
 - Sin pitch: no menciones el programa, la solución ni la certificación.
-- Si no cabe en 250 caracteres, la idea es demasiado compleja. Elige la parte más sencilla.
+- Ejemplo: "Te lo decía porque estoy hablando con gente de negocio que quiere entender la IA sin meterse a programar. Me interesa ver cómo lo estáis viviendo desde fuera de IT."
 
-PROHIBIDO como apertura del insight (patrones reconocibles de IA/consultor):
-- "Lo que estoy viendo es que..."
-- "Estoy viendo que..."
-- "Lo que están viendo muchos..."
-- "Cada vez más perfiles..."
-- "Muchos profesionales..."
-- "El reto no es..."
-- "El problema es..."
+Aperturas prohibidas para el insight (patrones de IA/consultor):
+"Lo que estoy viendo es que..." · "Estoy viendo que..." · "Lo que están viendo muchos..."
+"Cada vez más perfiles..." · "Muchos profesionales..." · "El reto no es..." · "El problema es..."
 
-REGLA DE VARIEDAD: No uses la misma estructura de frase en dos mensajes distintos.
-Si el mensaje parece una plantilla, está mal. Cada mensaje debe parecer escrito de forma
-manual para esa persona concreta. Si dos mensajes podrían empezar igual, uno está mal.
+Sustituciones — lenguaje normal en lugar de consultor:
+✗ "necesitan criterio sobre IA" → ✓ "quieren entender la IA sin complicarse con la parte técnica"
+✗ "los programas de desarrollo" → ✓ "muchas empresas todavía van un poco tarde con esto"
+✗ "liderar el cambio" → ✓ "bajarlo a cosas reales del día a día"
 
-SUSTITUCIONES — en lugar de lenguaje de consultor, usa lenguaje normal:
-✗ "Lo que estoy viendo es que muchos perfiles necesitan criterio sobre IA."
-✓ "Me da la sensación de que mucha gente quiere entender la IA sin complicarse con la parte técnica."
-
-✗ "Los programas de desarrollo no siempre han ido al mismo ritmo."
-✓ "Muchas empresas todavía van un poco tarde con esto."
-
-✗ "El reto es liderar el cambio."
-✓ "Lo difícil es bajarlo a cosas reales del día a día."
-
-✗ "Necesitan articular criterio sobre IA aplicada al negocio."
-✓ "Necesitan saber cuándo la IA ayuda de verdad y cuándo es humo."
-
-### MENSAJE 3 — CTA ABIERTO (máximo 140 caracteres · termina en ?)
-- Una sola pregunta. Se responde con una o dos palabras.
-- PROHIBIDO: pedir reunión, llamada o tiempo.
-- La pregunta puede preguntar si le pasa algo parecido, o si conoce a alguien a quien le encajaría.
-- Ejemplos de tono:
-  "¿Te está llegando esto también o todavía no?"
-  "¿Te pasa algo parecido o nada que ver?"
-  "¿Te suena alguien a quien le pueda cuadrar?"
-  "¿Lo estás viendo o todavía está lejos en tu entorno?"
+### MENSAJE 3 — cta_abierto (Último toque suave · máximo 160 caracteres)
+- Se envía si tampoco responde al segundo. Es el último contacto.
+- No presiona. No pide reunión. No suena a cierre comercial.
+- Puede ser una pregunta alternativa o de prescripción (¿conoce a alguien?).
+- Ejemplo: "Y si no es tu caso, ¿te viene alguien a la cabeza a quien le pueda cuadrar algo así?"
 
 ## LISTA NEGRA
 diferenciador · soluciones energéticas · optimización de procesos · eficiencia operativa

@@ -1,6 +1,6 @@
 # Índice de Decisiones Arquitectónicas
 > Guía Proyectos Grandes — Herramienta de Captación LinkedIn para Talent4Pro
-> Última actualización: 2026-06-25 (MSG-TEST-04)
+> Última actualización: 2026-06-25 (MSG-FIX-05)
 
 Este directorio es el punto de entrada canónico para todas las decisiones de diseño del proyecto.
 Los agentes de IA deben leer este índice antes de operar sobre cualquier componente del sistema.
@@ -30,6 +30,7 @@ Ubicación: `docs/decisions/DOC-BASE-NNN-*.md`
 | [MSG-FIX-04](MSG-FIX-04-v2-remove-repetitive-consultant-language.md) | Eliminación de Patrones Repetitivos y Lenguaje de Consultor | **COMPLETA** | Motor de Mensajes · IA · Fix | `agent_v2.ts` — patrones + variedad + sustituciones |
 | [REPO-CLEAN-01](REPO-CLEAN-01-working-tree-cleanup.md) | Limpieza del Working Tree antes de MSG-TEST-04 | **COMPLETA** | Infraestructura · Repositorio | `.gitignore` · `scripts/test_msg_v2_talent4pro.ts` |
 | [MSG-TEST-04](MSG-TEST-04-v2-final-human-dm-validation.md) | Validación Final de Naturalidad del Motor V2 | **COMPLETA** | Motor de Mensajes · IA · Calidad | Veredicto: ✅ LISTO PARA DEPLOY OPERATIVO |
+| [MSG-FIX-05](MSG-FIX-05-v2-real-linkedin-dm-sequence.md) | Conversión del Motor V2 a Secuencia Real de DMs | **COMPLETA** | Motor de Mensajes · IA · Fix | `agent_v2.ts` — 3 DMs reales: primer contacto + follow-up + último toque |
 
 ---
 
