@@ -147,6 +147,14 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Tests sobre output gpt-4o-mini anterior: 4/60 fallos detectados (correctos — el viejo modelo violaba ADR-004 y ADR-005)
 - Requiere `ANTHROPIC_API_KEY` en `.env.local` para el agente de redacción
 
+### MSG-TEST-02: Prueba Final Motor V2 ✅ COMPLETA (2026-06-25)
+- 4 leads probados — 3 APTO, 1 APTO CON RETOQUES (Lead-A menciona "Certificar" en insight)
+- Todos dentro de límites: observacion≤220, insight≤250 (max 233), cta≤140 (max 103) ✅
+- Mejora vs MSG-TEST-01: insight más largo bajó de 488 → 233 chars (−255 chars)
+- Motor V2 apto para uso operativo en campañas Talent4Pro
+- **Veredicto: LISTO PARA DEPLOY**
+- Próxima tarea: DEPLOY-02 — push a Vercel y prueba real en producción
+
 ### MSG-FIX-02: Límite de Longitud en Motor V2 ✅ COMPLETO (2026-06-25)
 - observacion ≤ 220 chars · insight ≤ 250 chars · cta_abierto ≤ 140 chars
 - Sección ESTILO y cada mensaje del FRAMEWORK actualizado con límites explícitos
@@ -199,7 +207,7 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | MSG-FIX-02: límites de caracteres añadidos al motor V2 (observacion≤220, insight≤250, cta≤140) |
+| Motivo | MSG-TEST-02: motor V2 validado — 3 APTO, 1 APTO CON RETOQUES, todos dentro de límites. Listo para deploy. |
 | validate-context.sh | ✅ EXIT_CODE 0 |
 | Build | ✅ `npm run build` limpio — 26/26 páginas, 0 errores (verificado 2026-06-25) |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
@@ -221,7 +229,8 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | 25 | MSG-FIX-01B: señal real de perfil + estilo humano en motor V2 | Claude Code | ✅ COMPLETO | — |
 | 26 | MSG-TEST-01: prueba controlada motor V2 — 4 leads, 1 APTO, 3 APTO CON RETOQUES | Claude Code | ✅ COMPLETO | — |
 | 27 | MSG-FIX-02: límites de longitud en motor V2 (observacion≤220, insight≤250, cta≤140) | Claude Code | ✅ COMPLETO | — |
-| 28 | MSG-TEST-02: confirmar límites con 2-3 leads; si OK → deploy a Vercel | Claude Code | 🕒 PENDIENTE | Alta |
+| 28 | MSG-TEST-02: confirmar límites con 4 leads — todos OK, listo para deploy | Claude Code | ✅ COMPLETO | — |
+| 29 | DEPLOY-02: despliegue de motor V2 actualizado a Vercel + prueba en producción | Claude Code | 🕒 PENDIENTE | Alta |
 | 12 | E2E Tests (Signup → Approve → Signin → Access) | Codex | 🕒 PENDIENTE | Alta |
 | 15 | Funcionalidad real `/dashboard/search` (Buscador) | Gemini CLI | 🕒 PENDIENTE | Alta |
 | 16 | Paginación real en tabla de contactos | Gemini CLI | 🕒 PENDIENTE | Media |

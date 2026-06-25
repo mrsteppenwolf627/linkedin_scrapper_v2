@@ -1,6 +1,6 @@
 # Índice de Decisiones Arquitectónicas
 > Guía Proyectos Grandes — Herramienta de Captación LinkedIn para Talent4Pro
-> Última actualización: 2026-06-25 (MSG-FIX-02)
+> Última actualización: 2026-06-25 (MSG-TEST-02)
 
 Este directorio es el punto de entrada canónico para todas las decisiones de diseño del proyecto.
 Los agentes de IA deben leer este índice antes de operar sobre cualquier componente del sistema.
@@ -23,6 +23,7 @@ Ubicación: `docs/decisions/DOC-BASE-NNN-*.md`
 | [MSG-FIX-01B](MSG-FIX-01B-v2-human-style-and-profile-signal.md) | Señal Real de Perfil y Estilo Humano en Motor V2 | **COMPLETA** | Motor de Mensajes · IA · Fix | `generate-v2/route.ts` · `agent_v2.ts` |
 | [MSG-TEST-01](MSG-TEST-01-v2-controlled-quality-test.md) | Prueba Controlada de Calidad del Motor V2 — 4 leads Talent4Pro | **COMPLETA** | Motor de Mensajes · IA · Calidad | `agent_v2.ts` · veredicto: Apto con retoques |
 | [MSG-FIX-02](MSG-FIX-02-v2-insight-length-limit.md) | Límite de Longitud de Mensajes en Motor V2 | **COMPLETA** | Motor de Mensajes · IA · Fix | `agent_v2.ts` — observacion≤220 · insight≤250 · cta≤140 |
+| [MSG-TEST-02](MSG-TEST-02-v2-final-length-quality-test.md) | Prueba Final de Calidad y Longitud del Motor V2 | **COMPLETA** | Motor de Mensajes · IA · Calidad | Veredicto: ✅ LISTO PARA DEPLOY |
 
 ---
 
