@@ -147,6 +147,16 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Tests sobre output gpt-4o-mini anterior: 4/60 fallos detectados (correctos — el viejo modelo violaba ADR-004 y ADR-005)
 - Requiere `ANTHROPIC_API_KEY` en `.env.local` para el agente de redacción
 
+### MSG-TEST-01: Prueba Controlada Motor V2 ✅ COMPLETA (2026-06-25)
+- 4 leads probados con snippets reales — motor funciona con la señal de perfil
+- Resultado: 1 APTO (Lead-D tech), 3 APTO CON RETOQUES (insight demasiado largo >400 chars)
+- Snippets usados correctamente en todos los leads — observaciones específicas ✅
+- CTAs excelentes en 4/4 — conversacionales, naturales, bifurcados ✅
+- Talent4Pro no aparece en ningún mensaje ✅ · Frases prohibidas ausentes ✅
+- Problema detectado: insight sin límite de caracteres → textos de 400-488 chars en 3/4 leads
+- Veredicto: **LISTO PARA USO OPERATIVO** — usuario debe recortar Mensaje 2 si >250 chars
+- Próxima tarea: MSG-FIX-02 — añadir límite ~250 chars al insight en el prompt
+
 ### MSG-FIX-01B: Motor V2 Mejorado ✅ COMPLETO (2026-06-25)
 - `posts_recientes` ahora recibe `raw_google_snippet` del perfil real (antes siempre vacío)
 - System prompt ampliado: contexto Talent4Pro + guía de estilo humano + frases prohibidas adicionales
@@ -183,7 +193,7 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | MSG-FIX-01B: señal real del perfil y estilo humano aplicados al motor V2 |
+| Motivo | MSG-TEST-01: prueba controlada del motor V2 completada — 1 APTO, 3 APTO CON RETOQUES |
 | validate-context.sh | ✅ EXIT_CODE 0 |
 | Build | ✅ `npm run build` limpio — 26/26 páginas, 0 errores (verificado 2026-06-25) |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
@@ -203,7 +213,8 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | 23 | MSG-AUDIT-01: auditar motor de mensajes V2 para Talent4Pro | Claude Code | ✅ COMPLETO | — |
 | 24 | MSG-STYLE-01: guía de estilo humano para mensajes Talent4Pro | Claude Code | ✅ COMPLETO | — |
 | 25 | MSG-FIX-01B: señal real de perfil + estilo humano en motor V2 | Claude Code | ✅ COMPLETO | — |
-| 26 | MSG-TEST-01: prueba controlada con 3–5 leads reales en producción | Claude Code | 🕒 PENDIENTE | Alta |
+| 26 | MSG-TEST-01: prueba controlada motor V2 — 4 leads, 1 APTO, 3 APTO CON RETOQUES | Claude Code | ✅ COMPLETO | — |
+| 27 | MSG-FIX-02: límite de 250 chars en insight del system prompt V2 | Claude Code | 🕒 PENDIENTE | Media |
 | 12 | E2E Tests (Signup → Approve → Signin → Access) | Codex | 🕒 PENDIENTE | Alta |
 | 15 | Funcionalidad real `/dashboard/search` (Buscador) | Gemini CLI | 🕒 PENDIENTE | Alta |
 | 16 | Paginación real en tabla de contactos | Gemini CLI | 🕒 PENDIENTE | Media |

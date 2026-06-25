@@ -1,6 +1,6 @@
 # Índice de Decisiones Arquitectónicas
 > Guía Proyectos Grandes — Herramienta de Captación LinkedIn para Talent4Pro
-> Última actualización: 2026-06-25 (MSG-FIX-01B)
+> Última actualización: 2026-06-25 (MSG-TEST-01)
 
 Este directorio es el punto de entrada canónico para todas las decisiones de diseño del proyecto.
 Los agentes de IA deben leer este índice antes de operar sobre cualquier componente del sistema.
@@ -21,6 +21,7 @@ Ubicación: `docs/decisions/DOC-BASE-NNN-*.md`
 | [MSG-AUDIT-01](MSG-AUDIT-01-message-engine-audit-talent4pro.md) | Auditoría del Motor de Mensajes para Talent4Pro | **COMPLETA** | Motor de Mensajes · IA · Producto | `agent_v2.ts` · `claude_prompts.ts` · `/api/generate-v2` |
 | [MSG-STYLE-01](MSG-STYLE-01-human-conversation-style-talent4pro.md) | Guía de Estilo de Conversación Humana para Talent4Pro | **ACTIVA** | Motor de Mensajes · Estilo · Producto | `agent_v2.ts` (system prompt) · futura tarea MSG-FIX-01B |
 | [MSG-FIX-01B](MSG-FIX-01B-v2-human-style-and-profile-signal.md) | Señal Real de Perfil y Estilo Humano en Motor V2 | **COMPLETA** | Motor de Mensajes · IA · Fix | `generate-v2/route.ts` · `agent_v2.ts` |
+| [MSG-TEST-01](MSG-TEST-01-v2-controlled-quality-test.md) | Prueba Controlada de Calidad del Motor V2 — 4 leads Talent4Pro | **COMPLETA** | Motor de Mensajes · IA · Calidad | `agent_v2.ts` · veredicto: Apto con retoques |
 
 ---
 
