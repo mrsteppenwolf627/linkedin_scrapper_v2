@@ -147,6 +147,15 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Tests sobre output gpt-4o-mini anterior: 4/60 fallos detectados (correctos — el viejo modelo violaba ADR-004 y ADR-005)
 - Requiere `ANTHROPIC_API_KEY` en `.env.local` para el agente de redacción
 
+### MSG-FIX-03: Estilo DM Simple Aplicado al Motor V2 ✅ COMPLETO (2026-06-25)
+- Rol del agente cambiado: de "redactor especializado" a "alguien que escribe desde el móvil"
+- Sección ESTILO reemplazada: regla central "¿podría escribirlo desde el móvil en 2 minutos?"
+- Patrones actualizados con los 4 ejemplos de MSG-STYLE-02
+- 20 palabras de consultor/analista añadidas a prohibiciones (gap, criterio, brecha, upskilling…)
+- Framework simplificado: instrucciones en registro sencillo, ejemplos de CTA actualizados
+- Build ✅ 26/26 · solo `agent_v2.ts` tocado · ADRs, schema, UI sin cambios
+- Pendiente: MSG-TEST-03 — prueba de naturalidad con leads reales
+
 ### MSG-STYLE-02: Nueva Guía de Lenguaje Simple ✅ ACTIVA (2026-06-25)
 - Los mensajes de MSG-TEST-02 cumplen longitud pero suenan a consultor/post de LinkedIn
 - Diagnóstico: lenguaje demasiado elaborado, analítico y sofisticado para un DM real
@@ -216,7 +225,7 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | MSG-STYLE-02: nueva guía de lenguaje simple para DMs — mensajes de MSG-TEST-02 suenan demasiado consultivos |
+| Motivo | MSG-FIX-03: lenguaje simple aplicado al motor V2 — rol, estilo, prohibiciones y framework actualizados |
 | validate-context.sh | ✅ EXIT_CODE 0 |
 | Build | ✅ `npm run build` limpio — 26/26 páginas, 0 errores (verificado 2026-06-25) |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
@@ -240,7 +249,8 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | 27 | MSG-FIX-02: límites de longitud en motor V2 (observacion≤220, insight≤250, cta≤140) | Claude Code | ✅ COMPLETO | — |
 | 28 | MSG-TEST-02: confirmar límites con 4 leads — todos OK, listo para deploy | Claude Code | ✅ COMPLETO | — |
 | 29 | MSG-STYLE-02: guía de lenguaje simple para DMs (mensajes siguen sonando consultivos) | Claude Code | ✅ COMPLETO | — |
-| 30 | MSG-FIX-03: aplicar lenguaje simple al system prompt V2 | Claude Code | 🕒 PENDIENTE | Alta |
+| 30 | MSG-FIX-03: lenguaje simple y humano aplicado al motor V2 | Claude Code | ✅ COMPLETO | — |
+| 31 | MSG-TEST-03: prueba de naturalidad con 3-4 leads tras MSG-FIX-03 | Claude Code | 🕒 PENDIENTE | Alta |
 | 12 | E2E Tests (Signup → Approve → Signin → Access) | Codex | 🕒 PENDIENTE | Alta |
 | 15 | Funcionalidad real `/dashboard/search` (Buscador) | Gemini CLI | 🕒 PENDIENTE | Alta |
 | 16 | Paginación real en tabla de contactos | Gemini CLI | 🕒 PENDIENTE | Media |

@@ -1,6 +1,6 @@
 # Índice de Decisiones Arquitectónicas
 > Guía Proyectos Grandes — Herramienta de Captación LinkedIn para Talent4Pro
-> Última actualización: 2026-06-25 (MSG-STYLE-02)
+> Última actualización: 2026-06-25 (MSG-FIX-03)
 
 Este directorio es el punto de entrada canónico para todas las decisiones de diseño del proyecto.
 Los agentes de IA deben leer este índice antes de operar sobre cualquier componente del sistema.
@@ -25,6 +25,7 @@ Ubicación: `docs/decisions/DOC-BASE-NNN-*.md`
 | [MSG-FIX-02](MSG-FIX-02-v2-insight-length-limit.md) | Límite de Longitud de Mensajes en Motor V2 | **COMPLETA** | Motor de Mensajes · IA · Fix | `agent_v2.ts` — observacion≤220 · insight≤250 · cta≤140 |
 | [MSG-TEST-02](MSG-TEST-02-v2-final-length-quality-test.md) | Prueba Final de Calidad y Longitud del Motor V2 | **COMPLETA** | Motor de Mensajes · IA · Calidad | Veredicto: ✅ LISTO PARA DEPLOY |
 | [MSG-STYLE-02](MSG-STYLE-02-simple-human-dm-language.md) | Lenguaje Simple y Humano para DMs de LinkedIn | **ACTIVA** | Motor de Mensajes · Estilo · Producto | `agent_v2.ts` (system prompt) · futura tarea MSG-FIX-03 |
+| [MSG-FIX-03](MSG-FIX-03-v2-simple-human-dm-style.md) | Estilo DM Simple y Humano Aplicado al Motor V2 | **COMPLETA** | Motor de Mensajes · IA · Fix | `agent_v2.ts` — rol + estilo + prohibiciones + framework |
 
 ---
 
