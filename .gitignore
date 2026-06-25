@@ -38,3 +38,12 @@ Thumbs.db
 
 # Claude Code internal files
 .claude/
+
+# Codex internal files
+.codex/
+
+# Runtime logs (Next.js dev + node process)
+next-dev.log
+next-node.err.log
+next-node.out.log
+*.log
