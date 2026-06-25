@@ -147,6 +147,14 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 - Tests sobre output gpt-4o-mini anterior: 4/60 fallos detectados (correctos — el viejo modelo violaba ADR-004 y ADR-005)
 - Requiere `ANTHROPIC_API_KEY` en `.env.local` para el agente de redacción
 
+### MSG-FIX-04: Patrones Repetitivos Eliminados ✅ COMPLETO (2026-06-25)
+- Prohibidos 7 patrones de apertura del insight ("Lo que estoy viendo es que...", etc.)
+- Regla de variedad añadida: cada mensaje debe parecer escrito a mano para esa persona
+- Sustituciones concretas añadidas como referencia de reformulación sin lenguaje de consultor
+- Lista de palabras prohibidas ampliada: estrategia, reto, competencias, certificar, marco, etc.
+- Build ✅ 26/26 · solo `agent_v2.ts` tocado · schema, UI, V1 sin cambios
+- Pendiente: MSG-TEST-04 — prueba final; si 3/4 APTO → deploy operativo
+
 ### MSG-TEST-03: Prueba de Naturalidad Real ✅ COMPLETA (2026-06-25)
 - 4 leads probados — 1 APTO (Lead-D), 2 APTO CON RETOQUES (A, B), 1 NO APTO (C)
 - Veredicto: NECESITA AJUSTE MENOR — tono dramáticamente mejor vs MSG-TEST-02
@@ -233,7 +241,7 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | MSG-TEST-03: 1 APTO / 2 APTO CON RETOQUES / 1 NO APTO — patrón repetitivo y 2 palabras prohibidas detectadas |
+| Motivo | MSG-FIX-04: patrones repetitivos y lenguaje residual de consultor eliminados del motor V2 |
 | validate-context.sh | ✅ EXIT_CODE 0 |
 | Build | ✅ `npm run build` limpio — 26/26 páginas, 0 errores (verificado 2026-06-25) |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
@@ -259,7 +267,8 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | 29 | MSG-STYLE-02: guía de lenguaje simple para DMs (mensajes siguen sonando consultivos) | Claude Code | ✅ COMPLETO | — |
 | 30 | MSG-FIX-03: lenguaje simple y humano aplicado al motor V2 | Claude Code | ✅ COMPLETO | — |
 | 31 | MSG-TEST-03: naturalidad real — 1 APTO, 2 APTO CON RETOQUES, 1 NO APTO | Claude Code | ✅ COMPLETO | — |
-| 32 | MSG-FIX-04: eliminar patrón "Lo que estoy viendo es que..." + sustituciones palabras recurrentes | Claude Code | 🕒 PENDIENTE | Alta |
+| 32 | MSG-FIX-04: patrones repetitivos eliminados + palabras prohibidas ampliadas + sustituciones | Claude Code | ✅ COMPLETO | — |
+| 33 | MSG-TEST-04: prueba final con 4 leads — si 3/4 APTO → deploy operativo | Claude Code | 🕒 PENDIENTE | Alta |
 | 12 | E2E Tests (Signup → Approve → Signin → Access) | Codex | 🕒 PENDIENTE | Alta |
 | 15 | Funcionalidad real `/dashboard/search` (Buscador) | Gemini CLI | 🕒 PENDIENTE | Alta |
 | 16 | Paginación real en tabla de contactos | Gemini CLI | 🕒 PENDIENTE | Media |

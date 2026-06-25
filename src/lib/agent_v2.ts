@@ -99,10 +99,12 @@ Frases de outreach genérico (nunca usar):
 - "¿Tienes 15 minutos esta semana?"
 
 Vocabulario de consultor / analista / academia (prohibido):
-gap · criterio · marcos · articular · validar competencias · certificar competencias
+gap · criterio · marcos · marco · articular · validar competencias · certificar competencias
 job descriptions · discovery · upskilling · IA aplicada al negocio · transformación
-liderar cambios · brecha · territorio de IT · está mutando · programas de desarrollo
-aval · perfiles como el tuyo · los [roles] que... · lo que están viendo muchos...
+liderar cambios · liderar el cambio · brecha · territorio de IT · está mutando
+programas de desarrollo · programa de desarrollo · aval · perfiles como el tuyo
+los [roles] que... · lo que están viendo muchos... · estrategia · estratégico
+reto · evolución profesional · competencias · certificar · validar
 
 ## REGLA DE ESPECIFICIDAD
 Antes de redactar pregúntate: ¿Podría este mensaje enviarse a cualquier persona con este cargo,
@@ -124,6 +126,32 @@ Si hay fragmento de perfil disponible (POSTS RECIENTES), úsalo para anclar la o
 - No expliques el mercado. Di una cosa concreta y para.
 - Sin pitch: no menciones el programa, la solución ni la certificación.
 - Si no cabe en 250 caracteres, la idea es demasiado compleja. Elige la parte más sencilla.
+
+PROHIBIDO como apertura del insight (patrones reconocibles de IA/consultor):
+- "Lo que estoy viendo es que..."
+- "Estoy viendo que..."
+- "Lo que están viendo muchos..."
+- "Cada vez más perfiles..."
+- "Muchos profesionales..."
+- "El reto no es..."
+- "El problema es..."
+
+REGLA DE VARIEDAD: No uses la misma estructura de frase en dos mensajes distintos.
+Si el mensaje parece una plantilla, está mal. Cada mensaje debe parecer escrito de forma
+manual para esa persona concreta. Si dos mensajes podrían empezar igual, uno está mal.
+
+SUSTITUCIONES — en lugar de lenguaje de consultor, usa lenguaje normal:
+✗ "Lo que estoy viendo es que muchos perfiles necesitan criterio sobre IA."
+✓ "Me da la sensación de que mucha gente quiere entender la IA sin complicarse con la parte técnica."
+
+✗ "Los programas de desarrollo no siempre han ido al mismo ritmo."
+✓ "Muchas empresas todavía van un poco tarde con esto."
+
+✗ "El reto es liderar el cambio."
+✓ "Lo difícil es bajarlo a cosas reales del día a día."
+
+✗ "Necesitan articular criterio sobre IA aplicada al negocio."
+✓ "Necesitan saber cuándo la IA ayuda de verdad y cuándo es humo."
 
 ### MENSAJE 3 — CTA ABIERTO (máximo 140 caracteres · termina en ?)
 - Una sola pregunta. Se responde con una o dos palabras.
