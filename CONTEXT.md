@@ -159,11 +159,11 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 |---|---|
 | Fecha | 2026-06-25 |
 | Responsable | Claude Code (Ingeniero de Infraestructura) |
-| Motivo | DEPLOY-CHECK-01: auditoría de preparación para Vercel staging |
+| Motivo | DEPLOY-PREP-01: bloqueadores de staging Vercel resueltos (`maxDuration` + `.vercelignore`) |
 | validate-context.sh | ✅ EXIT_CODE 0 |
-| Build | ⚠️ `tsc --noEmit` ok (2026-06-04) — `npm run build` completo pendiente de verificar |
+| Build | ⚠️ `tsc --noEmit` ok (2026-06-04) — `npm run build` completo pendiente de verificar antes del primer deploy |
 | Credenciales | .env.local completado (11 variables) — archivo gitignoreado, no entra al repo |
-| Vercel staging | 🟡 LISTO CON RESTRICCIONES — ver `docs/decisions/DEPLOY-CHECK-01-vercel-staging-readiness.md` |
+| Vercel staging | 🟢 DESBLOQUEADO — bloqueadores DEPLOY-CHECK-01 resueltos; pendiente configurar env vars en Vercel dashboard |
 
 ---
 
@@ -175,7 +175,7 @@ Lead (LinkedIn profile) ──► POST /api/generate-messages ──► OpenAI g
 | 13 | User Management Panel (`/dashboard/users`) | Codex | ✅ COMPLETO | — |
 | 20 | Refactor export: `linkedin_scraper.ts` → `leads_raw.json` (contrato datos) | Claude Code | ✅ COMPLETO | — |
 | 21 | Orquestador pipeline Scraper → leads_raw.json → mensajes_listos.json | Claude Code | ✅ COMPLETO | — |
-| 22 | DEPLOY-PREP-01: `maxDuration` en /api/search + `.vercelignore` + build check | Claude Code | 🕒 PENDIENTE | Alta |
+| 22 | DEPLOY-PREP-01: `maxDuration` en /api/search + `.vercelignore` | Claude Code | ✅ COMPLETO | — |
 | 12 | E2E Tests (Signup → Approve → Signin → Access) | Codex | 🕒 PENDIENTE | Alta |
 | 15 | Funcionalidad real `/dashboard/search` (Buscador) | Gemini CLI | 🕒 PENDIENTE | Alta |
 | 16 | Paginación real en tabla de contactos | Gemini CLI | 🕒 PENDIENTE | Media |

@@ -20,6 +20,8 @@ interface SearchRequestBody {
 
 // Forzamos que sea dinámica para que Vercel no cachee la respuesta
 export const dynamic = 'force-dynamic';
+// Tiempo máximo de función en Vercel (segundos) — las búsquedas SSE pueden tardar varios minutos
+export const maxDuration = 300;
 
 export async function POST(req: NextRequest) {
   // --- Auth ---

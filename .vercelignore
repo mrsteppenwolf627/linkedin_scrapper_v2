@@ -1,0 +1,37 @@
+# ============================================
+# .vercelignore — Archivos excluidos del deployment en Vercel
+# No excluir docs/ — agent_v2.ts lee docs/adr/ en runtime via filesystem
+# ============================================
+
+# Datos de salida locales (pueden contener perfiles de personas reales)
+leads_raw.json
+mensajes_listos.json
+
+# Variables de entorno locales (nunca deben subir)
+.env
+.env.local
+.env.*.local
+
+# Backups internos del proyecto
+.context-backups/
+
+# Dependencias (Vercel las instala en el build)
+node_modules/
+
+# Build local de Next.js
+.next/
+
+# Scripts de desarrollo local (no necesarios en producción)
+scripts/
+
+# Tests (no necesarios en producción)
+tests/
+
+# Migraciones SQL (solo para uso local con Supabase CLI)
+migrations/
+
+# Logs locales
+*.log
+next-dev.log
+next-node.err.log
+next-node.out.log
